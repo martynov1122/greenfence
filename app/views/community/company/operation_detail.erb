@@ -1,0 +1,75 @@
+<div class="compain_header">
+  <div class="user_block detail_mod ">
+	<div class="user_avatar_w detail_mod">
+	  <img ng-src="{{operation.company.logo.logo.thumb.url}}" class="user_avatar_img detail_mod">
+	</div>
+	<div class="user_name detail_mod">{{operation.company.name}}</div>
+  </div>
+  <div class="compain_header_side_w">
+	<a href="#/company_public_profile/{{operation.company.id}}" title="" class="back_to_company_butt">Back to {{operation.company.name}}</a>
+  </div>
+</div>
+
+<div class="detail_block">
+  <div class="detail_header">
+	<div class="user_block detail_mod">
+	  <div class="user_avatar_w detail_mod ">
+		<img ng-src="{{operation.profile_picture.profile_picture.thumb.url}}" class="user_avatar_img detail_mod">
+	  </div>
+	  <div class="user_name detail_mod">{{operation.name}}</div>
+	</div>
+	<div class="detail_header_side_w">
+	  <a href="#/company_follow_configure" title="" class="detail_follow_configure_butt"><%= t('follow_and_configure') %></a>
+	</div>
+  </div>
+  <div class="detail_b_content">
+	<div class="detail_b_content_header">
+	  <ul class="post_f_list" ng-if="operation.products_count > 0 || operation.services_count > 0 || operation.documents_count > 0">
+		<li class="post_f_list_item" ng-if="operation.services_count > 0">
+		  <dl class="tag_block">
+			<dt class="tag_b_text"><%= t('services') %></dt>
+			<dd class="tag_b_value">{{operation.services_count}}</dd>
+		  </dl>
+		</li>
+		<li class="post_f_list_item" ng-if="operation.products_count > 0">
+		  <dl class="tag_block">
+			<dt class="tag_b_text"><%= t('products') %></dt>
+			<dd class="tag_b_value">{{operation.products_count}}</dd>
+		  </dl>
+		</li>
+		<li class="post_f_list_item" ng-if="operation.documents_count > 0">
+		  <dl class="tag_block">
+			<dt class="tag_b_text"><%= t('document') %></dt>
+			<dd class="tag_b_value">{{operation.documents_count}}</dd>
+		  </dl>
+		</li>
+	  </ul>
+	</div>
+	<div class="detail_b_content_text">
+	  <h2><%= t('description') %></h2>
+
+	  <p>{{operation.description || 'NA'}}</p>
+
+	  <div ng-repeat="definition in definitions">
+		<div ng-switch on="definition.input_type">
+		  <h2>{{definition.name}}</h2>
+
+		  <p ng-switch-when="checkbox">
+			{{checkedValues(definition.id) || 'NA'}}
+		  </p>
+
+		  <p ng-switch-when="file">
+			<img ng-src="{{operation.definition_value[definition.id]}}" width="150px">
+		  </p>
+		  <p ng-switch-default>
+			{{operation.definition_value[definition.id] || 'NA'}}
+		  </p>
+		</div>
+	  </div>
+	  <h2> <%= t('additional_information') %></h2>
+
+	  <p>{{operation.additional_information || 'NA'}}</p>
+	</div>
+  </div>
+</div>
+

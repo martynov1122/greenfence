@@ -1,0 +1,22 @@
+<div class="add_info_block">
+  <div class="add_info_header">
+	<div class="add_info_title" ng-class="{'required_mod': data.required == 'true'}">{{data.name}}
+	</div>
+	<div class="add_info_colapse_butt" ng-click="infoColapseButt($event)"></div>
+  </div>
+  <div class="add_info_content_block">
+	<div class="add_info_content"><p ng-if="definitionValueExist()">{{store.definition_value[data.id]}}</p></div>
+	<div class="add_info_form_block">
+	  <div class="add_info_form_w">
+		<dl class="form_cell form_cell_v1_mod">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			<label for="{{data.name}}">{{data.name}}</label>
+		  </dt>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			<input type="text" placeholder="{{data.name}}" ng-required="{{data.required == 'true'}}" class="f_c_field default_mod" ng-model="document.definition_value[data.id]" datepicker readonly="readonly" min-Date="1-1-1970">
+		  </dd>
+		</dl>
+	  </div>
+	</div>
+  </div>
+</div>

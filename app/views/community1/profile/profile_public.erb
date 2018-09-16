@@ -1,0 +1,178 @@
+<div class="clear"></div>
+<div class="content_main" style="margin-top: 100px; margin-bottom: 100px;">
+         
+</div>
+
+<div id='message-modal' class='modal'>
+  <input type="hidden" id="message_type" value="global"/>
+  <div class='textarea'>
+      <textarea rows='5'  style='width:100%' placeholder='Enter your message here'></textarea>
+  </div>
+  <div class='button-container' style='margin-top: 2px;'>
+      <div class='green close'>Submit</div>
+  </div>
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="coworkers">
+  <div class='icon'>
+    <img src='<%= asset_path 'freeapp/coworkers.png'%>'>
+  </div>
+  <div class='info'>
+    <h2>Co-workers ({{calculateLenth}})</h2>
+    <div class='coworkers'>
+      {{#users}}
+        {{#isNotCurrentUser}}
+        <div class='coworker'>
+          <div class='photo'>
+            {{#image}}{{#image}}{{#thumb}}{{#url}}<img src={{url}}>{{/url}}{{^url}}<img src="{{user_image}}">{{/url}}{{/thumb}}{{/image}}{{/image}}
+          </div>
+          <div class='infos'>
+            <a href='profile_public?id={{id}}'><div class='name'>{{name}}</div></a>
+            <div class='position'>
+              {{#profile_title}}
+                {{profile_title}} at {{company_name}}
+              {{/profile_title}}
+              {{^profile_title}}
+                {{company_name}}
+              {{/profile_title}}              
+            </div>
+          </div>
+        </div>
+        {{/isNotCurrentUser}}
+      {{/users}}
+    </div>
+  </div>
+</script>
+   
+<script type="x-tmpl-mustache" id="public_profile">     
+  <div class='profile_left'>
+    <div class='top-info'>
+      {{#user_profile}}
+        <div class='photo'>
+          {{#image}}
+            {{#image}}
+              {{#thumb}}
+                {{#url}}
+                  <img src = {{url}} height='150' id="avatar">
+               {{/url}}
+                {{^url}}
+                  <img src = '<%= asset_path 'freeapp/avatar.jpg' %>' height='150' id="avatar">
+               {{/url}}
+              {{/thumb}}
+            {{/image}}
+         {{/image}}
+        </div>
+        <div class='name'>{{name}}</div>
+        <div class='position'>
+          {{#title}}
+            {{title}}
+              {{#company}}
+                at {{name}}
+              {{/company}}
+            {{/title}}
+            {{^title}}
+              {{#company}}
+                {{name}}
+              {{/company}}
+            {{/title}}
+        </div>
+        <div class='location'>        
+        </div>
+      {{/user_profile}}    
+      {{#current_user_profile_page}}
+        <a href="profile_welcome" ><div class="button green">Edit</div></a> 
+        {{/current_user_profile_page}}
+        {{#not_current_user_profile_page}}          
+          <div class='button white' onclick="show_model_for_user_message('{{id}}')">Message</div>
+        {{/not_current_user_profile_page}}    
+    </div>
+    <div class='profile_footer'>      
+    </div>
+  </div>
+  {{#user_profile}}
+    <div class='profile_right'>
+      <div class='section'>
+        <div class='icon'>
+          <img src='<%= asset_path 'freeapp/summary.png'%>'>
+        </div>
+        <div class='info'>
+          <h2>Executive Summary</h2>
+          <p><pre>{{executive_experience}}</pre></p>
+        </div>
+      </div>
+      <div class='section'>
+        <div class='icon'>
+          <img src='<%= asset_path 'freeapp/experience.png'%>'>
+        </div>
+        <div class='info'>
+          <h2>Experience</h2>
+          {{#profile_experiences}}
+            <p><b>{{title}}</b></p>
+            <p>{{company_name}} {{location}}</p>
+            <p>{{from_date}} - {{to_date}}</p>
+            <p><pre>{{description}}</pre></p>
+          {{/profile_experiences}}
+        </div>
+      </div>
+      <div class='section'>
+        <div class='icon'>
+          <img src='<%= asset_path 'freeapp/education.png'%>'>
+        </div>
+        <div class='info'>
+          <h2>Education</h2>
+          {{#profile_educations}}
+            <p><b>{{school}}</b></p>
+            <p>{{degree}} {{study_field}}</p>
+            <p>{{from_date}} - {{till_date}}</p>
+            <p><pre>{{activities}}</pre></p>
+          {{/profile_educations}}
+        </div>
+      </div>
+      <div class='section'>
+        <div class='icon'><img src='<%= asset_path 'freeapp/languages.png'%>'></div>
+        <div class='info'>
+          <h2>Languages</h2>
+          {{#profile_languages}}
+            <p>{{language}}-{{proficiency_label}}</p>
+          {{/profile_languages}}            
+        </div>
+      </div>
+      <div class='section'>
+        <div class='icon'><img src='<%= asset_path 'freeapp/company.png'%>'></div>
+        <div class='info'>           
+          {{#company}}
+            <h2>{{name}}</h2>
+          {{/company}}
+          <p>Skills: <pre>{{skills}}</pre></p>
+        </div>
+      </div>    
+      <div id='coworkers_section' class='section'>
+      </div>
+    </div>            
+  {{/user_profile}}
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'profile_public.js' %>"></script>
+<script type="text/javascript">
+  var current_user_id = <%= current_user.id %>,
+  id = gf.getQueryVariable("id")
+  $( document ).ready(function() {
+      pp.profile(id, current_user_id);
+  });
+  $('#message-modal .green, .close').click(function() {
+    submit_message("#message-modal textarea", $("#message_type").val(), id)
+  })
+  function get_gravatar() {
+      var email = "<%= current_user.email %>";
+      var email_hash = $.md5(email);
+      profile_image = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+      return profile_image;
+  }
+  function calculateLenth() {
+      return this.users.length-1
+  }
+</script>

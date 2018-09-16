@@ -1,0 +1,279 @@
+<div class="view_container">
+  <div class="add_info_main_header mod_static">
+		<div class="user_block add_info_main_header_mod">
+		  <div class="pencil" accept="image/*" ng-file-select ng-file-change="upload($files, $event)"></div>
+		  <div id='crop' style="display: none">
+				<div class="cropArea">
+				  <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+				</div>
+				<div>
+				  <div class="butt_save" style="margin: 0" ng-click="uploadUserImage()"><%= t('save') %></div>
+				</div>
+		  </div>
+		  <div class="user_avatar_w add_info_main_header_mod" id="avatar_file" accept="image/*" ng-file-select ng-file-change="upload($files, $event)">
+			<img ng-src="{{store.user_profile_attributes.image.image.thumb.url}}" alt="{{store.name}}" class="user_avatar_img about_mod"/>
+		  </div>
+		</div>
+		<h1 class="content_headline"><%= I18n.t('about_Me') %></h1>
+		<a class="wizard_delete_butt"><%= t('delete') %></a>
+		<a class="wizard_add_butt_v2" ng-click="userSubmit(user)"><%= t('save') %></a>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header mod_two">
+		  <div class="add_info_title"> <%= I18n.t('describe_yourself') %> </div>
+		</div>
+	<div class="add_info_content_block ">
+	  <div class="add_info_content mod_two" ng-if="store.user_profile_attributes.executive_experience" style="white-space: pre-line;">
+			<p>{{store.user_profile_attributes.executive_experience}}</p>
+	  </div>
+	  <div class="add_info_form_block mod_two active_mod">
+			<div class="add_info_form_w mod_two">
+			  <dl class="form_cell form_cell_v1_mod">
+					<dt class="form_c_hline form_v1_mod hline_hide_mod">
+					  <label for="about"><%= I18n.t('experience_skills_education_certifications_etc') %></label>
+					</dt>
+					<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					  <textarea id="about" placeholder="<%= I18n.t('experience_skills_education_certifications_etc') %>" class="f_c_field default_mod white_mod textarea_mod_1" ng-model="user.user_profile_attributes.executive_experience"></textarea>
+					</dd>
+			  </dl>
+			</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('are_you_a') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.type">
+				<p>{{store.type}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+			<div class="add_info_form_w">
+			  <dl class="form_cell form_cell_v1_mod">
+					<dt class="form_c_hline form_v1_mod hline_hide_mod">
+					  <label for="Select_type"><%= t('are_you_a') %></label>
+					</dt>
+					<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					  <ui-select ng-model="user.type" theme="selectize" ng-disabled="store != undefined && store.type != null">
+							<ui-select-match placeholder="Select a job title in the list or search its name...">{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="type.value as type in types |  filter: $select.search">
+							  <div ng-bind-html="type.name | highlight: $select.search"></div>
+							</ui-select-choices>
+					  </ui-select>
+					</dd>
+			  </dl>
+			</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= I18n.t('job_title') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.user_profile_attributes.title">
+				<p>{{store.user_profile_attributes.title}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'title'"
+				  p-title="''"
+				  dl-class="" containers-class="" field-class="'default_mod'"
+				  model="user.user_profile_attributes.title"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= I18n.t('location') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content"
+			   ng-if="
+				   store.address_attributes.street1
+				   || store.address_attributes.street2
+				   || store.address_attributes.city
+				   || store.address_attributes.state
+				   || store.address_attributes.country
+				   || store.address_attributes.postal_code
+				   ">
+				<p>
+			  {{location(
+			  store.address_attributes.street1,
+			  store.address_attributes.street2,
+			  store.address_attributes.city,
+			  store.address_attributes.state,
+			  store.address_attributes.country,
+			  store.address_attributes.postal_code
+			  )}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <div class="form_block hor_mod location_mod">
+
+						<gf-text-input
+						class="form_cell form_cell_v1_mod full_mod"
+						id="'Street1'"
+						p-title="'Street 1'"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.street1"></gf-text-input>
+						<gf-text-input
+						class="form_cell form_cell_v1_mod half_mod location_mod"
+						id="'Street2'"
+						p-title="'Street 2'"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.street2"></gf-text-input>
+
+						<dl class="form_cell form_cell_v1_mod half_mod location_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="Country">Country</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<ui-select ng-model="user.address_attributes.country" name="Country" theme="selectize">
+								  <ui-select-match placeholder="Select a country">{{$select.selected.name}}</ui-select-match>
+								  <ui-select-choices repeat="country.name as country in countries |  filter: $select.search">
+									<div ng-bind-html="country.name | highlight: $select.search"></div>
+								  </ui-select-choices>
+								</ui-select>
+						  </dd>
+						</dl>
+						<dl class="form_cell form_cell_v1_mod third_mod location_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="State/Province">State/Province</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<ui-select ng-model="user.address_attributes.state" ng-show="user.address_attributes.country=='United States'" name="State" theme="selectize" id="selectState">
+								  <ui-select-match placeholder="US state name">{{$select.selected.name}}</ui-select-match>
+								  <ui-select-choices repeat="state.name as state in states |  filter: $select.search">
+									<div ng-bind-html="state.name | highlight: $select.search"></div>
+								  </ui-select-choices>
+								</ui-select>
+								<input type="text" id="State" placeholder="State/Province" class="f_c_field default_mod " ng-model="user.address_attributes.state" ng-hide="user.address_attributes.country=='United States'"/>
+						  </dd>
+						</dl>
+
+						<gf-text-input
+						class="form_cell form_cell_v1_mod third_mod location_mod"
+						id="'City'" p-title="'City'"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.city"></gf-text-input>
+						<gf-text-input
+						class="form_cell form_cell_v1_mod third_mod location_mod"
+						id="'Postalcode'"
+						p-title="'Postal code'"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.postal_code">
+						</gf-text-input>
+
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= I18n.t('tags') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.tags[0]">
+				<ul class="add_info_user_tag_list">
+				  <li class="add_info_user_tag_l_item" ng-repeat="tag in store.tags">
+						<div class="add_info_user_tag_butt">{{tag}}</div>
+				  </li>
+				</ul>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="tags"><%= I18n.t('add_tags_seperated_by_commas') %> </label>
+						</dt>						
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select gf-chosen gf-chosen-collection='tags' ng-model="user.tags" multiple="multiple" class="f_c_field select_tags_mod select_rediz_coosen"
+                ng-options="tag.name as tag.name for tag in tags">
+              </select>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= I18n.t('add_Links') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.connections_attributes[0].url || store.connections_attributes[1].url || store.connections_attributes[2].url">
+				<ul class="add_info_user_link_list">
+				  <li class="add_info_user_link_l_item" ng-repeat="link in store.connections_attributes" ng-show="link.url">
+						<a href="http://{{link['url']}}" target="_blank" title="link" class="add_info_user_link url" ng-class="link_class[link['name']]">{{link['url']}}</a>
+				  </li>
+				</ul>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <div ng-repeat="link in user.connections_attributes">
+						<gf-text-input
+						id="link.name"
+						p-title="link.name"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="link.url"></gf-text-input>
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block category_mod" ng-show='store.type=="Auditor" || user.type=="Auditor"'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('qualifications') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="selected_list">
+				<div ng-repeat="(key, value) in selected_list">
+				  <h2 class="category_hline">{{key}}</h2>
+				  <ul class="add_info_user_tag_list">
+						<li class="add_info_user_tag_l_item" ng-repeat="scheme in value">
+						  <div class="add_info_user_tag_butt">{{scheme}}</div>
+						</li>
+				  </ul>
+				</div>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="scheme_types">Select qualification</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select id="scheme_types" gf-multiselect data='scheme_types' gf-placeholder='Select qualification' gf-class='' ng-model="selected_schemes" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+						  	ng-options="scheme as scheme.name group by scheme.category for scheme in scheme_types track by scheme.id | orderBy: 'category'">
+						  </select>
+						</dd>
+				  </dl>
+				  <div class="category_wrap">
+						<div ng-repeat="(key, value) in selected_list">
+						  <h2 class="category_hline">{{key}}</h2>
+						  <ul class="category_list">
+								<li class="category_list_item" ng-repeat="scheme in value">
+								  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+										<input name="Example" type="checkbox" checked="true" class="lbl_inp_rb_ch">
+										<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod">{{scheme}}</span>
+								  </label>
+								</li>
+						  </ul>
+						</div>
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+</div>

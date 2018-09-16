@@ -1,0 +1,24 @@
+[
+  {
+    "activator_id": 4,
+    "activator_name": "Test Farm",
+    "activator_type": "Facility",
+    "message_format": "GFSI Certificate for <subject> is required.",
+    "subject_name": "Test Farm",
+    "subject_type": "Facility",
+    "text": null,
+    "custom_name": null,
+    "alert_level":"warning"
+  },
+  {
+    "activator_id": 4,
+    "activator_name": "Test Farm",
+    "activator_type": "Facility",
+    "message_format": "<subject> added.",
+    "subject_name": "Test Farm",
+    "subject_type": "Facility",
+    "text": null,
+    "custom_name": null,
+    "alert_level":"none"
+  }
+]

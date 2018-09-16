@@ -1,0 +1,42 @@
+<article class="profile_card_block">
+  <span class="corner_ico company_mod"></span>
+  <a class="user_block profile_card_mod " href="#/company_public_profile/{{data.id}}">
+	<div class="user_avatar_w profile_card_mod" >
+	  <img ng-src="{{data.profile.thumb_url}}" alt="{{data.name}}" class="user_avatar_img profile_card_mod">
+	</div>
+	<div class="user_name profile_card_mod">{{data.name}}</div>
+	<div class="user_info profile_card_mod" ng-if="data.class">{{data.class}}</div>
+	<div class="user_text profile_card_mod" ng-if="data.profile.summary" style="white-space: pre-line;">
+	  {{data.profile.summary}}
+	</div>
+  </a>
+  <footer class="profile_card_b_footer">
+	<a class="card_follow_butt" href="#/company_follow_configure/{{data.id}}">Follow</a>
+	<ul class="post_f_list">
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('operations') %></dt>
+		  <dd class="tag_b_value">{{data.profile.operations_count}}</dd>
+		</dl>
+	  </li>
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('services') %></dt>
+		  <dd class="tag_b_value">{{data.profile.services_count}}</dd>
+		</dl>
+	  </li>
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('products') %></dt>
+		  <dd class="tag_b_value">{{data.profile.products_count}}</dd>
+		</dl>
+	  </li>
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('certificates') %></dt>
+		  <dd class="tag_b_value">{{data.profile.documents_count}}</dd>
+		</dl>
+	  </li>
+	</ul>
+  </footer>
+</article>

@@ -1,0 +1,483 @@
+<div id="supplier_filter" style="display:none" title="<%= t('filter_by_products') %>" >
+  <div class="dialog_content" >
+    <div class="dialog_form mod_size_1">
+      <dl class="form_sub_cell">
+        <dt class="form_sub_cell_hline"><%= t('filter_by_products') %></dt>
+        <dd class="form_sub_cell_wrap">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category"><%= t('select_products') %></label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <select gf-multiselect data='products' gf-placeholder='<%= t('select_products') %>' gf-class='gf_multiselect' ng-model="req.selected_products" multiple="multiple" class="f_c_field default_mod normal_list_v2"
+                ng-options="opt as opt.name for opt in products track by opt.entity_id" >   
+              </select>
+            </dd>
+          </dl>         
+        </dd>
+      </dl> 
+    </div>
+    <div id="error_msg" style="text-align: center; padding: 5px 0px;"></div>
+  </div>
+  <footer class="dialog_footer mod_size_1">
+    <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+    <div class="map_filter_reset_butt" ng-click="reset_products()"><%= t('reset') %></div>
+    <a href="" class="map_filter_update_butt" ng-click="filterSuppliers(req)"><%= t('filter') %></a>
+  </footer>
+</div>
+<div class="content_block full_page">
+  <div class="tabs_v1">
+		<ul class="dialog_tab_list white_mod">
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_1" title="" class="dialog_tab_1_butt white_mod "><%= t('view_requirements') %></a>
+		  </li>
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_2" title="" class="dialog_tab_1_butt white_mod "><%= t('assign_requirements') %></a>
+		  </li>
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_3" title="" class="dialog_tab_1_butt white_mod "><%= t('add_requirements') %></a>
+		  </li>
+		</ul>
+		<div id="tab_1" class="tab_block">
+		  <header class="add_info_main_header mod_static_two">
+				<h1 class="content_headline requirements_mod"><%= t('requirements_by') %></h1>
+				<dl class="form_cell form_cell_v1_mod requirements_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+						<label for="select_company_operation"><%= t('select_company_or_operations') %>:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+						<select id="select_company_operation" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="selected"
+								ng-options="opt.name for opt in company_operations track by opt.uuid" ng-change="getRequirements(selected)">
+						</select>
+				  </dd>
+				</dl>				
+		  </header>
+		  <div class="table_wrap requirements_mod">
+				<table class="table_style_one">
+				  <thead>
+						<tr>
+						  <th ng-click="setOrder('document_type')"><%= t('specification') %></th>
+						  <th><%= t('number_of_suppliers_assigned_to') %></th>
+						  <th ng-click="setOrder('compliant')" title="<%= t('requirement_fulfilled') %>"><%= t('number_of_compliant') %><br/>(<%= t('requirement_fulfilled') %>)</th>
+						  <th ng-click="setOrder('warning')" title="<%= t('requirement_needs_fulfillment')%>"><%= t('number_of_warning') %><br/>(<%= t('requirement_needs_fulfillment')%>)</th>
+						  <th ng-click="setOrder('non_compliant')" title="Document expired, Lab report positive, Requirement not fulfilled, Document not authenticated, Document authentication expired"><%= t('number_of_noncompliant') %></th>
+						</tr>
+				  </thead>
+				  <tbody>
+					  <tr ng-repeat="requirement in requirements | orderBy: order : reverse">
+							<td><a href="#/requirement_detail_view?buyer_id={{selected.id}}&buyer_type={{selected.type ? 'Company' : 'Operation'}}&definition_id={{requirement.id}}" style="cursor: pointer;">{{requirement.document_type}}</a></td>
+							<td>{{requirement.suppliers_count}}</td>
+							<td>{{requirement.compliant}}</td>
+							<td>{{requirement.warning}}</td>
+							<td>{{requirement.non_compliant}}</td>
+					  </tr>
+				  </tbody>
+				</table>
+		  </div>
+		  <footer class="table_footer requirements_mod">
+				<div id="pagination_container"></div>
+				<dl class="form_cell form_cell_v1_mod hor_mod view_count_mod ">
+				  <dt class="form_c_hline form_v1_mod hl_hor_mod">
+						<label for="count"><%= t('view') %>:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod hor_mod appearance_mod view_count_mod">
+						<select id="count" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="filter.per_page" ng-change="search()">
+						  <option value="6">6</option>
+						  <option value="10">10</option>
+						  <option value="25">25</option>
+						  <option value="50">50</option>
+						</select>
+				  </dd>
+				</dl>
+		  </footer>
+		</div>
+		<div id="tab_2" class="tab_block">			
+		  <header class="add_info_main_header mod_static_two">
+				<h1 class="content_headline requirements_mod"><%= t('assign_requirements') %></h1>
+				<a class="wizard_add_butt_v2" ng-click="assignRequirement(req)"><%= t('assign') %></a>
+		  </header>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('select_requirements') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <label for="Enter_name_of_document_definition">Select the documents, certificates, lab reports, etc to be assigned</label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <select gf-multiselect data='document_definitions_list' gf-placeholder='<%= t('enter_document_name') %>' gf-class='gt_multiselect_requirement' ng-model="req.selected_requirements" multiple="multiple" class="f_c_field default_mod normal_list"
+		                ng-options="opt as opt.document_type for opt in document_definitions_list track by opt.id" >
+		              </select>
+		            </dd>
+		          </dl>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('select_company_or_operations') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <label for="Enter_name_of_document_definition"><%= t('select_company_or_operations') %></label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		                <ui-select ng-model="buyer_uuid" theme="selectize" ng-change="getSuppliersList({{$select.selected}})">
+		                  <ui-select-match placeholder="<%= t('enter_name_of_buyer') %>">{{$select.selected.name}}</ui-select-match>
+		                  <ui-select-choices repeat="buyer.uuid as buyer in buyers |  filter: $select.search">
+		                    <div ng-bind-html="buyer.name | highlight: $select.search"></div>
+		                  </ui-select-choices>
+		                </ui-select>
+		              </dd>
+		          </dl>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('suppliers') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w second_style_mod assign_mod">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <label for="Enter_name_of_supplier"><%= t('select_supplier') %></label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <div class="add_info_form_result_header">
+		                  <div class="add_info_selected_el">
+		                    <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+		                      <input name="selectAll" type="checkbox" class="lbl_inp_rb_ch" ng-change="selectAll()" ng-model="allSelected"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod ng-binding">Select All Suppliers</span>
+		                    </label>
+		                  </div>
+		                 <div class="gl_action_block assign_mod">
+		                  <div class="wizard_add_butt_v2" style="margin-bottom:8px;" id="supplier_filter_butt" title="Filter suppliers on products">Filter Suppliers</div>
+		                </div>
+		              </div>
+		              <div class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+			              <select gf-multiselect data='suppliers' gf-placeholder='<%= t('select_supplier') %>' gf-class='gt_multiselect_requirement' ng-model="req.selected_suppliers" multiple="multiple" class="f_c_field default_mod normal_list_v2"
+			                ng-options="opt as opt.name for opt in suppliers track by opt.id" >
+			              </select>
+		              </div>
+		            </dd>
+		          </dl>
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <label for="add_message">Add a message</label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <textarea id="add_message" placeholder="Add a message" class="f_c_field default_mod white_mod textarea_mod_1 " ng-model="customMessage"></textarea>
+		            </dd>
+		          </dl> 
+		          <div class="category_wrap">
+		            <div ng-repeat="list in selected_list">
+		              <h2 ng-if="list.value.length > 0" class="category_hline">{{list.name}}</h2>
+		              <ul ng-if="list.value.length > 0" class="category_list">
+		                <li class="category_list_item" ng-repeat="product in list.value">
+		                  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+		                    <input name="Example" type="checkbox" checked="true" class="lbl_inp_rb_ch" ng-click="deselect($event)"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod">{{product.name}}</span>
+		                  </label>
+		                </li>
+		              </ul>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('due_date') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <label for="Enter_name_of_document_definition">Due Date</label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod ">
+		              <input type="text" id="Enter_filled_by_date" name="description" placeholder="YYYY/MM/DD" class="f_c_field default_mod " ng-model="filled_by" datepicker readonly="readonly">
+		            </dd>
+		          </dl>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title"><%= t('select_authentication_preferences') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <ul class="options_b_value_list">
+		            <li class="options_b_value_l_item">
+			            <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			              <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="1" ng-model="rule.authenticated_by"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('third_party') %></span>
+			            </label>
+		            </li>
+		            <li class="options_b_value_l_item">
+			            <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			              <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="2" ng-model="rule.authenticated_by"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('second_party') %></span>
+			            </label>
+		            </li>
+		            <li class="options_b_value_l_item">
+			            <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			              <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="3" ng-model="rule.authenticated_by"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('first_party') %></span>
+			            </label>
+		            </li>
+		            <li class="options_b_value_l_item">
+		              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+		                <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="0" ng-model="rule.authenticated_by"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">None</span>
+		              </label>
+		            </li>
+		          </ul>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title"><%= t('will_supplier_become_non_compliant_when_certificate_expires') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <ul class="options_b_value_list">
+		            <li class="options_b_value_l_item">
+		              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+		                <input name="not expired" type="checkbox" class="lbl_inp_rb_ch" ng-model="rule.certificate_not_expired"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Yes</span>
+		              </label>
+		            </li>
+		          </ul>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title"><%= t('will_supplier_become_non_compliant_if_any_lab_tests_indicate_conditions_out_of_specification') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <ul class="options_b_value_list">
+		            <li class="options_b_value_l_item">
+		              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+		                <input name="not expired" type="checkbox" class="lbl_inp_rb_ch" ng-model="rule.lab_report_positive"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Yes</span>
+		              </label>
+		            </li>
+		          </ul>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_footer">
+			 	<a class="wizard_add_butt" ng-click="assignRequirement(req)"><%= t('assign') %></a>
+		  </div>
+		</div>
+		<div id="tab_3" class="tab_block">
+			<input type="hidden" value="<%= current_user.company.id %>" id="current_company_id"/>
+			<input type="hidden" value="<%= current_user.id %>" id="current_user_id"/>
+		  <header class="add_info_main_header mod_static_two">
+				<h1 class="content_headline" ng-if="!store.id"><%= t('add_requirements') %></h1>
+	  		<h1 class="content_headline" ng-if="store.id">View/Edit Requirement</h1>
+				<a class="wizard_add_butt_v2" ng-click="createDocumentDefinition(document_definition)"><%= t('add') %></a>
+		  </header>
+		  <div class="add_info_block title_mod">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('document_type_name') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block" style="display: none;">
+		        <div class="add_info_form_w">
+		          <gf-text-input
+		          id="'enter_document_type_name'"
+				      p-title="'Enter name of document type'"
+		          dl-class="" containers-class="" field-class="'default_mod'"
+		          model="document_definition.document_type"></gf-text-input>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('document_type_for') %></div>
+		      <div class="add_info_colapse_butt operation_box"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block operation_box">
+		        <div class="add_info_form_w">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="Document_type_for">Document Type For</label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <ui-select ng-model="document_definition.document_type_for" theme="selectize" ng-disabled="document_definition.id != undefined">
+		                <ui-select-match placeholder="Select document type for...">{{$select.selected.type}}</ui-select-match>
+		                <ui-select-choices repeat="document_type_for.value as document_type_for in document_type_for_list |  filter: $select.search">
+		                  <div ng-bind-html="document_type_for.type | highlight: $select.search"></div>
+		                </ui-select-choices>
+		              </ui-select>
+		            </dd>
+		          </dl>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block" ng-show="document_definition.document_type_for == 'Company'">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('document_category') %></div>
+		      <div class="add_info_colapse_butt operation_box"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block operation_box">
+		        <div class="add_info_form_w">
+		          <dl class="form_cell form_cell_v1_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="Document_category">Document Category</label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		              <ui-select ng-model="document_definition.document_category" theme="selectize" ng-disabled="document_definition.id != undefined">
+		                <ui-select-match placeholder="Select document category...">{{$select.selected.type}}</ui-select-match>
+		                <ui-select-choices repeat="document_category.value as document_category in document_categories | filter: $select.search">
+		                  <div ng-bind-html="document_category.type | highlight: $select.search"></div>
+		                </ui-select-choices>
+		              </ui-select>
+		            </dd>
+		          </dl>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_block upload_mod">
+		    <div class="add_info_header">
+		      <div class="add_info_title required_mod"><%= t('custom_definitions') %></div>
+		      <div class="add_info_colapse_butt"></div>
+		    </div>
+		    <div class="add_info_content_block">
+		      <div class="add_info_form_block">
+		        <div class="add_info_form_w">
+		          <div ng-repeat="definition in document_definition.definition">
+		            <div id="d_structure">
+		      			  <input type="hidden" id="id" required ng-model="definition.id"/>
+		      			  <input type="hidden" id="sort_order" required ng-model="definition.sort_order"/>
+		      			  <div class="form_block hor_mod location_mod">
+			      				<dl class="form_cell form_cell_v1_mod full_mod location_mod">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="name">Enter name</label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			      						<input type="text" ng-model="definition.name" id="name" class="f_c_field default_mod" placeholder="Enter name">
+			      				  </dd>
+			      				</dl>
+			      				<dl class="form_cell form_cell_v1_mod  full_mod">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="input_type">Field type</label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				      					<select ng-model="definition.input_type" id="input_type" class="f_c_field default_mod normal_list" ng-change="showHideOption($event);">
+				      					  <option value="">Field type...</option>
+				      					  <option value="text">Text Box</option>
+				      					  <option value="checkbox">Check Box</option>
+				      					  <option value="radio">Radio Button</option>
+				      					  <option value="number">Number</option>
+				      					  <option value="select">Select List</option>
+				      					  <option value="standard">Standard List</option>
+				      					  <option value="file">File</option>
+				                  <option value="date">Date</option>
+				      					</select>
+			      				  </dd>
+			      				</dl>
+			      				<dl class="form_cell form_cell_v1_mod  full_mod">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="required">Required</label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				      					<select class="f_c_field default_mod normal_list" id="required" ng-model="definition.required">
+				      					  <option value="">Required...</option>
+				      					  <option value="true">Yes</option>
+				      					  <option value="false">No</option>
+				      					</select>
+			      				  </dd>
+			      				</dl>
+			      				<dl class="form_cell form_cell_v1_mod full_mod">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="searchable">Searchable</label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				      					<select class="f_c_field default_mod normal_list" id="searchable" ng-model="definition.searchable">
+				      					  <option value="">Searchable...</option>
+				      					  <option value="true">Yes</option>
+				      					  <option value="false">No</option>
+				      					</select>
+			      				  </dd>
+			      				</dl>
+			      				<dl class="form_cell form_cell_v1_mod full_mod">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="standard">Standards</label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				      					<select class="f_c_field default_mod normal_list" ng-model="definition.standard" id="standard" ng-show="definition.input_type=='standard'" ng-change="showHideOption($event);">
+				      					  <option value="">Standards...</option>
+				      					  <option selected="true" value="business">Business Type</option>
+				      					  <option value="scheme">Scheme Type</option>
+				      					</select>
+			      				  </dd>
+			      				</dl>
+			              <dl class="form_cell form_cell_v1_mod full_mod">
+			                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			                	<label for="category">Categories</label>
+			                </dt>
+			                <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				                <select class="f_c_field default_mod normal_list" ng-model="definition.category" id="category" ng-show="definition.standard=='scheme'">
+				                  <option value="">All...</option>
+				                  <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+				                </select>
+			                </dd>
+			              </dl>
+			      				<dl class="form_cell form_cell_v1_mod full_mod" ng-show="definition.input_type=='radio' || definition.input_type=='list' || definition.input_type=='checkbox' || definition.input_type=='select'">
+			      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			      						<label for="options">Options </label>
+			      				  </dt>
+			      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			      						<textarea rows="4" class="f_c_field default_mod textarea_mod_2" ng-model="definition.options" id="options" ></textarea>
+			      				  </dd>
+			      				</dl>
+		      			  </div>
+		      			  <div class="butt_wrap">
+		      				  <div class="remove_butt" ng-click="removeStructure($event, definition.id);">Remove</div>
+		      			  </div>
+		      			</div>
+		          </div>
+		        </div>
+		        <div class="butt_wrap add_info_form_mod">
+		          <div class="add_another_field_mod" ng-click="addMoreDefinitions($event);">+ Add More</div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="add_info_footer">
+			 	<a class="wizard_add_butt" ng-click="createDocumentDefinition(document_definition)"><%= t('add') %></a>
+		  </div>
+		</div>
+  </div>
+</div>

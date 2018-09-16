@@ -1,0 +1,173 @@
+<div ng-controller="UserPublicProfileCtrl">
+<div class="profile_header" ng-cloak>
+  <div class="video_back_block mod_h_1">
+  <div class="video_back mod_h_1">
+    <video autoplay="" poster="<%= asset_path 'test.jpg' %>" loop="" class="video_block" ng-if="false">
+    <source src="<%= asset_path 'test.webm' %>" type="video/webm">
+    <source src="<%= asset_path 'test.mp4' %>" type="video/mp4">
+    </video>
+  </div>
+</div>
+  <div class="profile_header_w" ng-class="{ 'clean' : public_user_id == current_user.id }">
+		<div class="user_block profile_mod">
+		  <div class="user_authentication profile_mod" ng-if="auditor_authentications.is_authenticated">
+			<div class="user_authentication_popup">
+			  <div class="user_authentication_header">
+				<div class="user_authentication_name">{{public_user.name}}</div>
+				<div class="user_authentication_count">Has {{auditor_authentications.auditor_authentications.length}} Certificates</div>
+			  </div>
+			  <div gf-carusel slideit="auditor_authentications.auditor_authentications" slide-template="auditor"></div>
+			  </div>
+		  </div>
+		  <div class="user_avatar_w profile_mod user_profile_mod">
+	        <img ng-src="{{public_user.user_profile_attributes.image.image.url}}" fallback-src="<%= asset_path 'avatar.png' %>" class="user_avatar_img profile_mod user_profile_mod"/>
+		  </div>
+		  <div ng-if="public_user.name" class="user_name profile_mod user_profile_mod">{{public_user.name}}</div>
+		  <div ng-if="public_user.user_profile_attributes.title" class="user_info profile_mod user_profile_mod">{{public_user.user_profile_attributes.title}}</div>
+ 		  <footer class="user_b_footer profile_mod" ng-if="public_user.type || public_user.address_attributes.city">
+			<div ng-class="{ user_location: public_user.address_attributes.city != null }" class="profile_mod">{{public_user.address_attributes.city}}</div>
+    		<div ng-class="{ user_industry: public_user.type != null }" class="profile_mod">{{public_user.type}}</div>
+		  </footer>
+		</div>
+		<div class="profile_header_butt_w" ng-hide="public_user_id == current_user.id">
+		  <div class="follow_user_butt"
+			   ng-click="follow_me(public_user)"
+			   ng-if="!public_user.followed_by_current_user"><%= t('follow') %>
+		  </div>
+
+		  <div class="follow_user_butt"
+			   ng-click="unfollow_me(public_user)"
+			   ng-if="public_user.followed_by_current_user"><%= t('unfollow') %>
+		  </div>
+
+		  <div class="connect_user_butt"
+			   ng-click="request_connect(public_user)"
+			   ng-if="public_user.connected_status_with_current_user == 'unconnected'">Connect
+		  </div>
+
+		  <div class="connect_user_butt"
+			   ng-click="cancel_request_connect(public_user)"
+			   ng-if="public_user.connected_status_with_current_user == 'pending'">Cancel Request
+		  </div>
+
+
+		  <div class="message_user_butt"
+			   ng-if="public_user.connected_status_with_current_user == 'accepted'"><%= t('message') %>
+		  </div>
+		  <div class="disconnect_user_butt"
+			   ng-click="disconnect(public_user)"
+			   ng-if="public_user.connected_status_with_current_user == 'accepted'">Disconnect
+		  </div>
+
+		</div>
+  </div>
+</div>
+<div class="profile_body" ng-cloak>
+  <div class="profile_about">
+  <h1 class="profile_headline"><%= t('about') %></h1>
+  <div class="profile_about_text">
+    <div ng-if="public_user.user_profile_attributes.executive_experience">
+    <!-- TODO: implement modal dialog -->
+    <p>
+      {{ public_user.user_profile_attributes.executive_experience | limitTo : 380 : 0}}
+      <span ng-if="public_user.user_profile_attributes.executive_experience.length > 380">
+      ...
+      <a href="" class="view_more_show link_highlight_mod">Read More</a>
+      </span>
+    </p>
+    </div>
+    <div ng-if="!public_user.user_profile_attributes.executive_experience">
+    <p ng-if="public_user_id == current_user.id">
+      <%= t('user_brief_text') %><br/>
+      <a href="#/user_edit_profile" class="link_highlight_mod">+ <%= t('add_a_user_blurb') %></a>
+    </p>
+    <p ng-if="public_user_id != current_user.id">
+      Oops, it looks like {{public_user.name}} has not included any information here yet
+    </p>
+    </div>
+  </div>
+  </div>
+  <div class="profile_contact_info">
+  <ul class="profile_contact_list">
+    <li class="profile_contact_l_item">
+    <a ng-if="public_user.email"
+       href="mailto:{{public_user.email}}"
+       title="{{public_user.email}}"
+       class="profile_contact_link mail_mod">
+      {{public_user.email}}
+    </a>
+    <div ng-if="!public_user.email">
+      <span class="profile_contact_link mail_mod"
+       ng-if="public_user_id != current_user.id"><%= t('no_email_address_added') %></span>
+      <a ng-if="public_user_id == current_user.id"
+       href="#/user_edit_profile"
+       class="profile_contact_link mail_mod link_highlight_mod">+ <%= t('add_a_contact_email') %>
+      </a>
+    </div>
+    </li>
+    <li class="profile_contact_l_item">
+    <a ng-if="public_user.connections_attributes[0].url"
+       href="http://{{public_user.connections_attributes[0].url}}"
+       title=""
+       class="profile_contact_link site_mod">
+      {{public_user.connections_attributes[0].url}}
+    </a>
+    <span ng-if="!public_user.connections_attributes[0].url">
+      <span class="profile_contact_link site_mod"
+       ng-if="public_user.id != current_user.id"><%= t('no_website_address_added') %></span>
+      <a ng-if="public_user.id == current_user.id"
+       href="#/user_edit_profile"
+       class="profile_contact_link site_mod link_highlight_mod">+<%= t('add_your_website_link') %>
+      </a>
+    </span>
+    </li>
+    <li class="profile_contact_l_item">
+    <a ng-if="public_user.connections_attributes[1].url"
+       href="http://{{public_user.connections_attributes[1].url}}"
+       title=""
+       class="profile_contact_link linkedin_mod">
+      {{public_user.connections_attributes[1].url}}
+    </a>
+    <span ng-if="!public_user.connections_attributes[1].url">
+      <span class="profile_contact_link linkedin_mod"
+       ng-if="public_user.id != current_user.id"><%= t('no_linkedIn_profile_added') %></span>
+      <a ng-if="public_user.id == current_user.id"
+       href="#/user_edit_profile"
+       class="profile_contact_link linkedin_mod link_highlight_mod">+ <%= t('add_linkedIn_profile') %>
+      </a>
+    </span>
+    </li>
+  </ul>
+  </div>
+</div>
+<div id="profile_send_message" style="display:none" title="Send message {{public_user.name}}">
+  <div class="dialog_content">
+  <div class="dialog_form">
+    <dl class="form_cell form_cell_v1_mod">
+    <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      <label for="Compose_your_message">Compose your message</label>
+    </dt>
+    <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      <textarea id="Compose_your_message" placeholder="Compose your message" class="f_c_field default_mod textarea_mod_1 " ng-model="communication.message"></textarea>
+    </dd>
+    </dl>
+  </div>
+  </div>
+  <footer class="dialog_footer">
+  <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+  <div class="butt_wrap msg_form_mod">
+    {{communication.attachment.filename}}
+    <div ng-if="communication.attachment.filename" ng-click="remove_compose_attachment()">Remove attachment</div>
+    <div id="Upload_image" placeholder="<%= t('upload_image') %>" class="attach_butt" ng-file-select ng-file-change="compose_attach_file($files, $event)">Add attachment</div>
+    <div ng-class="{ 'dialog_not_submit_butt': communication.message == undefined || communication.message.length == 0, 'dialog_submit_butt': communication.message.length > 0 }" ng-click="send_message(public_user)">Submit</div>
+  </div>
+  </footer>
+</div>
+<div id="profile_view_more" title="About" style="display:none">
+  <div class="dialog_content text_block_mod" style="white-space: pre-line;">
+  <p class="view_more_text" style="text-align:justify">
+    {{public_user.user_profile_attributes.executive_experience}}
+  </p>
+  </div>
+</div>
+</div>

@@ -1,0 +1,72 @@
+<div class="main_row layuot_mod_1" ng-cloak>
+  <section class="content_sub_w">
+	<h2 class="content_headline second_mod"><%= I18n.t('companies') %> </h2>
+	<article class="post_block user_mod" ng-if="!public_user.company.name">
+	  <p class="no_content">{{public_user.name}} <%= t('has_no_company_yet') %></p>
+	</article>
+	<article class="post_block user_mod" ng-if="public_user.company.name">
+	  <h3 class="post_hline">{{public_user.user_profile_attributes.title}}</h3>
+	  <div class="post_b_w">
+		<header class="post_header">
+		  <div class="user_block profile_small_mod ">
+			<div class="user_avatar_w profile_small_mod ">
+			  <img ng-if="public_user.company.logo.url" ng-src="{{public_user.company.logo.url}}" alt="{{public_user.company.name}}" class="user_avatar_img profile_small_mod"/>
+			  <span class="user_avatar_img profile_small_mod no_img_mod" ng-if="!public_user.company.logo.url"></span>
+			</div>
+			<div class="user_name profile_small_mod">{{public_user.company.name}}</div>
+		  </div>
+		</header>
+		<div class="post_content">
+		  <p style="white-space: pre-line;">{{public_user.company.company_profile.summary || "No company description provided"}}</p>
+		</div>
+		<footer class="post_footer">
+		  <ul class="post_f_list">
+			<li class="post_f_list_item">
+			  <dl class="tag_block">
+				<dt class="tag_b_text"><%= I18n.t('operations') %></dt>
+				<dd class="tag_b_value">{{public_user.company.operations_count}}</dd>
+			  </dl>
+			</li>
+			<li class="post_f_list_item">
+			  <dl class="tag_block">
+				<dt class="tag_b_text"><%= I18n.t('services') %></dt>
+				<dd class="tag_b_value">{{public_user.company.services_count}}</dd>
+			  </dl>
+			</li>
+			<li class="post_f_list_item">
+			  <dl class="tag_block">
+				<dt class="tag_b_text"><%= I18n.t('products') %></dt>
+				<dd class="tag_b_value">{{public_user.company.products_count}}</dd>
+			  </dl>
+			</li>
+			<li class="post_f_list_item">
+			  <dl class="tag_block">
+				<dt class="tag_b_text"><%= I18n.t('document') %></dt>
+				<dd class="tag_b_value">{{public_user.company.documents_count}}</dd>
+			  </dl>
+			</li>
+		  </ul>
+		</footer>
+	  </div>
+	</article>
+  </section>
+  <section class="content_sub_w">
+	<h2 class="content_headline second_mod"><%= I18n.t('skills_endorsement') %></h2>
+	<dl class="user_endorse_block" ng-repeat='(tag, values) in public_user.tags_endorsements'>
+	  <dt class="user_endorse_skill">{{tag}}</dt>
+	  <dd class="user_endorsed_list" ng-repeat='value in values.users'>
+		<div class="user_block endorse_mod ">
+		  <div title="{{value.first_name}} {{value.last_name}}" class="user_avatar_w endorse_mod ">
+			<img ng-src="{{value.photo.thumb.url}}" alt="" class="user_avatar_img endorse_mod"/>
+		  </div>
+		</div>
+	  </dd>
+	  <dd class="endorse_count" ng-if="values.users">{{values.users.length}}</dd>
+	  <dd class="endorse_count" ng-if="!values.users">0</dd>
+	  <dd class="endorse_butt" ng-if="userId != current_user.id && !values.isEndorsed" ng-click="endorseTag(tag)"><%= I18n.t('endorse') %></dd>
+	</dl>
+	<article class="post_block user_mod" ng-if="public_user.tags_endorsements_length == 0">
+	  <p class="no_content">{{public_user.name}} <%= t('currently_has_not_added_any_skills') %></p>
+	</article>
+  </section>
+</div>

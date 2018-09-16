@@ -1,0 +1,27 @@
+<div class="add_info_block">
+  <div class="add_info_header">
+	<div class="add_info_title" ng-class="{'required_mod': data.required == 'true'}">{{data.name}}
+	</div>
+	<div class="add_info_colapse_butt" ng-click="infoColapseButt($event)"></div>
+  </div>
+  <div class="add_info_content_block">
+	<div class="add_info_content" ng-if="definitionValueExist()"><p>{{store.definition_value[data.id]}}</p></div>
+	<div class="add_info_form_block">
+	  <div class="add_info_form_w">
+		<dl class="form_cell form_cell_v1_mod">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			<label for="{{data.name}}">{{data.name}}</label>
+		  </dt>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+			<ui-select ng-required="{{data.required == 'true'}}" ng-model="document.definition_value[data.id]" theme="selectize">
+			  <ui-select-match placeholder="Select or search by name...">{{$select.selected.name}}</ui-select-match>
+			  <ui-select-choices repeat="op.name as op in getOptions() |  filter: $select.search">
+				<div ng-bind-html="op.name | highlight: $select.search"></div>
+			  </ui-select-choices>
+			</ui-select>
+		  </dd>
+		</dl>
+	  </div>
+	</div>
+  </div>
+</div>

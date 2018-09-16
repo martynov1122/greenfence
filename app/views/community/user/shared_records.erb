@@ -1,0 +1,302 @@
+<div class="content_block full_page">
+  <div class="tabs_v1">
+		<ul class="dialog_tab_list white_mod">
+		  <li class="dialog_tab_l_item white_mod ">
+				<a href="#tab_1" class="dialog_tab_1_butt white_mod icon_before_s1_mod my_company_d_mod"><%= t('my_company_docs') %></a>
+		  </li>
+		  <li class="dialog_tab_l_item white_mod ">
+				<a href="#tab_2" class="dialog_tab_1_butt white_mod icon_before_s1_mod my_personal_d_mod"><%= t('my_personal_docs') %></a>
+		  </li>
+		  <li class="dialog_tab_l_item white_mod ">
+				<a href="#tab_3" class="dialog_tab_1_butt white_mod icon_before_s1_mod shared_d_mod"><%= t('shared_with_me') %></a>
+		  </li>
+		</ul>
+		<!-- 1 -->
+		<div id="tab_1" class="tab_block">
+		  <div id="my_company_docs" class="documents_block">
+				<div class="documents_b_content">
+				  <table class="documents_b_table" ng-if="company_documents.length > 0">
+						<thead>
+						  <tr>
+								<th ng-click="setOrder('document_name')"><%= t('name') %></th>
+								<th ng-click="setOrder('documentable_type')"><%= t('type') %></th>
+								<th ng-click="setOrder('access_level')">Access<br/>Level</th>
+								<th><%= t('authenticated') %></th>
+								<th><%= t('files') %></th>
+								<th>Shared<br/>With</th>
+								<th><%= t('actions') %></th>
+						  </tr>
+						</thead>
+						<tbody style="overflow: auto;">
+						  <tr ng-repeat="document in company_documents">
+								<td>
+								  <a href="#/user_document/{{document.id}}/sharing_record_detail">{{document.document_name}}</a>
+								</td>
+								<td>{{document.documentable_type}}</td>
+								<td>{{document.access_level}}</td>
+								<td ng-if="document.authenticated">
+								  <img ng-src="/assets/checkmark.png" width="20" height="20" alt="Authenticated">
+								</td>
+								<td ng-hide="document.authenticated">
+								</td>
+								<td>{{document.document_files.length || 'NA'}}</td>
+								<td>{{document.shared_records_count}}</td>
+								<td class="action_mod">
+								  <ul class="table_action_list">
+									<li class="table_action_l_item">
+									  <span id="share_document_butt" class="table_action doc_share_mod" title="Share" ng-click="shareDocumentDetails(document.id, document.document_name)"></span>
+									</li>
+									<li class="table_action_l_item" ng-if="document.shared_records_count > 0">
+									  <span class="record_sharing_update table_action doc_manage_mod" ng-click="sharedUsers(document.id, 'Document')" title="Manage"></span>
+									</li>
+								  </ul>
+								</td>
+						  </tr>
+						</tbody>
+				  </table>
+				  <span class="doc_not_provided" ng-if="company_documents.length == 0">
+						<%= t('not_provided') %>
+				  </span>
+				</div>
+				<footer class="table_footer requirements_mod">
+				  <div class="pagination_container"></div>
+					<dl class="form_cell form_cell_v1_mod hor_mod view_count_mod ">
+					  <dt class="form_c_hline form_v1_mod hl_hor_mod">
+							<label for="count">View:</label>
+					  </dt>
+					  <dd class="form_c_f_w form_v1_mod hline_hide_mod hor_mod appearance_mod view_count_mod">
+							<select id="count" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="filter.per_page" ng-change="search()">
+							  <option value="5">5</option>
+							  <option value="10">10</option>
+							  <option value="25">25</option>
+							  <option value="50">50</option>
+							</select>
+					  </dd>
+				  </dl>
+				</footer>
+		  </div>
+		</div>
+		<!-- 2 -->
+		<div id="tab_2" class="tab_block">
+		  <div id="my_personal_docs" class="documents_block">
+				<div class="documents_b_content">
+				  <table class="documents_b_table" ng-if="user_documents.length > 0">
+						<thead>
+						  <tr>
+						  	<th ng-click="setOrder('document_name')"><%= t('name') %></th>
+								<th ng-click="setOrder('documentable_type')"><%= t('type') %></th>
+								<th ng-click="setOrder('access_level')">Access<br/>Level</th>
+								<th><%= t('authenticated') %></th>
+								<th><%= t('files') %></th>
+								<th>Shared<br/>With</th>
+								<th><%= t('actions') %></th>
+						  </tr>
+						</thead>
+						<tbody style="overflow: auto;">
+						  <tr ng-repeat="document in user_documents">
+								<td>
+								  <a href="#/user_document/{{document.id}}/sharing_record_detail">{{document.document_name}}</a>
+								</td>
+								<td>{{document.documentable_type}}</td>
+								<td>{{document.access_level}}</td>
+								<td ng-if="document.authenticated">
+								  <img ng-src="/assets/checkmark.png" width="20" height="20" alt="Authenticated">
+								</td>
+								<td ng-hide="document.authenticated">
+								</td>
+								<td>{{document.document_files.length || 'NA'}}</td>
+								<td>{{document.shared_records_count}}</td>
+								<td class="action_mod">
+								  <ul class="table_action_list">
+									<li class="table_action_l_item">
+									  <span id="share_document_butt" class="table_action doc_share_mod" title="Share" ng-click="shareDocumentDetails(document.id, document.document_name)"></span>
+									</li>
+									<li class="table_action_l_item" ng-if="document.shared_records_count > 0">
+									  <span class="record_sharing_update table_action doc_manage_mod" ng-click="sharedUsers(document.id, 'Document')" title="Manage"></span>
+									</li>
+								  </ul>
+								</td>
+						  </tr>
+						</tbody>
+				  </table>
+				  <span class="doc_not_provided" ng-if="user_documents.length == 0">
+					<%= t('not_provided') %>
+				  </span>
+				</div>
+				<footer class="table_footer requirements_mod">
+				  <div class="pagination_container"></div>
+					<dl class="form_cell form_cell_v1_mod hor_mod view_count_mod ">
+					  <dt class="form_c_hline form_v1_mod hl_hor_mod">
+							<label for="count">View:</label>
+					  </dt>
+					  <dd class="form_c_f_w form_v1_mod hline_hide_mod hor_mod appearance_mod view_count_mod">
+							<select id="count" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="filter.per_page" ng-change="search()">
+							  <option value="5">5</option>
+							  <option value="10">10</option>
+							  <option value="25">25</option>
+							  <option value="50">50</option>
+							</select>
+					  </dd>
+				  </dl>
+				</footer>
+		  </div>
+		</div>
+		<!-- 3 -->
+		<div id="tab_3" class="tab_block">
+		  <div id="shared_with_me" class="documents_block">
+				<div class="documents_b_content">
+				  <table class="documents_b_table" ng-if="sharing_records.length > 0">
+						<thead>
+						  <tr>
+						  	<th><%= t('name') %></th>
+								<th ng-click="setOrder('sharable_type')"><%= t('type') %></th>
+								<th>Access<br/>Level</th>
+								<th><%= t('authenticated') %></th>
+								<th>Documents/<br/>Files</th>
+								<th>Shared<br/>By</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr ng-repeat="sharing_record in sharing_records">
+								<td ng-if="sharing_record.sharable.document_name">
+								  <a href="#/user_document/{{sharing_record.sharable.id}}/sharing_record_detail">{{sharing_record.sharable.document_name}}</a>
+								</td>
+								<td ng-if="sharing_record.sharable.folder_name">
+								  <span ng-click="folderDocuments(sharing_record.sharable.id, sharing_record.sharable.folder_name)">{{sharing_record.sharable.folder_name}}</span>
+								</td>
+								<td>{{sharing_record.sharable.documentable_type || sharing_record.sharable.folderable_type}} {{sharing_record.sharable_type}}</td>
+								<td style="text-transform: capitalize">{{sharing_record.sharable.access_level || 'NA'}}</td>
+								<td ng-if="sharing_record.sharable.is_authenticated_third_party">
+								  <img ng-src="/assets/checkmark.png" width="20" height="20" alt="Authenticated">
+								</td>
+								<td ng-hide="sharing_record.sharable.is_authenticated_third_party">
+								</td>
+								<td>{{sharing_record.sharables || 'NA'}}</td>
+								<td>{{sharing_record.user.first_name}}{{sharing_record.user.last_name}}</td>
+							</tr>
+						</tbody>
+				  </table>
+				  <span class="doc_not_provided" ng-if="sharing_records.length == 0">
+					<%= t('not_provided') %>
+				  </span>
+				</div>
+				<footer class="table_footer requirements_mod">
+				  <div class="pagination_container"></div>
+					<dl class="form_cell form_cell_v1_mod hor_mod view_count_mod ">
+					  <dt class="form_c_hline form_v1_mod hl_hor_mod">
+							<label for="count">View:</label>
+					  </dt>
+					  <dd class="form_c_f_w form_v1_mod hline_hide_mod hor_mod appearance_mod view_count_mod">
+							<select id="count" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="filter.per_page" ng-change="search()">
+							  <option value="5">5</option>
+							  <option value="10">10</option>
+							  <option value="25">25</option>
+							  <option value="50">50</option>
+							</select>
+					  </dd>
+				  </dl>
+				</footer>
+		  </div>
+		  <div id="shared_with_me_details" class="documents_block" ng-if="folder_documents.length">
+				<header class="documents_b_header shared_d_mod">
+				  <h1 class="content_headline">{{folder_name}} <%= t('docs') %></h1>
+				</header>
+				<div class="documents_b_content">
+				  <table class="documents_b_table" ng-if="folder_documents.length > 0">
+						<thead>
+						  <tr>
+								<th><%= t('name') %></th>
+								<th><%= t('type') %></th>
+								<th>Access<br/>Level</th>
+								<th><%= t('authenticated') %></th>
+								<th><%= t('files') %></th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr ng-repeat="document in folder_documents">
+								<td>
+								  <a href="#/user_document/{{document.id}}/sharing_record_detail">{{document.document_name}}</a>
+								</td>
+								<td>{{document.documentable_type}}</td>
+								<td>{{document.access_level}}</td>
+								<td ng-if="document.authenticated">
+								  <img ng-src="/assets/checkmark.png" width="20" height="20" alt="Authenticated">
+								</td>
+								<td ng-hide="document.authenticated">
+								</td>
+								<td>{{document.document_files.length || 'NA'}}</td>
+							</tr>
+						</tbody>
+				  </table>
+				  <span class="doc_not_provided" ng-if="folder_documents.length == 0">
+					<%= t('not_provided') %>
+				  </span>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div id="remove_shared_user" style="display:none" title="Remove sharing of document" style="position: relative;">
+	<div class="dialog_content">
+	  <div class="documents_b_content not_shared" ng-if="shared_users.length == 0">
+		<span class="doc_not_provided"><%= t('document_is_not_shared_with_any_user') %></span>
+	  </div>
+	  <div class="dialog_form remove_shared_user" ng-if="shared_users.length > 0">
+		<div class="user_remove_butt mod_1" ng-click="unshareAll(document_id, 'Document')" style="position: absolute; top: -30px; right: 20px;"><%= t('unshare_with_all') %></div>
+		<ul class="popup_list">
+		  <li class="popup_list_item" ng-repeat="shared_user in shared_users">
+			<div class="user_block msg_mod popup_mod ">
+			  <div class="user_avatar_w msg_mod popup_mod ">
+				<img ng-src="{{shared_user.user.image.image.thumb.url}}" alt="{{shared_user.user.name}}" class="user_avatar_img msg_mod popup_mod">
+			  </div>
+			  <div class="user_name msg_mod popup_mod" style="line-height: 1.5;">{{shared_user.user.name}} <br>
+				<span style="font-size: 10px;">{{shared_user.user.email}}</span>
+			  </div>
+			</div>
+			<div class="user_remove_butt mod_1" ng-click="removeUser(shared_user)"><%= t('unshare') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div style="height: 1.6em; background: white; padding: 2px auto;">
+		<div id="unshare_msg_box" style="text-align: center; padding: 5px 0px;"></div>
+	  </div>
+	</div>
+	<footer class="dialog_footer" ng-if="false">
+	  <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+	</footer>
+  </div>
+</div>
+
+<div id="share_document" style="display:none" title="Share document">
+  <div class="dialog_content">
+	<div class="dialog_form">
+	  <dl class="form_cell form_cell_v1_mod">
+		<dt class="form_c_hline form_v1_mod hline_hide_mod">
+		  <label for="Enter_name_of_user_group_or_email">Enter name of user, group, or email</label>
+		</dt>
+		<dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod">
+		  <ui-select ng-model="share.sharee" theme="selectize">
+			<ui-select-match placeholder="Enter name of user, group, or email">{{$select.selected.name}}</ui-select-match>
+			<ui-select-choices repeat="sharee as sharee in users_and_groups | filter: $select.search" refresh="searchUsers($select.search)" refresh-delay="600">
+			  <div ng-bind-html="sharee.name | highlight: $select.search"></div>
+			  <small style="font-size: 10px;" ng-bind-html="sharee.description | highlight: $select.search"></small>
+			</ui-select-choices>
+		  </ui-select>
+		</dd>
+	  </dl>
+	  <dl class="form_cell form_cell_v1_mod">
+		<dt class="form_c_hline form_v1_mod hline_hide_mod">
+		  <label for="Add_message">Add message</label>
+		</dt>
+		<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		  <textarea id="Add_message" ng-model="share.message" placeholder="Add message" class="f_c_field default_mod textarea_mod_2 "></textarea>
+		</dd>
+	  </dl>
+	</div>
+	<div id="share_document_msg_box" style="text-align: center; padding: 5px 0px;">
+	</div>
+	<footer class="dialog_footer">
+	  <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+	  <div class="share_link_folder_butt" ng-click="shareDocument(share)"><%= t('share') %></div>
+	</footer>
+  </div>
+</div>

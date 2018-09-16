@@ -1,0 +1,38 @@
+<div class="clear"></div>
+<div class="content_main" id="content_main">
+  <div class="wrap_main">      
+    <div class="single_column">
+    </div>
+  </div>
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="product_list">
+  <h1>All {{name}} Products</h1>
+  <a href="my_facilities" class="b_l">Back to my facilities</a>
+  <div class="notifications_box">
+    <div class="notifications_top">
+      <h3>{{products.length}} Products</h3>
+    </div>    
+    <div class="clear"></div>
+      {{#products}}
+        <div class="notif">
+          <div class="avatar_left">
+            <img src="<%= asset_path 'freeapp/avatar.jpg' %>" class="ca" width="50" height="50" >
+          </div>
+          <div class="fl" style="width:500px">    
+            <a href="product_detail?id={{id}}">{{name}}</a>                       
+          </div>    
+          <div >
+            <a href="product_detail?id={{id}}"  class="right_a">View Details</a>
+          </div>
+        </div>
+      {{/products}}
+    </div> 
+  </div>      
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'view_all_products.js' %>"></script>

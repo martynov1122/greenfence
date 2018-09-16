@@ -1,0 +1,43 @@
+{
+  "total_pages": 1,
+  "current_page": 1,
+  "products": [
+    {
+      "id": 1,
+      "facilities_count": 1,
+      "name": "Eggs Fresh Eggs",
+      "product_category_name": "Fresh Eggs",
+      "producers_count": 1,
+      "subscription": {
+        "general": false,
+        "non_compliance": false,
+        "warning": false
+      }
+    },
+    {
+      "id": 2,
+      "facilities_count": 1,
+      "name": "Organic Fresh Eggs",
+      "product_category_name": "Liquid Organic Eggs",
+      "producers_count": 1,
+      "subscription": {
+        "general": false,
+        "non_compliance": false,
+        "warning": false
+      }
+    },
+    {
+      "id": 2,
+      "facilities_count": 1,
+      "name": "Pasteurized Liquid Eggs and Analogues",
+      "product_category_name": "Organic Liquid Eggs",
+      "producers_count": 1,
+      "subscription": {
+        "general": false,
+        "non_compliance": false,
+        "warning": false
+      }
+    }
+  ]
+}
+

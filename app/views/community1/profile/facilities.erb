@@ -1,0 +1,313 @@
+<div id="conteiner_settings" class="cont_facilities">
+            <div class="cont_settings ">
+
+                <!-- Left part -->
+                <div class='menu_menu tabs boxshadow_border'>
+                    <div class='tab active bbott'>
+                        <div class="quant_f fl_s bbott pp_five">
+                            <div class="q_facilities fl_s"><span>0</span> Facilities</div>
+                            <div class="add_facili addb_fac fr_s green_textcolor">Add</div>
+                        </div>
+                        <div class="facilities_s">
+
+                        </div>
+                    </div>
+                    <div class='tab'>
+                        <div class="quant_f fl_s bbott">
+                            <div class="q_product fl_s">No Products Added Yet</div>
+                            <div class="addb_fac fr_s green_textcolor">Add</div>
+                        </div>
+                    </div>
+                    <div class='tab'>
+                        <div class="quant_f fl_s ">
+                            <div class="q_certificate fl_s">No Certificates Added Yet</div>
+                            <div class="addb_fac fr_s green_textcolor">Add</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right part -->
+                <div class='tab-content'>
+                    <div class="tab_fac tab active">
+
+                        <div class='facil_menu mb_inp boxshadow_border'>
+                            <p class="save_fac fr_s">Save for later</p>
+                            <p class="start_fac fr_s">Start over</p>
+                            <p class="del_fac fr_s">Delete this facility</p>
+                        </div>
+
+                        <div class='facil_hello mb_inp boxshadow_border'>
+                            Hello! Welcom to the facility creationand edit setup, pick below what type of facility 
+                            you want to create, and based on that we will generate a form for you.
+                            <div class="close_hallo"></div>
+                        </div>
+
+                        <div id='type_facility' class='mb_inp boxshadow_border'>
+                            <select name="facility_type" id="facility_type">
+                                <option value="">--- Facility Type ---</option>
+                            </select>
+                        </div>
+
+
+                        <div class="fac_append" >
+                          <form class="name_facility boxshadow_border" id="new_definition_container" style="display:block !important">
+                          
+                          </form>
+                          <button class="green" id="save_facility">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="form_facilities">
+            <div id="clone">
+                <div class="blocking quant_f fl_s" onclick="edit_facil($(this));">
+                    <div class="one_facilities fl_s">Faciliti #1</div>
+                    <div class="edit_fac fr_s ">Edit</div>
+                </div>
+            </div>
+
+            <div class="name_facility boxshadow_border type_facility_1">
+                <div class='input '>
+                    <label>Name of facility (form1)</label>
+                    <input class="inputing name_facilitiess" type='text' placeholder='Enter name of facility'>
+                </div>
+                <p class="pn_fac">Type input #3 (form1)</p>
+                <select name="tinp_facility" id="tinp_facility" class="inputing" >
+                    <option value="ntype_facility_1">Type input #1</option>
+                    <option value="ntype_facility_2">Type input #1</option>
+                </select>
+                <div class='input '>
+                    <label>Type input #4 (form1)</label>
+                    <input class="inputing type_facilities_one" type='text' placeholder='Enter field #4'>
+                </div>
+                <div class='input '>
+                    <label>Type input #5 (form1)</label>
+                    <input class="inputing type_facilities_two" type='text' placeholder='Enter field #5'>
+                </div>
+            </div>
+
+        </div> -->
+
+    <script>
+        $('.tabs .tab').click(function() {
+            $('.tab-content .tab').removeClass('active');
+            $('.tab-content .tab:eq(' + $(this).index() + ')').addClass('active');
+            $('.tabs .tab').removeClass('active');
+            $('.tabs .tab:eq(' + $(this).index() + ')').addClass('active');
+        });
+
+        $('.actions .action').click(function() {
+            $(this).parent().children('.action').removeClass('active');
+            $(this).addClass('active');
+        });
+    </script>
+    
+    <script>
+        var facilities = [];
+        var facilities_eq = 0;
+        $(document).ready(function() {
+            $.ajax({
+                url:'/api/v2.2/community/facility_definitions/definition_types.json',
+                type: 'GET',
+                success: function(response){
+                  $('#facility_type').empty()
+                  $('#facility_type').append("<option value=''>--Facility Type--</option>");
+                  $.each(response, function (index,value) {
+                    $('#facility_type').append('<option value='+value.id+'>'+value.text+'</option>');
+                  });
+                }    
+            });
+
+            // remove_forms();
+            // $('select#facility_type').change(function() {
+            //     $(this).val();
+            //     inpfaciliti($(this).val());
+            // });
+            // $('.add_facili').click(function() {
+            //     remove_forms();
+            //     $('#type_facility').fadeIn('slow');
+            // });
+            // $('.del_fac').click(function() {
+            //     delete_facil();
+            //     remove_forms();
+            // });
+            $('.close_hallo').click(function() {
+                $('.facil_hello').fadeOut('slow');
+            });
+            // $('.save_fac').click(function() {
+            //     save_fac($(this));
+            //     remove_forms();
+            // });
+        });
+
+      $('#facility_type').on('change', function(e){
+
+        var id = $(this).val();
+        $('#new_definition_container').empty();
+          if(id != ""){
+             //inpfaciliti($(this).val());
+             $.ajax({
+                url:'/api/v2.2/community/facility_definitions/'+id+'.json',
+                type: 'GET',
+                success: function(response){
+                    var text = ['text','textarea','number','file']
+                    var choice = ['checkbox','radio']
+                    var select = ['select'] 
+                    $('#new_definition_container').empty();
+                    $.each(response.definition, function (index,value) {
+                        if(text.indexOf(value['input_type']) != -1 ) {
+                          createText(value,{})                      
+                        }
+                        else if(choice.indexOf(value['input_type']) != -1){
+                          createChoice(value,{})  
+                        }
+                        else if(select.indexOf(value['input_type']) != -1){
+                          createSelect(value,{}) 
+                        }
+                    });
+                }
+            });
+        }
+       });
+
+       function createSelect(data,definition_value){
+        var options = data['options'].split("\n");
+        var div =  $('<div>', {class: 'input '});
+        var label = $("<label>").attr('for', data.id).text(data['name']);
+
+        var sel = $("<select id=\""+ data.id + "\" name=\""+ data.id +"\" class='inputing' />").appendTo(div);
+        sel.before(label)
+        for(var val in options) {
+            $("<option />", {value: options[val], text: options[val]}).appendTo(sel);
+        }
+        $('#new_definition_container').append(div);
+       }
+
+       function createText(data,definition_value){
+        
+         var div = $('<div>', {class: 'input '});
+         var label = $("<label>").attr('for', data.id).text(data['name']);
+         var text = $('<input/>').attr({ type: data['input_type'], id: data['id'], name: data['id'], class: 'inputing'}).appendTo(div);
+         text.before(label)
+         $('#new_definition_container').append(div);
+       }
+
+       function createChoice(data,definition_value){
+        var div = $('<div>', {class: 'input '}); 
+        var options = data['options'].split("\n");
+        var label = $("<label>").text(data['name']);
+        label.appendTo(div)
+        for(var val in options) {
+            var chk = $('<input/>').attr({ type: data['input_type'], id: options[val]+"_"+data['id'], name: data['id'], value: options[val] });
+            var lbl = $("<label>").attr('for', options[val]+"_"+data['id']).text((options[val]).toUpperCase());
+            chk.appendTo(div)
+            lbl.appendTo(div)
+        }
+        $('#new_definition_container').append(div);
+       }
+
+       $('#save_facility').on("click",function(e){
+         e.preventDefault();
+         var definition = {};
+         var farm_attr = {};
+         var type = $('#facility_type').val();
+         $("#new_definition_container input, #new_definition_container select,#new_definition_container textarea").each(function(){
+            if($(this).attr('type') == "checkbox" || $(this).attr('type') == "radio"){
+              if($(this).is(':checked'))
+               { var val = definition.hasOwnProperty($(this).attr("name")) ? definition[$(this).attr("name")] : null 
+                val = val ? val +","+ $(this).val() : $(this).val()
+                definition[$(this).attr("name")] = val;
+               }
+            }
+            else{
+             definition[$(this).attr("name")] = $(this).val();
+            }
+         });
+        farm_attr['definition_value'] = definition;
+        farm_attr['facility_definition_id'] = type;
+        // $.ajax({
+        //     url:'/api/v2.2/farms.json',
+        //     data: {'farm' : farm_attr },
+        //     type: 'POST',
+        //     success: function(response){
+        //       ss_alert("success","Successfully saved.")
+        //     },
+        //     error: function (errors,response){
+        //       ss_alert("error",errors.responseText);
+        //     }
+        // });
+        console.log(JSON.stringify(farm_attr));
+        return false;
+
+      });
+
+//     function delete_facil() {
+//         var eq = $('.name_facility.editing').attr('data-eq');
+//         $('.name_facility.editing').fadeOut('slow').remove();
+//         $('.blocking.edit').fadeOut('slow').remove();
+//         facilities[eq][0] = 'deleted';
+//     }
+//     function remove_forms() {
+//         $('select#pick_facility').val("");
+//         $('.fac_append .name_facility').removeClass('edit').fadeOut('slow');
+//         $('.facilities_s .blocking').removeClass('edit');
+//         $('.name_facility').removeClass('editing');
+//         $('.q_facilities span').html($('.facilities_s .blocking').length);
+//     }
+//     function edit_facil(eq) {
+//         $('#type_facility').fadeOut('slow');
+//         $('.facilities_s .blocking').removeClass('edit');
+//         var index = $(eq).addClass('edit').attr('data-eq');
+//         $('.fac_append .name_facility').removeClass('editing').fadeOut();
+//         if ($("div").is('.fac_append .name_facility[data-eq=' + index + ']')) {
+//             $('.fac_append .name_facility[data-eq=' + index + ']').fadeIn('slow').addClass('editing');
+//         } else {
+//             $('.form_facilities .name_facility.' + facilities[index][0]).clone().appendTo(".fac_append").fadeIn('slow').addClass('editing').attr('data-eq', index);
+//             $('.editing input.name_facilitiess').val(facilities[index][1]);
+//             $('.editing select#tinp_facility').val(facilities[index][2]);
+//             $('.editing input.type_facilities_one').val(facilities[index][3]);
+//             $('.editing input.type_facilities_two').val(facilities[index][4]);
+//         }
+//     }
+    function  inpfaciliti(inplav) {
+        $('.name_facility').hide();
+        $('.facil_hello').fadeOut('slow');
+
+        if ($("div").is('.new_form_' + inplav)) {
+            $('.fac_append .name_facility').fadeOut('slow').removeClass('editing');
+            $('.new_form_' + inplav).fadeIn('slow').addClass('editing');
+        } else {
+            $('.fac_append .name_facility').fadeOut('slow').removeClass('editing');
+            $('.form_facilities .name_facility.' + inplav).clone().appendTo(".fac_append").fadeIn('slow').addClass('new_form_' + inplav).addClass('editing');
+        }
+    };
+//     function  save_fac() {
+//         var inplav = $('select#pick_facility').val();
+//         var add = [inplav];
+
+//         $('.editing select.inputing, .editing input.inputing, .editing textarea.inputing').each(function() {
+//             add.push($(this).val());
+//         });
+
+//         var form = $('.editing');
+//         if ($(form).hasClass('new_form_' + inplav)) {
+//             facilities.push(add);
+//             $('#clone .blocking').clone().find('div.one_facilities').html(add[1]).parent().appendTo(".facilities_s").fadeIn('slow').attr('data-eq', facilities_eq++);
+//             $(form).fadeOut('slow').remove();
+//         } else {
+//             var eq = $('.editing').attr('data-eq');
+//             add[0] = facilities[eq][0];
+//             $(add).each(function(i) {
+//                 facilities[eq][i] = add[i];//                    
+//             });
+//             $('.facilities_s .blocking[data-eq=' + eq + ']').find('.one_facilities').html(facilities[eq][1]);
+//         }
+//         remove_forms();
+// //                console.log(facilities);
+//     }
+</script>
+
+
+

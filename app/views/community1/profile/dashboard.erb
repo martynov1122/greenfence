@@ -1,0 +1,93 @@
+<div class="wrap_main">  
+    <h1>News feed</h1>
+    <div class="notifications_box" id="notifications_box">
+      
+    </div> 
+    <div class="right_column_feed" >  
+        <% if current_user.sign_in_count == 1 %>
+        <div class="welcome_feed">    
+            <h2><%= current_user.name %></h2>
+            <p>Welcome to your news feed, here you can see updates from your network of companies, and users that you are subscrived to</p>
+            <a href="#" class="green" id='close_message'>Close Message</a>
+        </div>
+        <% end %>
+        <div class="complete_p" style="display:block">    
+            <p>You have not completed your public profile yet, fill out your info so companies, and users find you more easily.</p>
+            <div class="p_complete">
+                <p><span class='bold' id='past_profile_completion' ></span> Complete</p>
+                <center><a href="/community/profile/profile_welcome" class="green" id="completion_id">Complete your profile</a></center>
+            </div>    
+        </div>
+    </div>
+    <div class="left_column_feed"  id="left_column_feed_id">
+    </div>
+    <div class="clear"></div>        
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="news_feeds">  
+  <div id="feed_container">
+    {{#notifications}}
+      <div class="feed_item" id="activity_{{id}}">
+          <div class="user_top">
+              <div class="avatar_left">
+                  <img src="{{activator_image}}" width="50" height="" alt="">
+              </div>
+              <div class="fl">    
+                  <a href="{{activator_route}}">{{activator_name}}</a>
+                  <p>{{time_difference}} ago</p>
+              </div>    
+          </div>
+
+          <div class="f_a">
+              <p>{{{formatted_message}}}</p>
+              <a href="{{route}}"><img src="{{image}}" width="" height="" alt=""></a>
+          </div>
+          <div>
+          {{> comment_threads}}
+          </div>
+      </div>
+    {{/notifications}}  
+  </div>
+</script>
+
+<script type="x-tmpl-mustache" id="comment_thread">
+  <div class="comment_thread" id="comment_thread_{{id}}">
+    {{#activity_comments}}
+      <div class="comment_item">    
+        <div class="user_top" style="margin-top: 20px;">    
+          <div class="avatar_left">
+            <img src="{{commentor_image}}" width="50" height="" alt="">
+          </div>
+          <div class="fl">    
+            <a href="{{commentor_path}}">{{commentor_name}}</a>
+            <p>{{comment_time_difference}} ago</p>
+          </div>    
+        </div>
+        <div class="comment_body" style="max-width: 511px; word-wrap: break-word;">
+          <p>{{text}}</p>
+        </div>   
+      </div>
+    {{/activity_comments}}
+    <div class="clear"></div>
+
+    <div class="comment_box">
+      <img src="{{current_user_image}}" width="45" height="45" alt="">
+      <input id="activity_comment_text_{{id}}" placeholder="Write a comment..." onkeyup="create_comment(event, {{id}})">
+    </div>    
+  </div>   
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'dashboard.js' %>"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  var user_id = "<%= current_user.id%>",
+      email = "<%= current_user.email %>",
+      default_image_url = "<%= asset_path "freeapp/avatar.jpg"%>";
+
+  dashboard.init(user_id, email, default_image_url)
+})
+</script>

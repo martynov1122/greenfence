@@ -1,0 +1,429 @@
+<div id='crop'>
+    <%= form_for current_user.user_profile, url: '', id: :crop_image do |f| %>
+        <%= f.cropbox :image %>
+        <%= f.submit 'Crop image', class: 'submit' %>
+    <% end %>
+</div>
+<div class="clear"></div>
+<% if current_user.sign_in_count == 1 %>
+<div class="welcome" style="display:none">
+    <div class="welcome_wrap">
+        <div class="text_wl">
+            <h1>Welcome to Greenfence</h1>
+        </div>
+        <div class="text_wr">
+        <p>Start customizing your personal profile below. Share with the food industry your past experiences, projects etc.
+        Want to know how greenfence works?</p>
+        <a href="#" class="grey" style="margin-left: -3px; margin-rightL: 10px; margin-right: 3px; position: relative; top: 7px;">Watch our video</a>
+        <a href="#" id='close' class="green" style="position: relative; top: 7px;">Close</a>
+        </div>
+    </div>
+</div>
+<% end %>
+<div class="clear"></div>
+<div class="content_main profile">
+ 
+   <div class="supplier_top"></div>
+
+    
+    <div class="right_column">  
+        <div class="profile_box">
+        <div class="profile_completion">   
+            <div class="percentage-chart">   
+                <div class="chart">
+                    <div class="tag"><span class='bold' id='past_profile_completion' ></span><br><span class='text'>completion</span></div>
+                    <canvas height="160" width="160" id="1"></canvas>
+                </div>
+            </div>
+            <ul class="menu" style="margin-top: -27px;">
+              
+                <li id='company-completion'>Company<span>0%</span></li>
+                <li id='excutive-summary'>Excutive Summary<span>0%</span></li>
+                <li id='experience-completion'>Experience<span>0%</span></li>
+                <li id='education-completion'>Education<span>0%</span></li>
+                <li id='languages-completion'>Languages<span>0%</span></li>
+                <li id='skills-completion'>Skills<span>0%</span></li>
+            </ul>    
+        </div>
+    </div>  
+    </div> 
+
+    <div class="left_column">
+        <div class="profile_top">
+            <div class="avatar" >
+                <img src="<%= asset_path 'freeapp/no_avatar.jpg' %>" width="140" height="140" alt="No avatar image" id="avatar">
+            </div>    
+            <div class="user_name">
+                <h1><%= current_user.name%></h1>
+                <div class='upload'>
+                    <input type='file' id="avatar_file">
+                    <div class='icon'><img src='/images/upload2.png'></div>
+                    <div class='text'>Upload image</div>
+                </div>
+            </div>
+        </div>    
+        
+        <div class="clear"></div>
+        
+        <div class='profile_inputs padded'>
+
+            <div class='title'>What organization are you a part of?</div>
+            <div class='organization' id="editComapny">
+                <%= form_for current_user.company || Company.new,  url: {:action => 'create', method: 'POST'} do |f| %>
+                <%= f.text_field :name , placeholder: "Company",style: "width:222px;" %>
+                <%= f.text_field :type , placeholder: "Select company type",style: "width:230px;display:block;margin-top:10px",id: "company_types" %>
+
+                <input class="green" type="submit" id="company_association" value="Save" style="margin-top:10px"  disabled= "disabled">
+                <% end %>
+            </div>
+            <% c_type = ""
+             if @company && @company.type != "Other"
+                c_type = @company.type
+                if c_type == "Broker"
+                  c_type = "Broker/Wholesaler"
+                end
+             end%>
+            <div class='organization' id="infoCompany">
+               <span class='title' style="color:#4bbf66"><%= @company.name if @company %></span>&nbsp;&nbsp;<%= c_type %>
+                
+            </div>
+        </div>
+        <div class="profile_inputs last">
+        <div class="info_input">
+            <div class='info-content'>
+            <div class='title'>Title</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info">
+                    <form>
+                        <input name="title" placeholder="Enter title" id="user_title" cols="50" rows="10" value='<%= current_user.user_profile.title if @current_user  -%>' >
+                        <BR><BR>
+                        <input id="title_submit" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>
+                </div>   
+                </div>
+        </div>
+        <div class="info_input">
+        <div class='info-content'>
+            <div class='title'>Executive Summary</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info">
+                    <form>
+                        <label for="executive_experience">Summary</label><BR>
+                        <textarea name="executive_experience" id="executive_experience" cols="50" rows="10" ><%= current_user.user_profile.executive_experience if @current_user  -%></textarea>
+                        <BR><BR>
+                        <input id="executive_experience_submit" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>
+                </div>    
+                </div>
+        </div>
+        
+        <div class="clear"></div>
+        <div class="info_input">
+        <div class='info-content'>
+            <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="experience_span"></span>
+            <div class='title' >Experience</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                
+                <div class="enter_info"  id="experience_slide">
+
+                    <form id="profile_experience" > 
+                        <input  id='experienceid' name='id' type='text' style="display:none"> 
+                        <label for="company_name">Company Name<span class="required">*</span></label><BR>
+                        <input id ="company_name" name="company_name" type="text" value="<%= @profile_experience.company_name if @profile_experience  -%>">
+                        <BR><BR>
+                        
+                        <label for="title">Title<span class="required">*</span></label><BR>
+                        <input id ="title" name="title" type="text" value="<%= @profile_experience.title if @profile_experience  -%>"><BR><BR>
+                        
+                        <label for="location">Location</label><BR>
+                        <input id ="location" name="location" type="text" value="<%= @profile_experience.location if @profile_experience  -%>"><BR><BR>
+                        
+                        <label for="time_period">Time Period<span class="required">*</span></label><BR>
+                        
+                        <input style="width:150px;" placeholder="Month" id ="profile_experience_from_month" name="from_date_month" type="text">
+                        <script type="text/javascript">
+                            $('#profile_experience_from_month').select2({
+                                data: [{id:'1',text:'January'},{id:'2',text:'February'},{id:'3',text:'March'},{id:'4',text:'April'},{id:'5',text:'May'},{id:'6',text:'June'},{id:'7',text:'July'},{id:'8',text:'August'},{id:'9',text:'September'},{id:'10',text:'October'},{id:'11',text:'November'},{id:'12',text:'December'}]
+                          })
+
+                        </script>
+                        <input style="width:150px;" placeholder="Year" id ="profile_experience_from_year" name="from_date_year" type="text">
+                            <script type="text/javascript">
+                                var yearData=[];
+                                var current_year=new Date().getFullYear()
+                                for(var i=0; i<100; i++)
+                                {
+                                    var yearterm={};
+                                    yearterm['id']=current_year-i
+                                    yearterm['text']=yearterm['id'].toString()
+                                    yearData.push(yearterm)
+
+                                }
+                                $('#profile_experience_from_year').select2({
+                                        data: { results: yearData }
+                                  })
+                            </script>
+                        - 
+
+                        <span id= "to_date_span">
+                        <input style="width:150px;" placeholder="Month" id ="profile_experience_to_month" name="to_date_month" type="text">
+                        <script type="text/javascript">
+                            $('#profile_experience_to_month').select2({
+                                data: [{id:'1',text:'January'},{id:'2',text:'February'},{id:'3',text:'March'},{id:'4',text:'April'},{id:'5',text:'May'},{id:'6',text:'June'},{id:'7',text:'July'},{id:'8',text:'August'},{id:'9',text:'September'},{id:'10',text:'October'},{id:'11',text:'November'},{id:'12',text:'December'}]
+                          })
+
+                        </script>
+                        <input style="width:150px;" placeholder="Year" id ="profile_experience_to_year" name="to_date_year" type="text">
+                            <script type="text/javascript">
+                                var yearData=[];
+                                var current_year=new Date().getFullYear()
+                                for(var i=0; i<100; i++)
+                                {
+                                    var yearterm={};
+                                    yearterm['id']=current_year-i
+                                    yearterm['text']=yearterm['id'].toString()
+                                    yearData.push(yearterm)
+
+                                }
+                                $('#profile_experience_to_year').select2({
+                                        data: { results: yearData }
+                                  })
+                            </script>
+                        </span>
+                        <span id= "present_span" style="display:false">Till Present</span>
+                        <br>
+                        <span style="float:right">
+                        <input type="checkbox" id='profile_experirence_till_present' name='till_present'><label for="till_present">Till Present</label></span>
+                        <input id="from_date" name="from_date" type="hidden" value="<%= @profile_experience.from_date if @profile_experience  -%>">
+                        <input id="to_date" name="to_date" type="hidden" value="<%= @profile_experience.to_date if @profile_experience  -%>">
+
+                        <BR><BR>
+                        <label for="description">Description</label><BR>
+                        <textarea name="description" id="description" cols="50" rows="10" ><%= @profile_experience.description if @profile_experience -%></textarea>
+                        <BR><BR>
+                        
+                        <input id= "experience_submit" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>
+                    
+                </div>   
+                </div>
+        </div>    
+        <div class="clear"></div>
+        <div class="info_input">
+        <div class='info-content'>
+            <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="education_span"></span>
+            <div class='title'>Education</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info" id='education_slide'>
+                    <form id="profile_education">
+                        <input type='text' style="display:none" id='educationid' name='id'> 
+                        <label for="school">School<span class="required">*</span></label><BR>
+                        <input id ="school" name="school" type="text" value="<%= @profile_education.school if @profile_education  -%>"><BR><BR>
+                        <label for="dates_attended">Dates Attended</label><BR>
+
+                        <input style="width:150px;" placeholder="Month" id ="profile_education_from_month" name="from_date_month" type="text">
+                        <script type="text/javascript">
+                            $('#profile_education_from_month').select2({
+                                data: [{id:'1',text:'January'},{id:'2',text:'February'},{id:'3',text:'March'},{id:'4',text:'April'},{id:'5',text:'May'},{id:'6',text:'June'},{id:'7',text:'July'},{id:'8',text:'August'},{id:'9',text:'September'},{id:'10',text:'October'},{id:'11',text:'November'},{id:'12',text:'December'}]
+                          })
+
+                        </script>
+                        <input style="width:150px;" placeholder="Year" id ="profile_education_from_year" name="from_date_year" type="text">
+                            <script type="text/javascript">
+                                var yearData=[];
+                                var current_year=new Date().getFullYear()
+                                for(var i=0; i<100; i++)
+                                {
+                                    var yearterm={};
+                                    yearterm['id']=current_year-i
+                                    yearterm['text']=yearterm['id'].toString()
+                                    yearData.push(yearterm)
+
+                                }
+                                $('#profile_education_from_year').select2({
+                                        data: { results: yearData }
+                                  })
+                            </script>
+                        - 
+                        <input style="width:150px;" placeholder="Month" id ="profile_education_to_month" name="to_date_month" type="text">
+                        <script type="text/javascript">
+                            $('#profile_education_to_month').select2({
+                                data: [{id:'1',text:'January'},{id:'2',text:'February'},{id:'3',text:'March'},{id:'4',text:'April'},{id:'5',text:'May'},{id:'6',text:'June'},{id:'7',text:'July'},{id:'8',text:'August'},{id:'9',text:'September'},{id:'10',text:'October'},{id:'11',text:'November'},{id:'12',text:'December'}]
+                          })
+
+                        </script>
+                        <input style="width:150px;" placeholder="Year" id ="profile_education_to_year" name="to_date_year" type="text">
+                            <script type="text/javascript">
+                                var yearData=[];
+                                var current_year=new Date().getFullYear()
+                                for(var i=0; i<100; i++)
+                                {
+                                    var yearterm={};
+                                    yearterm['id']=current_year-i
+                                    yearterm['text']=yearterm['id'].toString()
+                                    yearData.push(yearterm)
+
+                                }
+                                $('#profile_education_to_year').select2({
+                                        data: { results: yearData }
+                                  })
+                            </script>
+                      
+                       <BR><BR>
+                        <input id="from_date2" name="from_date" type="hidden" value="<%= @profile_education.from_date if @profile_education  -%>">
+                        <input id="till_date" name="till_date" type="hidden" value="<%= @profile_education.till_date if @profile_education  -%>">
+                        
+                        <label for="degree">Degree<span class="required">*</span></label><BR>
+                        <input id ="degree" name="degree" type="text" value="<%= @profile_education.degree if @profile_education  -%>"><BR><BR>
+                        
+                        <label for="field_of_study">Field of Study</label><BR>
+                        <input id ="study_field" name="study_field" type="text" value="<%= @profile_education.study_field if @profile_education  -%>"><BR><BR>
+                        
+                        
+                        
+                        <label for="activities_and_socities">Activities and Societies</label><BR>
+                        <textarea name="activities" id="activities" cols="50" rows="10" ><%= @profile_education.activities if @profile_education  -%></textarea>
+                        <BR><BR>
+                        
+                        <input id="education_submit" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>
+                    
+                    
+                </div>   
+                </div>
+        </div>   
+
+        <div class="clear"></div>
+        <div class="info_input">
+        <div class='info-content'>
+            <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="language_span"></span>
+            <div class='title'>Languages</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info" id='language_slide'>
+                    <form id="language_form">
+                        <input type='text' style="display:none" id='language_id'> 
+                        <ul>
+                            <li>
+                                <label for="language">Language</label><BR>
+                                <input id ="language" name="language" type="text" value="<%= @profile_language.language if @profile_language  -%>"><BR><BR>
+                            </li>
+                            <li>
+                                <label for="proficiency">Proficiency</label><BR>
+                                <select id="proficiency" name="proficiency">
+                                    <option value="elementary">Elementary</option>
+                                    <option value="limited_working">Limited working</option>
+                                    <option value="professional">Professional</option>
+                                    <option value="native_or_bilingual">Native or Bilingual</option>
+                                </select>
+                                <BR><BR>
+                            </li>
+                        </ul>
+                        <input id="language_submit"class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>
+                </div>
+                </div>
+        </div>   
+
+       
+        
+
+        <div class="clear"></div>
+        
+        <div class="info_input">
+        <div class='info-content'>
+            <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="skills_span"></span>
+            <div class='title'>Skills</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info">
+                    <form>
+                        <textarea name="skills" id="skills" cols="50" rows="10" ><%= current_user.user_profile.skills if @current_user  -%></textarea>
+                        <BR><BR>
+                        <input id ="skills_submit" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>                    
+                </div>    
+                </div>
+        </div>   
+
+        <div class="clear"></div>
+
+        <div class="info_input" id="coworkers">
+        <div class='info-content'>
+            <div class='title'>Invite Employees/Co-workers/Friends/Suppliers/Buyers</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+                <div class="enter_info">
+                    <form>                        
+                        <label for="coworkers">Email address</label><BR>
+                        <input id="coworker_emails" type="text" name="coworkers">
+                        <input id="isCoworker" type="checkbox" name="isCoworker">
+                        <label for="isCoworker">Coworker</label><BR>
+                        <BR><BR>
+                        <input id = "invite_coworkers" class="green" type="button" value="Save">
+                        <input class="grey cancel" type="button" value="Cancel">
+                    </form>                    
+                </div>    
+        </div>    
+        <div class="clear"></div> 
+        </div>
+    </div>    
+</div>
+</div>
+
+<!-- mustache section (feature removed) -->
+
+<script type="x-tmpl-mustache" id='profile_experience_template'>
+    <ul >
+        {{#.}}
+            <a href="javascript:void(0)" onclick="editExperience('{{id}}')" style="float:right;color: #45c062;  cursor: pointer;">Edit</a>
+            <li><h3 style="margin:0px">{{title}}</h3>{{company_name}}, {{location}}<br>{{from_date}} - {{to_date}}<br><br><pre> {{description}}</pre></li>
+        {{/.}}
+    </ul>
+</script>
+
+<script type="x-tmpl-mustache" id='profile_education_template'>
+    <ul >
+        {{#.}}
+            <a href="javascript:void(0)" onclick="editEducation('{{id}}')" style="float:right;color: #45c062; cursor: pointer;">Edit</a>
+            <li><h3 style="margin:0px">{{degree}}</h3>{{study_field}}<br>{{school}}<br>{{from_date}} - {{till_date}}<br><br><pre> {{activities}}</pre></li>
+            <br><br>
+        {{/.}}
+    </ul>
+</script>
+
+<script type="x-tmpl-mustache" id='profile_language_template'>
+    <ul >
+        {{#profile_languages}}
+            <a href="javascript:void(0)" onclick="editLanguage('{{language}}', '{{proficiency}}','{{id}}')" style="float:right;color: #45c062;cursor: pointer;">Edit</a>
+            <li>{{language}} - {{proficiency_label}}</li>
+            <br><br>
+        {{/profile_languages}}
+    </ul>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'profile_welcome.js' %>"></script>
+<script type="text/javascript">
+    var user_id = "<%= current_user.id %>",
+        company = "<%= current_user.company%>",
+        email_id = "<%= current_user.email %>";
+
+    $( document ).ready(function() {
+        pw.init(user_id, email_id, company);
+        
+        var a = document.createElement('a');
+        a.href = document.referrer;
+        if(a.pathname == "/" || a.pathname == "/community/signup") {
+            $('.welcome').css('display','block');
+        }
+        $('#close').click(function() {
+            $('.welcome').fadeOut();
+            a.pathname = 'no_welcome'
+        })      
+    });
+</script>

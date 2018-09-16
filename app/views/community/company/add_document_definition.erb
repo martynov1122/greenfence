@@ -1,0 +1,184 @@
+<input type="hidden" value="<%= current_user.company.id %>" id="current_company_id"/>
+<input type="hidden" value="<%= current_user.id %>" id="current_user_id"/>
+<div class="view_container">
+  <div class="add_info_main_header">
+	  <h1 class="content_headline" ng-if="!store.id">Create Document Type</h1>
+	  <h1 class="content_headline" ng-if="store.id">View/Edit a Document Type</h1>
+	  <a class="wizard_delete_butt" >Delete</a>
+	  <a href="" class="wizard_add_butt_v2" ng-click="createDocumentDefinition(document_definition)">Add</a>
+  </div>
+  <div class="add_info_block title_mod">
+    <div class="add_info_header">
+      <div class="add_info_title">Document Type Name</div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block" style="display: none;">
+        <div class="add_info_form_w">
+          <gf-text-input
+          id="'enter_document_type_name'"
+		      p-title="'Enter name of document type'"
+          dl-class="" containers-class="" field-class="'default_mod'"
+          model="document_definition.document_type"></gf-text-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_info_block">
+    <div class="add_info_header">
+      <div class="add_info_title"><%= t('document_type_for') %></div>
+      <div class="add_info_colapse_butt operation_box"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block operation_box">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+              <label for="Document_type_for">Document Type For</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select ng-model="document_definition.document_type_for" theme="selectize" ng-disabled="document_definition.id != undefined">
+                <ui-select-match placeholder="Select document type for...">{{$select.selected.type}}</ui-select-match>
+                <ui-select-choices repeat="document_type_for.value as document_type_for in document_type_for_list |  filter: $select.search">
+                  <div ng-bind-html="document_type_for.type | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_info_block" ng-show="document_definition.document_type_for=='Company'">
+    <div class="add_info_header">
+      <div class="add_info_title">Document Category</div>
+      <div class="add_info_colapse_butt operation_box"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block operation_box">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+              <label for="Document_category">Document Category</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select ng-model="document_definition.document_category" theme="selectize" ng-disabled="document_definition.id != undefined">
+                <ui-select-match placeholder="Select document category...">{{$select.selected.type}}</ui-select-match>
+                <ui-select-choices repeat="document_category.value as document_category in document_categories | filter: $select.search">
+                  <div ng-bind-html="document_category.type | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_info_block upload_mod">
+    <div class="add_info_header">
+      <div class="add_info_title">Custom Definitions</div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block">
+        <div class="add_info_form_w">
+          <div ng-repeat="definition in document_definition.definition">
+            <div id="d_structure">
+      			  <input type="hidden" id="id" required ng-model="definition.id"/>
+      			  <input type="hidden" id="sort_order" required ng-model="definition.sort_order"/>
+      			  <div class="form_block hor_mod location_mod">
+      				<dl class="form_cell form_cell_v1_mod full_mod location_mod">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="name">Enter name</label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      					<input type="text" ng-model="definition.name" id="name" class="f_c_field default_mod" placeholder="Enter name">
+      				  </dd>
+      				</dl>
+      				<dl class="form_cell form_cell_v1_mod  full_mod">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="input_type">Field type</label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      					<select ng-model="definition.input_type" id="input_type" class="f_c_field default_mod select_add_category normal_list" ng-change="showHideOption($event);">
+      					  <option value="">Field type...</option>
+      					  <option value="text">Text Box</option>
+      					  <option value="checkbox">Check Box</option>
+      					  <option value="radio">Radio Button</option>
+      					  <option value="number">Number</option>
+      					  <option value="select">Select List</option>
+      					  <option value="standard">Standard List</option>
+      					  <option value="file">File</option>
+                  <option value="date">Date</option>
+      					</select>
+      				  </dd>
+      				</dl>
+      				<dl class="form_cell form_cell_v1_mod  full_mod">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="required">Required?</label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      					<select class="f_c_field default_mod select_add_category normal_list" id="required" ng-model="definition.required">
+      					  <option value="">Required...</option>
+      					  <option value="true">Yes</option>
+      					  <option value="false">No</option>
+      					</select>
+      				  </dd>
+      				</dl>
+      				<dl class="form_cell form_cell_v1_mod full_mod">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="searchable">Searchable</label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+      					<select class="f_c_field default_mod select_add_category normal_list" id="searchable" ng-model="definition.searchable">
+      					  <option value="">Searchable...</option>
+      					  <option value="true">Yes</option>
+      					  <option value="false">No</option>
+      					</select>
+      				  </dd>
+      				</dl>
+      				<dl class="form_cell form_cell_v1_mod full_mod">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="standard">Standards</label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+      					<select class="f_c_field default_mod select_add_category normal_list" ng-model="definition.standard" id="standard" ng-show="definition.input_type=='standard'" ng-change="showHideOption($event);">
+      					  <option value="">Standards...</option>
+      					  <option selected="true" value="business">Business Type</option>
+      					  <option value="scheme">Scheme Type</option>
+      					</select>
+      				  </dd>
+      				</dl>
+              <dl class="form_cell form_cell_v1_mod full_mod">
+                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                <label for="category">Categories</label>
+                </dt>
+                <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+                <select class="f_c_field default_mod select_add_category normal_list" ng-model="definition.category" id="category" ng-show="definition.standard=='scheme'">
+                  <option value="">All...</option>
+                  <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+                </select>
+                </dd>
+              </dl>
+      				<dl class="form_cell form_cell_v1_mod full_mod" ng-show="definition.input_type=='radio' || definition.input_type=='list' || definition.input_type=='checkbox' || definition.input_type=='select'">
+      				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      					<label for="options">Options </label>
+      				  </dt>
+      				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      					<textarea rows="4" class="f_c_field default_mod textarea_mod_2" ng-model="definition.options" id="options" ></textarea>
+      				  </dd>
+      				</dl>
+      			  </div>
+      			  <div class="butt_wrap">
+      				  <div class="remove_butt" ng-click="removeStructure($event, definition.id);">Remove</div>
+      			  </div>
+      			</div>
+          </div>
+        </div>
+        <div class="butt_wrap add_info_form_mod">
+          <div class="add_another_field_mod" ng-click="addMoreDefinitions($event);">+ Add More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

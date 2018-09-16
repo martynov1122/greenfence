@@ -1,0 +1,14 @@
+<script type="text/javascript">
+  var GREENFENCE = {
+    firebase_uri: {
+      notification: '<%= ENV['FIREBASE_RUI'] + 'notifications' %>',
+      contact: '<%= ENV['FIREBASE_RUI'] + 'contacts' %>'
+    },
+    stripe_key: {
+      publishable: '<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>'
+    },
+    default_avatar: {
+    	url: '<%= asset_path('avatar.jpg') %>'
+    }
+  }
+</script>

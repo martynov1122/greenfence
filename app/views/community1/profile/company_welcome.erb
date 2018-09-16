@@ -1,0 +1,182 @@
+<!-- Add your site or application content here -->
+<div class="clear"></div>
+  <div class="content_main profile">
+  <div class="supplier_top"></div>
+  <div class="right_column">  
+    <div class="profile_box">
+      <div class="profile_completion">   
+        <div class="percentage-chart">   
+                <div class="chart">
+                    <div class="tag"><span class='bold' id='past_profile_completion' ></span><br><span class='text'>completion</span></div>
+                    <canvas height="160" width="160" id="1"></canvas>
+                </div>
+            </div>
+        <ul class="menu" style="margin-top: -27px;">
+            <li id='company-completion'>Executive Summary<span>0%</span></li>
+            <li id='address-completion'>Address<span>0%</span></li>
+            <li id='contact-completion'>Contact Details<span>0%</span></li>
+        </ul>    
+      </div>
+    </div>   
+  </div> 
+
+  <div class="left_column">
+      
+      <div class="profile_top">
+            <div class="avatar" >              
+              <% if @current_user.company.logo_url %>
+                <img src="<%= @current_user.company.logo_url %>" width="140" height="140" alt="No avatar image" id="avatar">
+              <% else %>
+                <img src="<%= asset_path 'freeapp/no_avatar.jpg' %>" width="140" height="140" alt="No avatar image" id="avatar">
+              <% end %>
+            </div>    
+            <div class="user_name">
+                <h1> <% if @current_user.company %>
+                <h1><%= current_user.company.name %></h1>
+              <% else%>
+
+                <strong> Associate yourself with a company from you <a href="/community/profile_welcome">user profile </a> </strong>
+              <% end %> </h1>
+                <div class='upload'>
+                    <input type='file' id="avatar_file">
+                    <div class='icon'><img src='/images/upload2.png'></div>
+                    <div class='text'>Upload image</div>
+                </div>
+            </div>
+        </div>  
+
+      
+      <div class="clear"></div>
+
+    <div id="company_profile_details" >
+      <div class="profile_inputs last">
+      <div class="info_input">
+        <div class='info-content'>
+          <div class='title'>Executive Summary</div>
+          <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+              <div class="enter_info">
+                  <form>
+                      <label for="summary">Summary</label><BR>
+                      <textarea name="summary" id="summary" cols="50" rows="10" ><%= @current_user.company.company_profile.summary if @current_user.company.company_profile -%></textarea>
+                      <BR><BR>
+                      <input id="summary_id" type="hidden" value="<%= @current_user.company.company_profile.id if @current_user.company.company_profile %>">
+                      <input id="summary_submit" class="green" type="button" value="Save">
+                      <input class="grey cancel" type="button" value="Cancel">
+
+                  </form>
+              </div>  
+          </div> 
+      </div> 
+      <div class="info_input">
+        <div class='info-content'>
+          <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="address_span"></span>
+          <div class='title'>Address</div>
+            <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+              <div class="enter_info">
+                  <form id="company_address_form">
+                      <%company_address = @current_user.company.address || Address.new%>
+                      <input type="hidden" name="id" value="<%=@current_user.company.address.id if current_user.company.address %>">
+                      <input type="text" placeholder="Street 1" id="street1" name="street1" value="<%=company_address.street1%>" />
+                      <input type="text" placeholder='Street address line 2' id="street2" name="street2" value="<%=company_address.street2%>" />
+                       <br> <br>
+                       <input type="text" placeholder="City" id="locality" name="locality" value="<%=company_address.locality%>" />
+                       <input type="text" placeholder="State" id="administrative_area" name="administrative_area" value="<%=company_address.administrative_area%>"/>
+                       <br> <br>
+                       <input type="text" placeholder="Zip code" id="postal_code" name="postal_code" value=<%=company_address.postal_code%> >
+                      <%= select_tag(:country, options_for_select(country_list,:selected => company_address.try(:country) ), prompt:"Select Country", style: 'width: 190px') %>
+                      <br> <br>
+                      <input id="address_submit" class="green"  value="Save" type="button">
+                      <input class="grey cancel" type="button" value="Cancel">
+                  </form>
+              </div>                
+        </div>  
+      </div>
+
+      <div class="info_input">
+        <div class='info-content'>
+          <span style="display: block;height: 67px;margin-top: -67px;visibility: hidden;" id="contact_span"></span>
+          <div class='title'>Contact Details</div>
+          <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+            <div class="enter_info">
+              <form>
+                  <input id="profile_id" type="hidden" value="<%= @current_user.company.company_profile.id if @current_user.company.company_profile %>">
+                  <input type="text" placeholder="Website" id="website" value="<%= current_user.company.company_profile.website if current_user.company.company_profile -%>"/> <br> <br>
+                  <input type="text" placeholder="Phone" id="phone" value="<%= current_user.company.company_profile.phone if current_user.company.company_profile -%>"/> 
+                  <br> <br>
+                  <input type="text" placeholder="Email" id="email" value="<%= current_user.company.company_profile.email if current_user.company.company_profile -%>"/> 
+                  <br> <br>
+                 <input id="contact_submit" class="green"  value="Save" type="button">
+                  <input class="grey cancel" type="button" value="Cancel">
+              </form>
+            </div>
+          </div>  
+      </div>
+      <div class="clear"></div>
+
+
+      <div class="info_input" id="coworkers">
+      <div class='info-content'>
+          <div class='title'>Invite Employees/Co-workers/Friends/Suppliers/Buyers</div>
+          <a class="add_link"> <img src="<%= asset_path 'freeapp/plus2.png'%>" alt="Plus icon" ></a>
+              <div class="enter_info">
+                  <form>
+
+                    <label for="coworkers">Email address</label><BR>
+                    <input id="coworker_emails" type="text" name="coworkers">
+                    <input id="isCoworker" type="checkbox" name="isCoworker">
+                    <label for="isCoworker">Coworker</label><BR>  
+                    <BR><BR>
+                    <input id = "invite_coworkers" class="green" type="button" value="Save">
+                    <input class="grey cancel" type="button" value="Cancel">
+                  </form>
+              </div>    
+      </div>    
+      </div>
+  </div>   
+  </div>
+</div>        
+
+
+</div>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'company_welcome.js' %>"></script>
+<script type="text/javascript">
+  var user_id = "<%= current_user.id %>" ;
+  $('.chart').percentPie({endPercent: 0});
+
+  $( document ).ready(function() {
+
+    cw.company_profile(company_id);
+
+    $("#avatar_file").change(function() {
+      cw.update_image(company_id);
+    })    
+
+    if ( $('#organization').select2('val') != "" ) {
+        $('.profile_inputs .organization .buttons').show()
+    }
+
+  })
+
+  $('#summary_submit').click(function(e) {
+      cw.summary(e, company_id);
+      $(this).parent().parent('.enter_info').parent().find('.add_link').trigger('click');
+  })  
+
+  $('#address_submit').click(function() {
+      cw.address(company_id);      
+      $(this).parent().parent('.enter_info').parent().find('.add_link').trigger('click');
+  })
+
+  $('#contact_submit').click(function() {
+      cw.contact(company_id);      
+      $(this).parent().parent('.enter_info').parent().find('.add_link').trigger('click');
+  })
+
+  $('#invite_coworkers').click(function() {
+      cw.send_invitation(user_id);
+      $(this).parent().parent('.enter_info').parent().find('.add_link').trigger('click');
+  })
+</script>

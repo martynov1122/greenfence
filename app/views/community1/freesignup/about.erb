@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+    <div id="container"> 
+
+        <div id="header">
+            <div class="header_left">    
+                <img src="<%= asset_path 'freeapp/logo_main.png' %>" style="margin: 13px 0 0 14px;" width="141" height="40" alt="greenfence logo">
+            </div>    
+
+            <div class="header_right">
+                <ul style="margin: 22px 0 0 0;">
+                    <li name='about' onclick='getView("about")'><a href="#"  >About</a></li>
+                    <li name='name' onclick='getView("team")'><a href="#" >Team</a></li>
+                    <li><a href="mailto:contact@greenfence.com">Contact Us</a></li>
+                    <li><a href="/users/sign_in" class="green" style="margin-top: -9px;">Login</a></li>
+                </ul>  
+            </div> 
+        </div>
+            
+        <div class="clear"></div>
+             
+            <div class="content_main about">
+                
+                <!--<div class='title'>Settings</div>-->
+                <div class='tabs'>
+                    <div id='aboutTab' class='tab active'>About</div>
+                    <div id='teamTab' class='tab'>Team</div>
+                </div>
+                <div class='tab-content'>
+                    <div id='about' class='tab active'>
+                         <p>
+                            GreenFence technology was uniquely created to effectively protect life and health from adulterated food production.
+                        </p>
+                         <p>
+                            GreenFence is committed to bringing innovative, proactive and preventative technology solutions to the global food industry. GreenFence’s priorities are focused on food safety, quality assurance, waste, cost, and liability mitigation.
+                        </p>
+                         <p>
+                            GreenFence is more than an opportunity to heighten standards to achieve “best in class”. Ranging from a single organization and its supply chains, to the global food supply industry and its participants, GreenFence is the means to a much-needed universal food safety and quality management system.
+                        </p>
+                         <p>
+                            GreenFence will demonstrate quantifiable value add through ease of compliance, increased operating efficiencies, waste reduction, brand and reputation protection, reduced operating costs, and margin lift.
+                        </p>
+                         <p>
+                            GreenFence is operated by a unique partnership of food safety, food regulatory, and technology experts. The entire team shares a passion for food and a dedication to making a significant contribution to the safe production and delivery of foods for human and animal consumption, on a global scale.
+                        </p>
+                    </div>
+
+                    <div id='team' class='tab'>
+                                                <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/mitch.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Mitchell Chait</div>
+                                    <div class='title'>Founder, Chairman</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:mitch@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>
+                                More than 30 years of experience in food operations, supply chain and logistics.
+                            </p>
+                            <p>
+                                Serviced top 100 brands in retail, hospitality, QSR and food service.
+                            </p>
+                            <p>
+                                Extensive knowledge in fresh, processed and value add produce, fisheries and aquaculture, fresh shell eggs.
+                            </p>
+                            <p>
+                                Inventor of numerous patents in software, laser, traceability, material handling and packaging.
+                            </p>
+                            <p>Conceived and developed algorithms and software for human operations and machine integration and automation, compliance verification automation, and big data analysis and discovery automation.</p>
+                        </div>
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Anthony J. Ciabattoni</div>
+                                    <div class='title'>Co-Founder, Board Member</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:tonyc@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 40 years of experience in business development, M&A, operations and enterprise sales servicing fortune 500 clients such as Northrop Grumman, Lockheed Martin, Twentieth Century Fox, First Interstate Bank/Wells Fargo Bank, Prudential, Automobile Club of California, and GTE/Verizon.</p>
+                            <p>Thorough understanding of Health Care Operations, Clean Water Technology and Satellite Communications.</p>
+                        </div>
+
+
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/sunil_singh.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Sunil Singh, Ph.D.</div>
+                                    <div class='title'>President Technology Division, Board Member</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:sunil@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 30 years experience in various fields of software development.</p>
+                            <p>Proficient in both enterprise software and consumer Internet businesses.</p>
+                            <p>Deep operational expertise in managing global technology products and services businesses, including outsourced product development.</p>
+                            <p>Extensive experience on managing complex technology-enabled businesses, services and Customer-Facing.</p>
+                            <p>Experience range from operational business intelligence platforms for large manufacturers for increasing asset utilization, and to demand-supply synchronization platforms for food and packaged goods industries (e.g. http://www.globallogic.com) to mobile education ERP for a network of distributed “retail schools”.</p>
+                            <p>Longstanding advisor of several Silicon Valley venture capital firms, such as NEA and Mayfield.</p>
+                            <p>Former Asst. Professor at Dartmouth, the Media Lab at MIT, and at RPI (Rensselaer Polytechnic Institute).</p>
+                            <p>Ph.D. from Cornell University, Ithaca, N.Y., in its Robotics Program (an interdisciplinary program between the schools of Computer Science, Mechanical and Electrical Engineering).</p>
+                        </div>
+
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Jaideep Srivastava, Ph.D.</div>
+                                    <div class='title'>Chief Big Data Officer</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 30 years experience in various fields of software development.</p>
+                            <p>Professor of Computer Science & Engineering at the University of Minnesota.</p>
+                            <p>Distinguished professorships at multiple international universities.</p>
+                            <p>His research has been supported by a broad range of government agencies, including NSF, NASA, ARDA, DARPA, IARPA, NIH, CDC, US Army, US Air Force, and MNDoT; and industries, including IBM, United Technologies, Eaton, Honeywell, and Cargill.</p>
+                            <p>Advisor for technology and strategy to Cargill, United Technologies, IBM, Honeywell, KPMG, 3M, TCS, and Eaton.</p>
+                            <p>Is a Data Mining Architect at Amazon.com (www.amazon.com); the Director of Data Analytics at Yodlee (www.yodlee.com), served as the Chief Technology Officer for Persistent Systems (www.persistentsys.com).</p>
+                            <p>Has authored over 325 papers, filed 8 patents, and supervised 32 PhD dissertations and 59 MS theses.</p>
+                            <p>Is a Fellow of the Institute of Electrical and Electronics Engineers (IEEE), has been an IEEE Distinguished Visitor, and is a Distinguished Fellow of Allina’s Center for Healthcare Innovation.</p>
+                            <p>His research has received 6 best paper awards, and he has been awarded the Distinguished Research Contributions Award of the PAKDD, for his lifetime contributions to the field of data mining.</p>
+                        </div>
+
+                            <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Jeffrey Sholl, Ph.D.</div>
+                                    <div class='title'>President Food Operations Division, Board Member</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 40 years experience in the processed food and fresh produce industries developing products and bringing them to market.</p>
+                            <p>Numerous patents in food, software and processing.</p>
+                            <p>Successfully introduced national brand licensing to fresh produce.</p>
+                            <p>Long-standing expertise with growers, shippers and processors of fresh produce.</p>
+                            <p>Thorough understanding of food distribution chain and logistical issues that can arise during recalls.</p>
+                            <p>Conceived and developed food contamination simulation model for the U.S. Food and Drug Administration and U.S. Department of Homeland Security.</p>
+                            <p>Held senior leadership positions including CEO, Colorful Harvest; CEO, Potandon Produce; CEO, Green Giant Fresh; as well as senior management positions at Pillsbury, Haagen-Dazs and the Paul Ecke Ranch.</p>
+                        </div>
+
+                            <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/sue.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Susan Harlander, Ph.D.</div>
+                                    <div class='title'>Chief Food Scientist</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 30 years experience in food science and the food industry.</p>
+                            <p>Former University of Minnesota professor of food microbiology and biotechnology with extensive research, publications and public outreach.</p>
+                            <p>Served on U.S. FDA’s Science Board, along with numerous other FDA, USDA, NIH, NSF, NAS, NRC, and IOM advisory boards.</p>
+                            <p>Senior R&D leadership positions at Land O’Lakes and The Pillsbury Company.</p>
+                            <p>Principal of BTSafety and co-developer of risk assessment models on intentional food contamination for FDA and DHS.</p>
+                            <p>Fellow of the Institute of Food Technologists.</p>
+                            <p>Extensive experience in managing agricultural research programs for marker assisted plant breeding, chemical use optimization and seed variety selection.</p>
+                            <p>Principal investigator on numerous grants and has published over 110 referred papers, book chapters and monographs.</p>
+            
+                        </div>
+
+                            <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Dr. Hussein El-Ghoroury</div>
+                                    <div class='title'>Chief of Microelectronics</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>Dr. El-Ghoroury has more than 30 years experience in inventing, developing and deploying Microelectronics. Dr. El-Ghoroury contributed to the advancement of the wireless technology and led the development of numerous wireless products in the market today.</p>
+                            <p>Dr. El-Ghoroury is the Founder, Chairman & CEO Ostendo Technologies. Stakeholders include Peter Thiel and the Defense Advanced Research Projects Agency (DARPA).</p>
+                            <p>Dr. El-Ghoroury served as CTO of IBM Microelectronics and VP for Linkabit Corporation, the predecessor company to Qualcomm and the precursor to much of the wireless industry in Southern California.  In addition to many technical achievements at Linkabit, he built over $480 million in technology for U.S. Defense agencies.</p>
+                            <p>Dr. El-Ghoroury was founder & CEO of CommQuest Technologies, where he pioneered the first GSM Quad-band chipset in North America.  IBM acquired CommQuest for $250 million.</p>
+                            <p>He received PhD and MS degrees in Electrical Engineering from Southern Methodist University.</p>
+                            <p>He has authored several publications on digital communications and solid state light technologies and has more than twenty-five granted patents and applications in the areas of DSP’s, digital communications, digital displays, and solid state light technologies.</p>
+                        </div>
+
+                            <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/john_haaland.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>John Haaland, PhD.</div>
+                                    <div class='title'>Director Of Special Engineering And Sensor Technology</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>Over 40 years experience in aerospace, microelectronics, biotechnology and food businesses.</p>
+                            <p>Principal developer of manual controls for the NASA funded Apollo space program while at Honeywell and Project Leader of NASA work that led to the creation of Hazard Analysis and Critical Control Points (HACCP).</p>
+                            <p>Member of Pillsbury’s senior management team.</p>
+                            <p>Was the first food safety system incorporating HACCP to be installed in a Fortune 500 company. A history of these events and their relevance to today’s food industry was the cover story in the 2007/2008 issue of Food Safety Magazine1.</p>
+                            <p>Haaland served as President and Chief Executive Officer of Discovery Genomics, Inc., an early-stage genetic medicine and gene therapy company.</p>
+                            <p>Extensive hands on knowledge and experience designing handheld biosensors for physical parameters (e.g. temperature, chlorine) and pathogens (e.g. Salmonella, E. coli and Listeria).</p>
+                            <p>Haaland has a PhD in biophysics from the University of Minnesota and holds U.S. patents in diverse technical areas.</p>
+
+                        </div>
+
+                         <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/kristin.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Kristin Colony</div>
+                                    <div class='title'>VP Technology Liaison, SME</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:kristin@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>Mrs. Colony has worked in the development of food safety software and technology since 2004.</p>
+                            <p>With Greenfence, she serves as the liaison and subject matter expert with the product technology team.</p>
+                            <p>Mrs. Colony worked as a product manager and researcher and developed sophisticated systems for modeling of intentional and unintentional foodborne outbreaks, from food production and distribution, to consumption and medical outcomes, to public health response.</p>
+                            <p>Her clients included the FDA, USDA, DHS, NCFPD, and other industry groups.</p>
+                            <p>Mrs. Colony has extensive knowledge of food safety and compliance software and technology.</p>
+                            <p>She serves on the IFSH/FDA Sprout Safety Taskforce and the Sprout Safety Alliance, and has contributed to the ISFH/USDA Sprout Safety Audit and SSA guidance.</p>
+                            <p>Mrs. Colony is also managing coordinator and a technical advisor for the Sprout Alliance for Safety and Science.</p>
+                            <p>She has a degree in physics, as well as extensive education in astronomy, history, and Near Eastern archaeology.</p>
+                        </div>
+
+                         <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/kevin_elfering.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Kevin Elfering</div>
+                                    <div class='title'>Food Safety, Trace-Back Modeling</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 40 years of experience in the dairy and food industry.</p>
+                            <p>Served 26 years with the Minnesota Department of Agriculture.</p>
+                            <p>Director of the dairy and food inspection program in Minnesota: responsibilities include food safety for all food and meat products and trace-back investigations.</p>
+                            <p>Award- winning leader in developing cooperative programs between food industry & regulatory agencies.</p>
+                            <p>Currently dedicates time to law enforcement agencies for bio-terrorism prevention and defense.</p>
+                            <p>Adjunct professor at University of Minnesota: veterinary medicine, food science, and public health, and Animal Products for Consumers.</p>
+                            <p>Longstanding member of several animal health and food safety organizations: United States Animal Health Association, National Association of State Meat and Food Inspection Directors, National Egg Regulatory Officials, United States Department of Agriculture's National Advisory for Meat and Poultry Inspection.</p>
+                        </div>
+
+                         <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/todd_johnston.png' %>" width="125" height="125"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Charles Johnson</div>
+                                    <div class='title'>Regulatory Affairs, Liaison</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michaelabehsera@gmail.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 45 years of experience in egg production, processing, marketing, and quality control management and technical skills in various levels of government.</p>
+                            <p>Served as Branch Chief of the USDA, Agricultural Marketing Service, Poultry Programs in Washington, DC from 2005 to 2011 where he managed administration of the national egg and poultry grading and auditing programs.</p>
+                            <p>Presided over nationwide food grading and certification services to over 200 egg processing plants and 150 poultry plants utilizing over 400 federal employees and 300 State employees to provide these services.</p>
+                            <p>Held positions of Supervisor, Regional Supervisor, National Supervisor and Assistant Branch Chief of the USDA AMS Poultry Programs.</p>
+                            <p>Trained and experience in HACCP and ISO 9000 principles.</p>
+                            <p>While working with the USDA, obtained a national security clearance, and have participated on many multi-agency task forces including the President's Council for Food Safety and FDA's Food Safety Task Force.</p>
+                        </div>
+
+                         <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Michael Abehsera</div>
+                                    <div class='title'>Senior UI/UX Developer</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:michael@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>Extensive experience interface user behavior, intuitive design and execution.</p>
+                            <p>Developed software for Lenovo, Makegameswith.us (a graduate of the esteemed Y Combinator 13) and Woo Agency.</p>
+                            <p>Developed, launched and scaled applications over 1 millions unique daily users.</p>
+                            <p>Designed educational programs for the iOS market working with makegameswith.us, an academy instructing hundreds of adolescents yearly in the trade of programming, game and interactive design.</p>
+                            <p>Founding member of Twicsy, a social media aggregator scaling one million “unique” visitors per day and growing a portfolio over four billion images from Twitter.</p>
+                            <p>Advanced scripting-language abilities using JavaScript, HTML, CSS, Ruby on Rails, and Photoshop.</p>
+                            <p>Broad focus on product development as well as keenly familiar with modular assets on a smaller scale.</p>
+                        </div>
+
+
+
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>J. Todd Johnston</div>
+                                    <div class='title'>EVP of Global Marketing and Business Development</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:todd.johnston@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>More than 20 years of experience in the development and deployment of certification market programs.</p>
+                            <p>Lead multi-national marketing initiatives and sales teams with Top 4 Firms in the 3rd Party Management Systems Certification; Testing; and Global Scheme Manager 2nd Party Supplier Audits sector.</p>
+                            <p>Produced 900+% growth in BRC Certifications; 400% growth in SQF Certifications; and 700+% growth in FSSC Certifications.</p>
+                            <p>Recognized as the highest producing sales representative of the year in 2001 at British Standards Institute (BSI).</p>
+                            <p>University of Georgia in Political Theory & Philosophy Major.</p>
+                        </div>
+
+                   
+
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/avatar.jpg' %>"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Todd Begerow</div>
+                                    <div class='title'>Certification Specialist, Business Development</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:todd.begerow@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>20 years of experience in the certification and human capital solutions with small to multi-national organizations.</p>
+                            <p>Developed specialized supply chain transparency and sustainability solution for global 500 organizations, which included environmental, safety and corporate social responsibility programs.</p>
+                            <p>Specialist in information security background as a Holistic Information Security Practitioner (HISPI).</p>
+                            <p>Achieved a Masters of Science in Administration from Central Michigan University and BS in Public Administration from Grand Valley State University.</p>
+                        </div>
+
+                    
+
+                        <div class='team-member'>
+                            <div class='info'>
+                                <!--<div class='avatar'><img src="<%= asset_path 'freeapp/chad_thomas.png' %>" width="125" height="125" class="avatar_about"></div>-->
+                                <div class='text'>
+                                    <div class='name'>Chad Thomas</div>
+                                    <div class='title'>Certification Specialist and Business Development</div>
+                                    <!--<div class='email'>
+                                        <a href='mailto:chad.thomas@greenfence.com?subject=Hello' target='_window'>
+                                            <div class='typcn typcn-mail'></div>
+                                            <span>Email</span>
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <p>20 years of experience in the certification and human capital solutions with small to multi-national organizations.</p>
+                            <p>Experienced in Sustainability, Food Safety (BRC, SQF, FSSC 22000,IFS, HACCP, GMP, CGMP), Quality (ISO 9001), Environmental (ISO 14001, ISO 50001), Safety(OSHAS 18001), Responsible Sourcing (SEDEX, SMETA 2 and 4 Pillar audits) and customer specific audit and verification protocols.</p>
+                            <p>Achieved a BA in Business Management.</p>
+                            <p>Completed HACCP Implementation and Internal Auditor training (HACCP Alliance recognized), SQF Practitioner, FSSC 22000 Lead Auditor training, Critical Thinking training, HACCP for Feed, and Root Cause Analysis.</p>
+                        </div>
+                </div>
+            </div>    
+    </div>
+
+
+      <!--  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+        <script src='js/select2.min.js'></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        
+
+        <script>
+            $('.tabs .tab').click(function(){
+                $('.tab-content .tab').removeClass('active')
+                $('.tab-content .tab:eq(' + $(this).index() + ')').addClass('active')
+                $('.tabs .tab').removeClass('active')
+                $('.tabs .tab:eq(' + $(this).index() + ')').addClass('active')
+            })
+
+            function getView(id){
+                $('.tab-content .tab').removeClass('active')
+                $('.tab-content .tab#'+id).addClass('active')
+                $('.tabs .tab').removeClass('active')
+                $('.tabs .tab#'+id+'Tab').addClass('active')
+            }
+        </script>
+    </body>
+</html>

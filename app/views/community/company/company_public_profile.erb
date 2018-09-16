@@ -1,0 +1,9 @@
+<gf-filter-template ng-repeat="detail in details" data="detail"></gf-filter-template>
+<div class="company_empty_mod" ng-if="public_company.id == my_current_company_id">
+    <a href="#/add_company" class="link_highlight_mod">
+    <%= t('edit_your_business_profile') %>
+    </a>
+</div>
+<div class="company_empty_mod" ng-if="public_company.summary">
+    <p>Oops, it looks like Company has not completed its profile</p>
+</div>

@@ -1,0 +1,32 @@
+<div class="clear"></div>
+  <div class="content_main">
+  </div>
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id='product_detail'>
+  <div class="supplier_top">
+    <ul class="breadcrumbs">
+      <li><a href="my_facilities">Facilities</a></li>        
+      {{#facility}}
+        <li><a href="#">{{name}}</a></li>
+        <li><a href="facility_profile?id={{id}}">{{name}}</a></li>
+      {{/facility}}
+      <li>></li>
+      <li><a href="#" class="active_link">{{name}}</a></li>
+    </ul>
+  </div>  
+  <div class="clear"></div>       
+  <div class="supplier_wrap">        
+    <div class="supplier_info">
+      <h3><a href="#" class="link_cn">{{name}}</a></h3>
+      <p>{{description}}</p>
+    </div>
+    <!--<div class="supplier_settings_button"><a href="#"><img src="<%= asset_path "freeapp/settings_circle.png"%>" width="40" height="40" alt=""></a></div>-->
+  </div>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'product_detail.js' %>"></script>

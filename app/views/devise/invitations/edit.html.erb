@@ -1,0 +1,128 @@
+<body ontouchstart="" class="no_animation develop_mod about_page" class="ng-cloak">
+  <div id='alert'></div>
+  <div class="wrapper layuot_login_mod">
+
+	<div class="base layuot_login_mod">
+
+	  <%= form_for(resource, as: resource_name, :url => invitation_path(@user), :html => {:method => :put}) do |f| %>
+		  <div id="servermessage" style="display:none">
+			<%= devise_error_messages! %>
+		  </div>
+
+		  <div class="ui-dialog dialog_color_schema_1_mod dialog_g_size_1 local_mod">
+
+			<div class="ui-dialog-titlebar">
+
+			  <div class="ui-dialog-title">Edit Personal Settings</div>
+
+			</div>
+
+			<div class="dialog_content">
+
+			  <div class="dialog_form">
+				<dl class="form_cell form_cell_v1_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+					<label for="Enter_email">token</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					<%= f.hidden_field :invitation_token %>
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+					<label for="Enter_email">t('email')</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					<%= f.email_field :email, id: "Enter_email", class: "f_c_field default_mod", placeholder: t('enter_email'), autofocus: true, readonly: 'true' %>
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+					<label for="Enter_your_name">Enter your name</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					<%= f.text_field :name, id: "Enter_your_name", class: "f_c_field default_mod", placeholder: t('enter_your_name'), autofocus: true %>
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+					<label for="Enter_your_password">Enter your password</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					<%= f.password_field :password, id: 'Enter_your_password', class: "f_c_field default_mod", placeholder: t('enter_your_password'), :autocomplete => "off" %>
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+					<label for="Re-enter_password">Re-enter password</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+					<%= f.password_field :password_confirmation, id: 'Re-enter_password', class: "f_c_field default_mod", placeholder: t('Re-enter_password'), :autocomplete => "off" %>
+				  </dd>
+				</dl>
+			  </div>
+			</div>
+			<footer class="dialog_footer local_mod">
+			  <div class="sign_up_butt">
+				<button type="submit" style="color: white">Submit</button>
+			  </div>
+			</footer>
+			<div class="dialog_second_footer">
+			  <dl class="question_b">
+				<dt class="question_b_title">Already have an account?</dt>
+				<dd class="question_b_value">
+				  <a href="/users/sign_in" title=""><%= t('sign_in') %></a>
+				</dd>
+			  </dl>
+			</div>
+
+			<script>
+				$(document).ready(function () {
+					var alert = function (type, text) {
+						$('#alert').text(text).fadeIn().addClass(type)
+						setTimeout(function () {
+							$('#alert').fadeOut()
+						}, 4000)
+						setTimeout(function () {
+							$('#alert').text('').removeClass(type)
+						}, 4600)
+					}
+					$('.layuot_login_mod form').submit(function () {
+						var first_name = $('#First_name').val(),
+								last_name = $('#Last_name').val(),
+								email = $('#Enter_email').val(),
+								password = $('#Enter_your_password').val()
+						if (first_name == '') {
+							alert('error', 'First Name required.');
+							return false;
+						}
+						else if (last_name == '') {
+							alert('error', 'Last Name required.');
+							return false;
+						}
+						else if (email == '') {
+							alert('error', 'Email required.');
+							return false;
+						}
+						else if (password == '') {
+							alert('error', 'Password required.');
+							return false;
+						}
+						else {
+							return true;
+						}
+					});
+					$(document).ready(function () {
+						if ($("#error_explanation ul li:first").length > 0) {
+							if ($("#error_explanation ul li:first")[0].innerHTML.trim() != "") {
+								alert("error", $("#error_explanation ul li:first")[0].innerHTML.trim());
+							}
+						}
+					});
+				})
+			</script>
+		  </div>
+	  <% end %>
+	</div>
+  </div>
+</body>

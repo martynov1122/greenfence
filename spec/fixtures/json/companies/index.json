@@ -1,0 +1,23 @@
+{
+  "current_page": 1,
+  "companies": [
+    {
+      "address": {
+        "latitude_degrees": 36.3354,
+        "longitude_degrees": -93.4372
+      },
+      "administrative_area": "OH",
+      "facilities_count": 1,
+      "gfsi_status": "red",
+      "name": "CAL MAINE FOODS, INC.",
+      "products_count": 1,
+      "subscription": {
+        "general": false,
+        "non_compliance": false,
+        "warning": false
+      }
+    }
+  ],
+  "total_pages": 1
+}
+

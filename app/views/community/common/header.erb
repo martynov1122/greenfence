@@ -1,0 +1,104 @@
+<header class="header standard">
+  <!-- Header toolbar -->
+  <div class="header_wrap standard">
+		<a href='#/user_public_profile' class="logo standard"></a>
+		<dl class="form_cell form_cell_v1_mod header_search">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod header_mod">
+				<label for="search"><%= I18n.t('search') %></label>
+		  </dt>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod header_mod">
+				<input type="text"
+				   id="search"
+				   ng-model="query"
+				   placeholder="<%= I18n.t('search') %>"
+				   class="f_c_field second_mod header_mod "
+				   gf-enter="search(query)"/>
+		  </dd>
+		</dl>
+		<ul class="user_menu_list mod_1">
+		  <li class="user_menu_l_item">
+				<!-- <a class="user_menu_list_butt mail_mod" href="#/messages_center/filter/messages" ng-if="unread_in_messages.length == 0" ></a> -->
+				<span class="user_menu_list_butt mail_mod " ng-class="{'new_notif_mod': unread_in_messages.length > 0}" data-notification-count="{{unread_in_messages.length}}"></span>
+		  </li>
+		  <li class="user_menu_l_item">
+				<!-- <a class="user_menu_list_butt add_user_mod" href="#/messages_center/filter/requests" ng-if="unread_requests.length == 0" ></a> -->
+				<span class="user_menu_list_butt add_user_mod " ng-class="{'new_notif_mod': unread_requests.length > 0}"  data-notification-count="{{unread_requests.length}}"></span>
+		  </li>
+		  <li class="user_menu_l_item">
+				<!-- <a class="user_menu_list_butt msg_center_mod" href="#/messages_center/filter/notifications" ng-if="unread_notifications.length == 0" ></a> -->
+				<span class="user_menu_list_butt msg_center_mod " ng-class="{'new_notif_mod': unread_notifications.length > 0}"  data-notification-count="{{unread_notifications.length}}"></span>
+		  </li>
+		</ul>
+		<ul class="user_menu_list">
+		  <li class="user_menu_l_item">
+				<a href="#/shared_records/company" class="user_menu_list_butt folders_mod">
+				  <span class="user_menu_list_butt_sub"><%= t('document_and_certificates') %></span>
+				</a>
+		  </li>
+		  <li class="user_menu_l_item">
+				<a href="#/user_documents" class="user_menu_list_butt add_folder_mod">
+				  <span class="user_menu_list_butt_sub"><%= t('upload_documents') %></span>
+				</a>
+		  </li>
+		</ul>
+		<div class="user_block header_mod ">
+		  <div class="user_avatar_w header_mod ">
+				<a href="#/user_public_profile">
+				  <img ng-src="{{user.user_profile_attributes.image.image.thumb.url}}" alt="{{user.name}}" class="user_avatar_img header_mod"/>
+				</a>
+		  </div>
+		</div>
+		<div class="user_menu_butt" id="menu_button">
+		  <%= I18n.t('menu') %>
+		  <span class="user_menu_butt_decor"></span>
+		</div>
+  </div>
+  <!-- Sliding Menu-->
+  <nav class="user_menu_w">
+		<div class="user_nav_hline"> <%= I18n.t('menu') %></div>
+		<ul class="user_nav">
+		  <li class="user_nav_item">
+				<a href="#/company_public_profile" title="<%= I18n.t('account_menu') %>" class="user_nav_link"><%= I18n.t('account_menu') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="#/user_edit_profile" title="<%= I18n.t('edit_profile') %>" class="user_nav_link"> <%= I18n.t('edit_profile') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="#/company_public_profile" title="<%= t('company_profile') %>" class="user_nav_link"><%= t('company_profile') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="#/user_settings" title="<%= I18n.t('account_settings') %>" class="user_nav_link">   <%= I18n.t('account_settings') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="#/shared_records/company" title="<%= t('shared_records') %>" class="user_nav_link"><%= t('shared_records') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="#/help_center" title="<%= I18n.t('help_center') %>" class="user_nav_link"><%= I18n.t('help_center') %></a>
+		  </li>
+		  <li class="user_nav_item">
+				<a href="/users/sign_out" data-method='delete' title="<%= I18n.t('logout') %>" class="user_nav_link"><%= I18n.t('logout') %></a>
+		  </li>
+		</ul>
+		<ul class="user_nav mod_1">
+		  <li class="user_nav_item mod_1">
+				<a href="#/privacy_policy" title="<%= t('privacy_policy') %>" class="user_nav_link mod_1"><%= t('privacy_policy') %></a>
+		  </li>
+		  <li class="user_nav_item mod_1">
+				<a href="#/terms_of_use" title="<%= t('terms_of_use') %>" class="user_nav_link mod_1"><%= t('terms_of_use') %></a>
+		  </li>
+		</ul>
+		<ul class="social_menu">
+		  <li class="social_menu_item">
+				<a href="" title="facebook" class="social_menu_link facebook_mod"></a>
+		  </li>
+		  <li class="social_menu_item">
+				<a href="" title="twitter" class="social_menu_link twitter_mod"></a>
+		  </li>
+		</ul>			
+  </nav>
+  <input id="user_id" type='hidden' value=<%= current_user.id %>>
+  <input id="user_uuid" type='hidden' value=<%= current_user.uuid %>>
+  <ng-include src="'/community/new/toolbar_company'"></ng-include>
+</header>
+
+

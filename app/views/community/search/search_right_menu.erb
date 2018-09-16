@@ -1,0 +1,107 @@
+<div class="secondary_row layuot_mod_1 search_page_mod"  ng-controller="SearchRightMenuCtrl">
+<div class="section_menu mod_1" ng-if="global_search_results_length">
+  <h2 class="section_hline">Filter search by </h2>
+  <ul class="section_menu_list">
+    <li class="section_menu_l_item" ng-if="search.companies">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('Company')">
+        Companies <span class="section_m_link_count">{{search.companies || 0}}</span>
+      </div>
+    </li>
+    <li class="section_menu_l_item" ng-if="search.operations">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('Operation')">
+        <%= t('operations') %><span class="section_m_link_count">{{search.operations || 0}}</span>
+      </div>
+    </li>
+    <li class="section_menu_l_item" ng-if="search.documents">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('Document')">
+        <%= t('certificates') %> &amp; <%= t('documents') %><span class="section_m_link_count">{{search.documents || 0}}</span>
+      </div>
+    </li>
+    <li class="section_menu_l_item" ng-if="search.services">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('Service')">
+        <%= t('services') %><span class="section_m_link_count">{{search.services || 0}}</span>
+      </div>
+    </li>
+    <li class="section_menu_l_item" ng-if="search.users">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('User')">
+        Users<span class="section_m_link_count">{{search.users || 0}}</span>
+      </div>
+    </li>
+    <li class="section_menu_l_item" ng-if="search.auditors">
+      <div class="section_menu_link hovered_1_mod" ng-click="filter('Auditor')">
+        Auditors<span class="section_m_link_count">{{search.auditors || 0}}</span>
+      </div>
+    </li>
+    <!-- <li class="section_menu_l_item">
+      <div class="section_menu_link hovered_3_mod filter_mod sectionMenuHiddenTrigger">Filter by CB</div>
+      <ul class="section_menu_hidden">
+        <li class="section_menu_l_item hidden_mod"><a href="" title="" class="section_menu_link hovered_4_mod">GFSI<span class="section_m_link_count icon_mod_1">5</span></a></li>
+        <li class="section_menu_l_item hidden_mod"><a href="" title="" class="section_menu_link hovered_4_mod">CB #2<span class="section_m_link_count icon_mod_1">50</span></a></li>
+      </ul>
+    </li>
+    <li class="section_menu_l_item">
+      <div class="section_menu_link hovered_3_mod filter_mod sectionMenuHiddenTrigger">Filter by Inventory</div>
+      <ul class="section_menu_hidden">        
+        <li class="section_menu_l_item hidden_mod">
+          <input type="text" id="inventory_min" placeholder="Min Inventory"  ng-model="inventory.min"  />
+          <input type="text" id="inventory_max" placeholder="Max Inventory"  ng-model="inventory.max" />
+          <a  ng-click="sub_filter_inventory('inventory')" class="button"> Filter </a>
+        </li>
+        
+      </ul>
+    </li>
+    <li class="section_menu_l_item">
+      <div class="section_menu_link hovered_3_mod filter_mod sectionMenuHiddenTrigger">Filter by Price</div>
+      <ul class="section_menu_hidden">        
+        <li class="section_menu_l_item hidden_mod">
+          <input type="text" id="price_min" placeholder="Min Price"  ng-model="price.min"  />
+          <input type="text" id="price_max" placeholder="Max Price"  ng-model="price.max" />
+          <a  ng-click="sub_filter_price('inventory')" class="button"> Filter </a>
+        </li>
+        
+      </ul>
+    </li> -->
+
+    <li class="section_menu_l_item">
+      <div class="section_menu_link hovered_3_mod ico_location sectionMenuHiddenTrigger">Location</div>
+      <div class="section_menu_hidden form_wrap_mod">
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Country">Country</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+            <ui-select ng-model="location.country" name="Country" theme="selectize" on-select="locationFilter()">
+              <ui-select-match placeholder="Country">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="country.name as country in countries |  filter: $select.search">
+                <div ng-bind-html="country.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </dd>
+        </dl>
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="State/Province">State/Province</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+            <ui-select ng-model="location.state" ng-show="location.country=='United States'" name="State" theme="selectize" id="selectState" on-select="locationFilter()">
+              <ui-select-match placeholder="US state name">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="state.name as state in states |  filter: $select.search">
+                <div ng-bind-html="state.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            <input type="text" id="State" placeholder="State/Province" class="f_c_field default_mod " ng-model="location.state"  ng-hide="location.country=='United States'" ng-blur="locationFilter()"/>
+          </dd>
+        </dl>
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="City">City</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+            <input type="text" id="City" placeholder="<%= I18n.t('city') %>" class="f_c_field default_mod " ng-model="location.city" ng-blur="locationFilter()"/>
+          </dd>
+        </dl>
+      </div>
+    </li>
+  </ul>
+</div>
+</div>

@@ -1,0 +1,202 @@
+<body>
+<!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]--> 
+
+<!-- Add your site or application content here -->
+<div id="container">
+  <div id="header">
+            <div class="header_left">    
+                <img src="img/logo_line.png" style="margin: 0px 0 0 16px;" width="" height="" alt="">
+                <div class="search">
+                    <input placeholder="Search for people, companies, and facilities...">
+                </div>    
+            </div>    
+
+            <div class="header_right">
+                
+                <div class="dropdown">
+                    <input class="dropdown-toggle" type="text">
+                    <div class="dropdown-text">
+                        <div class='user-avatar'><img src='img/avatar.jpg'></div>
+                        <div class='text'>Michael Abehsera</div>
+                    </div>
+                        <ul class="dropdown-content">
+                            <li><a href="#">Settings</a></li>
+                            <li><a href="#">Log out</a></li>
+                        </ul>
+                </div>
+                <div class="clear"></div>
+                <ul class="menu_main">
+                    <li><a href="#"><img src="img/envelope_top.png" style="margin-right: 6px;" width="16" height="12" alt="">Messages</a></li>
+                </ul>
+            </div>
+        </div> 
+
+<!--            <div class="clear"></div>
+            <div class="header_companies">
+                <ul class="left_menu">
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">My Facilities</a></li>
+                    <li><a href="#">My Suppliers</a></li>
+                </ul>
+
+                <ul class="right_menu">
+                    <li><a href="#"> Company Settings</a></li>
+                    <li><a href="#" class="green" style="padding: 8px 27px; position: relative; top: 3px; margin-right: 9px;">Upload</a></li>
+                </ul>
+
+            </div> 
+
+        <div class="compliance_bar">
+            <ul class="global_menu">
+              <li></li>
+            </ul>
+
+        </div>    
+
+  </div>
+  
+
+
+
+
+   FOOTER PART START 
+  <div id="footer">
+            <div class='column'>
+                <div class='title'>Menu</div>
+                <div id='footer-menu'>
+                    <div class='links'>
+                        <a href='/'>Home</a>
+                        <a href='/'>Contact</a>
+                        <a href='/'>About</a>
+                        <a href='/'>Team</a>
+                    </div>
+                </div>
+                <div class='bottom'>Greenfence</div>
+            </div>
+            <div class='column'>
+                <div class='title'>Company Address</div>
+                <div class='map'><img src='img/map.jpg'></div>
+            </div>
+            <div class='column'>
+                <div class='title'>Contact Us</div>
+                <div class='field'>
+                    <div class='icon'><div class='img'><img src='img/phone.png'></div></div>
+                    <div class='text'>Call us at: 1-800-000-0000</div>
+                </div>
+                <div class='field'>
+                    <div class='icon'><img src='img/mail.png'></div>
+                    <div class='text'>Email: michaelabehsera@gmail.com</div>
+                </div>
+                <div class='title' id='join'>Join us</div>
+                <div class='social facebook'><img src='img/facebook.png'></div>
+                <div class='social'><img src='img/twitter.png'></div>
+            </div>
+        </div>
+  <!-- FOOTER PART END --> 
+  
+</div>
+<div id='map-content'>
+    <div id='map'></div>
+    <div class='sidebar'>
+        <div class='complaints'>
+            <div class='complaint'>
+                <div class='color red'></div>
+                <div class='text'>1 complaint</div>
+            </div>
+            <div class='complaint'>
+                <div class='color yellow'></div>
+                <div class='text'>1 complaint</div>
+            </div>
+            <div class='complaint'>
+                <div class='color midori'></div>
+                <div class='text'>1 complaint</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var geoJson = [{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-74.20, 40.30]
+    },
+    "properties": {
+        "supplier": "Name of supplier",
+        "certificate": "Certificate name",
+        "classes": "midori"
+    }
+},{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-75.00, 40]
+    },
+    "properties": {
+        "supplier": "Name of supplier",
+        "certificate": "Certificate name",
+        "classes": "red"
+    }
+},{
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-75.65, 40.15]
+    },
+    "properties": {
+        "supplier": "Name of supplier",
+        "certificate": "Certificate name",
+        "classes": "yellow"
+    }
+}]
+
+L.mapbox.accessToken = 'pk.eyJ1IjoibWljaGFlbGFiZWhzZXJhIiwiYSI6IktjeUlvV0EifQ.VM5vLnfiSDkuLHJHTwjc_g';
+
+var map = L.mapbox.map('map', 'michaelabehsera.hdo0f6cm')
+    .setView([40, -74.50], 9);
+
+var layer = L.mapbox.featureLayer().addTo(map);
+
+layer.on('layeradd', function(e) {
+    var marker = e.layer,
+        feature = marker.feature;
+
+    marker.setIcon(
+      L.divIcon({
+        className: 'map-marker ' + feature.properties.classes,
+        iconSize: [40, 40],
+        popupAnchor: [170, 110]
+      })
+    );
+});
+
+layer.setGeoJSON(geoJson);
+
+layer.eachLayer(function(layer) {
+    // the feature properties declared above are available under `layer.feature.properties`
+    var content = "<div class='info'><div class='icon'><img src='img/buildings.jpg'></div>" + 
+        "<div class='text'>" + layer.feature.properties.supplier + "</div></div><div class='info'>" + 
+        "<div class='icon'><img src='img/paper.jpg'></div><div class='text'>" +
+        layer.feature.properties.certificate + "</div></div><div class='send-message'>" +
+        "<div class='button'>Send a message</div></div>";
+    layer.bindPopup(content);
+});
+
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script> 
+<script src="js/plugins.js"></script> 
+<script src="js/main.js"></script> 
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. --> 
+<script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+</body>

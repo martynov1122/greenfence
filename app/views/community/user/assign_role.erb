@@ -1,0 +1,82 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+  	<h1 class="content_headline">Add Role To User </h1>
+	<a class="wizard_add_butt_v2" ng-click="addUser(user_role)"><%= t('save') %></a>
+  </div>
+  <div class="add_info_block">
+    <div class="add_info_header">
+      <div class="add_info_title">Select Role To Assign</div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block ">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category">Enter name of role</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select ng-model="user_role.customRole" theme="selectize">
+                <ui-select-match placeholder="Select a role in the list or search his name...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="role in roles |  filter: $select.search">
+                  <div ng-bind-html="role.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="add_info_block" ng-show="user_role.customRole.role_on == 'operation'">
+    <div class="add_info_header">
+      <div class="add_info_title">Select an operation</div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block ">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category">Enter name of operation</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select ng-model="user_role.operationId" theme="selectize">
+                <ui-select-match placeholder="Select an operation in the list or search by name...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="operation.id as operation in operations |  filter: $select.search">
+                  <div ng-bind-html="operation.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+   <div class="add_info_block">
+    <div class="add_info_header">
+      <div class="add_info_title">Select User</div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block ">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category">Enter name of user</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select ng-model="user_role.userId" theme="selectize">
+                <ui-select-match placeholder="Select a user in the list or search his name...">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="user.id as user in users |  filter: $select.search" >
+                  <div ng-bind-html="user.name | highlight: $select.search" title="{{user.email}}"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

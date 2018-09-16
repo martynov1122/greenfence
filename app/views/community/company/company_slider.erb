@@ -1,0 +1,164 @@
+<div class="profile_header">
+  <div class="video_back_block mod_h_1">
+    <div class="video_back mod_h_1">
+      <video autoplay="" poster="<%= asset_path 'test.jpg' %>" loop="" class="video_block" ng-if="false">
+        <source src="<%= asset_path 'test.webm' %>" type="video/webm">
+        <source src="<%= asset_path 'test.mp4' %>" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="profile_header_w" ng-class="{clean: current_user_id == public_company.primary_contact_user.id}">
+    <div class="user_block profile_mod ">
+      <div class="user_avatar_w profile_mod" ng-class="!public_company.logo.logo.thumb.url ? 'no_img_mod':''">
+        <img ng-if="public_company.logo.logo.thumb.url" class="user_avatar_img profile_mod user_profile_mod" ng-src="{{public_company.logo.logo.thumb.url}}" alt="{{public_company.name}}"/>
+		    <span ng-if="!public_company.logo.logo.thumb.url" class="user_avatar_img profile_mod user_profile_mod no_img_mod" ></span>
+      </div>
+      <div ng-if="public_company.name" class="user_name profile_mod">{{public_company.name}}</div>
+  	  <footer class="user_b_footer profile_mod" ng-if="public_company.type || public_company.address_attributes.city">
+    		<div ng-if="public_company.address_attributes.city != null" ng-class="{ user_location: public_company.address_attributes.city != null }" class="profile_mod">{{public_company.address_attributes.city}}</div>
+    		<div ng-if="public_company.type != null" ng-class="{ user_industry: public_company.type != null }" class="profile_mod">{{public_company.type}}</div>
+  	  </footer>
+    </div>
+    <div class="profile_header_butt_w" ng-if="current_user_id != public_company.primary_contact_user.id">
+      <a class="follow_configure_butt" href="#/company_follow_configure/{{public_company.id}}">
+        <%= I18n.t('follow_and_configure') %>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="profile_body">
+  <div class="profile_about">
+    <h1 class="profile_headline"><%= t('about') %></h1>
+    <div class="profile_about_text">
+      <!-- TODO: implement modal dialog -->
+	  <div ng-if="public_company.id != current_company.id && !public_company.company_profile_attributes.summary">
+		Oops, it looks like {{public_company.name}} has not included any information here yet.
+	  </div>
+
+      <div ng-if="public_company.company_profile_attributes.summary">
+        <p>
+          {{ public_company.company_profile_attributes.summary | limitTo : 380 : 0}}
+          <span ng-if="public_company.company_profile_attributes.summary.length > 380">
+            ... <a href="" class="view_more_show link_highlight_mod">Read More</a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="profile_contact_info">
+    <ul class="profile_contact_list">
+      <li class="profile_contact_l_item">
+        <a ng-if="public_company.company_profile_attributes.email"
+           href="mailto:{{public_company.company_profile_attributes.email}}"
+           title="{{public_company.company_profile_attributes.email}}"
+           class="profile_contact_link mail_mod">
+          {{public_company.company_profile_attributes.email}}</a>
+        <span ng-if="!public_company.company_profile_attributes.email">
+          <span class="profile_contact_link mail_mod"
+             ng-if="public_company.id != current_company.id"><%= t('no_email_address_added') %></span>
+          <a ng-if="public_company.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link mail_mod link_highlight_mod">+ <%= t('add_a_contact_email') %></a>
+        </span>
+      </li>
+      <li class="profile_contact_l_item">
+        <a ng-if="public_company.company_profile_attributes.website"
+           href="public_company.company_profile_attributes.website"
+           title=""
+           class="profile_contact_link site_mod">
+          {{public_company.company_profile_attributes.website}}</a>
+        <span ng-if="!public_company.company_profile_attributes.website">
+          <span class="profile_contact_link site_mod"
+             ng-if="public_company.id != current_company.id"><%= t('no_website_address_added') %></span>
+          <a ng-if="public_company.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link site_mod link_highlight_mod">+ <%= t('add_your_website_link') %></a>
+        </span>
+      </li>
+      <li class="profile_contact_l_item">
+        <a ng-if="public_company.company_profile_attributes.phone"
+           href="public_company.company_profile_attributes.phone"
+           title=""
+           class="profile_contact_link tel_mod">
+          {{public_company.company_profile_attributes.phone}}</a>
+        <span ng-if="!public_company.company_profile_attributes.phone">
+          <span class="profile_contact_link tel_mod"
+             ng-if="public_company.id != current_company.id"><%= t('no_phone_number_added') %></span>
+          <a ng-if="public_company.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link tel_mod link_highlight_mod">+ <%= t('add_a_phone_number') %></a>
+        </span>
+      </li>
+    </ul>
+  </div>
+<!--
+  <div class="profile_contact_info" ng-if="false">
+    <ul class="profile_contact_list">
+      <li class="profile_contact_l_item">
+		<a ng-if="public_company.company_profile_attributes.email" href="mailto:{{public_company.company_profile_attributes.email}}" title="{{public_company.company_profile_attributes.email}}" class="profile_contact_link mail_mod">{{public_company.company_profile_attributes.email}}</a>
+		<span class="profile_contact_link mail_mod"  ng-if="!public_company.company_profile_attributes.email">No email address added</span>
+	  </li>
+      <li class="profile_contact_l_item">
+		<a ng-if="public_company.company_profile_attributes.website" href="http://{{public_company.company_profile_attributes.website}}" title="{{public_company.company_profile_attributes.website}}" class="profile_contact_link site_mod">{{public_company.company_profile_attributes.website}}</a>
+		<span class="profile_contact_link site_mod"  ng-if="!public_company.company_profile_attributes.website">No website address added</span>
+	  </li>
+      <li class="profile_contact_l_item">
+		<a ng-if="public_company.company_profile_attributes.phone" href="tel:{{public_company.company_profile_attributes.phone}}" title="{{public_company.company_profile_attributes.phone}}" class="profile_contact_link tel_mod">{{public_company.company_profile_attributes.phone}}</a>
+		<span class="profile_contact_link tel_mod"  ng-if="!public_company.company_profile_attributes.phone">No phone number added</span>
+	  </li>
+    </ul>
+  </div>
+-->
+</div>
+<div class="profile_tabs" ng-controller="CompanyPublicProfileRightMenuCtrl">
+  <ul class="section_menu_list profile_tabs_mod">
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'featured'}"
+		   ng-click="filterType('/filter/featured',$event)" data-count="{{public_company.featured_count}}"><%= t('featured') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'operations'}"
+		   ng-click="filterType('/filter/operations',$event)" data-count="{{public_company.operations_count}}"><%= t('operations') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'products'}"
+		   ng-click="filterType('/filter/products',$event)" data-count="{{public_company.products_count}}"><%= t('products') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'services'}"
+		   ng-click="filterType('/filter/services',$event)" data-count="{{public_company.services_count}}"><%= t('services') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'documents'}"
+		   ng-click="filterType('/filter/documents',$event)" data-count="{{public_company.documents_count}}"><%= t('certificates') %> &amp; <%= t('documents') %>
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'employees'}"
+		   ng-click="filterType('/filter/employees',$event)" data-count="{{public_company.employees_count}}">Employees
+	  </div>
+	</li>
+  </ul>
+</div>
+
+<div id="profile_view_more" title="<%= t('about') %>"  style="display:none">
+  <div class="dialog_content text_block_mod" style= "white-space: pre-line;">
+    <p class="view_more_text" style="text-align:justify"> 
+      {{public_company.company_profile_attributes.summary}}
+    </p>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="wrapper layuot_login_mod">
+  <div class="base layuot_login_mod">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|  %>
+      <div id="servermessage" style="display:none"> 
+          <div id="messagetext">
+           <%=flash[:notice] if flash[:notice]%>
+          </div>
+          <div id="errortext">
+           <%=flash[:alert] if flash[:alert]%>
+          </div>
+      </div>
+
+    <div class="ui-dialog dialog_color_schema_1_mod dialog_g_size_1 local_mod">
+      <div class="content_box sign_mod">
+        <div class="ui-dialog-titlebar">
+          <div class="ui-dialog-title">Sign In</div>
+        </div>
+        <div class="dialog_content">
+          <div class="dialog_form">
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                <label for="Enter_email">Enter email</label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                <%= f.email_field :email , id: "Enter_email", class: "f_c_field default_mod" , placeholder: "Enter email" , autofocus: true %>
+              </dd>
+            </dl>
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                <label for="Enter_your_password">Enter your password</label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                <%= f.password_field :password, id: 'Enter_your_password', class: "f_c_field default_mod", placeholder: "Enter your password",:autocomplete => "off" %>
+              </dd>
+            </dl>
+          </div>
+        </div>
+        <footer class="dialog_footer local_mod">
+          <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+            <%= f.check_box :remember_me, class: "lbl_inp_rb_ch"%>
+            <%= f.label :remember_me, class: "lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod dialog_footer_mod"%>
+          </label>
+          <button type="submit" class="signin_butt">Sign In</button>
+        </footer>
+      </div>
+      <div class="dialog_second_footer">
+        <dl class="question_b">
+          <dt class="question_b_title">Forgot password?</dt>
+          <dd class="question_b_value"><a href="/users/password/new" title="">Reset</a></dd>
+        </dl>
+        <dl class="question_b">
+          <dt class="question_b_title">Don’t have an account?</dt>
+          <dd class="question_b_value"><a href="/users/register" title="">Sign Up</a></dd>
+        </dl>
+      </div>
+      <script>
+        $(document).ready(function() {
+
+          var alert = function(type, text){
+            $('#alert').text(text).fadeIn().addClass(type)
+            setTimeout(function(){
+              $('#alert').fadeOut()
+            }, 4000)
+            setTimeout(function(){
+              $('#alert').text('').removeClass(type)
+            }, 4600)
+          }
+          $('.layuot_login_mod form').submit(function(){
+            var email = $('#Enter_email').val()
+            var password = $('#Enter_your_password').val()
+            if (email == '') { alert('error', 'Email required.') ; return false;}
+            else if (password == '') { alert('error', 'Password required.') ; return false;}
+            else { 
+                    return true ;
+              }
+               } ) ; 
+            $( document ).ready(function() {
+                if ($("#messagetext").text().trim() != "") {
+                    alert("success" , $("#messagetext").text());
+                }
+                if ($("#errortext").text().trim() != "") {
+                    alert("error" , $("#errortext").text());
+                }
+            });
+        })
+        </script>
+    </div>
+    <% end %>
+  </div>
+</div>

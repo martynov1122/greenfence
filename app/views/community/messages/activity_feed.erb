@@ -1,0 +1,20 @@
+<article class="msg_block">
+  <div class="friendship-block">
+    <header class="msg_header">
+      <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+        <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+          <img ng-src="{{data.sender.photo_url}}" alt="{{data.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+        </div>
+        <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">
+          <span ng-bind-html="message()"></span>
+        </div>
+      </div>
+      <div class="msg_time">{{data.updated_at}}</div>
+      <div class="gl_action_block msg_mod ng-scope" ng-if="data.actions.length > 0">
+        <a href="" title="" class="gl_action_trigger_butt take_action_butt" ng-if="data.is_unread">Take Action</a>
+        <ul class="gl_action_list msg_mod" ng-bind-html="action()">
+        </ul>
+      </div>
+    </header>
+  </div>
+</article>

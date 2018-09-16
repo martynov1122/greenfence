@@ -1,0 +1,51 @@
+<div class="content_main">    
+</div>
+
+<script type="x-tmpl-mustache" id="facility">
+  <div class="supplier_top"> 
+    <ul class="breadcrumbs">
+      <li><a href="my_facilities">Facilities</a></li>
+      <li>></li>
+      <li><a href="#" class="active_link">{{name}}</a></li>
+    </ul>
+  </div> 
+  <div class="profile_top">
+    <div class="avatar">
+      <img src="<%= asset_path "freeapp/stock_img_1.png"%>" width="134" height="134" alt="Coca Cola">
+    </div>    
+    <div class="user_name">
+      <h1>{{name}}</h1>
+      <p>{{description}}</p>
+    </div>
+  </div>    
+  <div class="company_info">
+    <ul>
+      <li><img src='<%= asset_path "freeapp/green_checkmark.png"%>'  style="margin-right: 7px;" width="25" height="25" alt="Green checkmark">{{status}}</li>
+    </ul>
+    <div class="company_buttons">
+      <a href="#" class="grey" style="padding: 9px 20px; margin-top: -30px; display: inline-block; float: right; margin-right: -18px;">Add to Supply Chain</a>
+    </div>    
+  </div>    
+  <div class="clear"></div>
+  <div class="tp">
+    <h2>{{certificates.length}} Certificate</h2>
+  </div>    
+  <div class="certificate_carousel">
+    <div class='arrow arrow-right'>></div>
+    <div class='arrow arrow-left'><</div>
+    <div class="cw">
+      {{#certificates}}
+      <a href='certificate_detail?id={{id}}'>
+        <div class="certificate">
+          <img src="{{#document}}{{#document}}{{#thumb}}{{url}}{{/thumb}}{{/document}}{{/document}}" width="220" height="300" alt="">
+          <h3>{{certificate_name}}</h3>
+        </div>
+      </a>
+      {{/certificates}}
+    </div>
+  </div>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'facility_profile.js' %>"></script>

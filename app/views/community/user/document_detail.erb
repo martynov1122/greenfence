@@ -1,0 +1,365 @@
+<input type="hidden" id="payment_settings" value="<%= current_user.is_payment_settings_verified? %>">
+<input id="company_id" type='hidden' value = '<%= current_user.company.id %>' >
+<div id="compain_header" class="compain_header">
+  <div class="user_block detail_mod ">
+		<div class="user_avatar_w detail_mod">
+		  <img ng-src="{{document.owner.image_url}}" alt="{{document.owner.name}}" class="user_avatar_img detail_mod">
+		</div>
+		<div class="user_name detail_mod">{{document.owner.name}}</div>
+  </div>
+  <div class="compain_header_side_w" ng-switch="document.owner.type">
+    <a href="javascript:history.back()" title="" class="back_to_company_butt">Back</a>
+    <!-- <a ng-switch-when="User" href="#/user_public_profile/{{document.owner.id}}" title="" class="back_to_company_butt">Back to {{document.owner.name}}</a>
+    <a ng-switch-when="Company" href="#/company_public_profile/{{document.owner.id}}" title="" class="back_to_company_butt">Back to {{document.owner.name}}</a>
+    <a ng-switch-when="Operation" href="#/operation/{{document.owner.id}}" title="" class="back_to_company_butt">Back to {{document.owner.name}}</a> -->
+  </div>
+</div>
+<!--TODO Andrey font shit -->
+<div class="detail_block_container">
+	<div class="detail_block">
+	  <div class="detail_b_main_w">
+			<div class="datail_b_header_v1">
+			  <div class="user_block detail_mod">
+					<div class="user_authentication detail_mod" ng-if="document.status_detail == 'authenticated'">
+					  <div class="user_authentication_popup">
+							<div class="user_authentication_header">
+							  <div class="user_authentication_name">Document</div>
+							</div>
+							<ul class="user_authentication_list">
+							  <li class="user_authentication_l_item">
+								<div class="user_authentication_sub_b">								  
+								  <div class="user_authentication_hline">Authenticated by</div>
+								  <ul class="info_b_sub_list authentication_mod">
+										<li class="info_b_sub_list_item authentication_mod">
+										  <a class="user_block default_mod h_36_mod hor_mod" ng-href="#/user_public_profile/{{document.auditor.id}}">
+												<div class="user_avatar_w default_mod h_36_mod hor_mod">
+												  <img ng-src="{{document.auditor.image_url}}" class="user_avatar_img default_mod h_36_mod hor_mod no_img_mod"/>
+												</div>
+												<div class="user_name default_mod h_36_mod hor_mod">{{document.auditor.name}}</div>
+										  </a>
+										</li>
+								  </ul>						  
+								  <div class="user_authentication_s_footer">
+										<dl class="user_authentication_period">
+										  <dt class="user_authentication_period_hline">Date Issued:</dt>
+										  <dd class="user_authentication_period_value">
+												<time>{{document.authentication_date}}</time>
+										  </dd>
+										  <dt class="user_authentication_period_hline">Expires:</dt>
+										  <dd class="user_authentication_period_value">
+												<time>{{request.authentication_expiration_date}}</time>
+										  </dd>
+										</dl>
+								  </div>
+								</div>
+							  </li>
+							</ul>
+					  </div>
+					</div>
+					<div class="user_avatar_w detail_mod">
+					  <img ng-if="false" ng-src="{{document.profile_picture.profile_picture.url}}" alt="" class="user_avatar_img detail_mod"/>
+					  <span class="user_avatar_img detail_mod no_img_mod document_mod"></span>
+					</div>
+					<div class="user_name detail_mod">{{document.document_name}}</div>
+					<div class="user_info detail_mod">Issued for {{document.document_definition.document_type}}</div>
+				</div>
+			  <div ng-if="document.status_detail != 'authenticated' && request" class="status_block warning datail_mod">Status: In Progress</div>
+			</div>
+			<div class="datail_b_stats">
+			  <span class="datail_b_stats_hline">{{comments.length || 0}} Comments &amp; {{document.document_authentication_requests.length || 0}} request for quote</span>
+			  <!--test content-->
+			  <!-- <dl class="datail_b_pagination">
+					<dt class="datail_b_pagination_hline">Viewing 1 out of 2 offers</dt>
+					<dd class="datail_b_pagination_wrap">
+					  <ul class="pagination_v2">
+							<li class="pagination_v2_item active_mod">
+							  <span class="pagination_v2_butt prev">Prev</span>
+							</li>
+							<li class="pagination_v2_item active_mod">
+							  <span class="pagination_v2_butt page_link_mod next">Next</span>
+							</li>
+					  </ul>
+					</dd>
+			  </dl> -->
+			  <!--test content-->
+			</div>			
+			<div class="msg_comment_block notif_mod" ng-if="visibleTo(request.auditor_id, document.documentable_type) && request">
+			  <header class="msg_header">
+					<div class="user_block default_mod h_48_mod hor_mod msg_mod">
+					  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+							<img ng-src="{{document.owner.image_url}}" alt="{{document.owner.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+					  </div>
+					  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">
+							<span class="second_style">{{document.owner.name}} wants you to</span> authenticate this document.
+					  </div>
+					</div>
+			  </header>
+			  <div class="msg_content" ng-if="stateVisible('decline_request', request.next_possible_events)">					
+			  	<a class="reject_req_butt" href="" ng-click="documentDeclined()">Decline Request</a>
+	    		<a class="accept_req_butt" href="" ng-click="documentAccepted()">Accept Request</a>
+	    	</div>
+			</div>
+			<div class="msg_comment_block" ng-if="visibleTo(request.auditor_id, document.documentable_type) && request.price_for_auth != null">
+			  <header class="msg_header msg_comment_2_mod">
+					<div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod ">				  	
+					  	<img ng-src="{{document.auditor.image_url}}" alt="{{document.auditor.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+					  </div>
+					  <div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">
+							<span class="second_style">You have submitted an offer to {{document.owner.name}}</span>
+					  </div>
+					</div>					
+			  </header>
+			  <div class="msg_content">
+					<p>Timeline: I will have it done by <b>{{request.offer_date_of_auth | date : dd-mm-yyyy}}</b></p>
+					<p>Price: <b>${{request.price_for_auth}}</b></p>
+				</div>
+			</div>			
+			<div class="msg_comment_block offer_mod" ng-if="visibleTo(request.doc_owner_id, document.documentable_type) && request.price_for_auth">
+			  <header class="msg_header msg_comment_2_mod">
+					<div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  	<img ng-src="{{document.auditor.image_url}}" alt="{{document.auditor.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+					  </div>
+					  <div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">
+							{{document.auditor.name}}
+							<span class="second_style">/ CEO Berry Good Food</span>
+					  </div>
+					</div>
+					<div class="msg_time">Offer for you  /  {{request.created_at | timeAgo }}</div>
+			  </header>
+			  <div class="msg_content">
+					<p>Timeline: I will have it done by <b>{{request.offer_date_of_auth | date : dd-mm-yyyy}}</b></p>
+					<p>Price: <b>${{request.price_for_auth}}</b></p>
+					<a ng-if="stateVisible('payment_done', request.next_possible_events)" class="accept_offer_butt" href="">Accept Offer & Pay</a>
+			  </div>
+			</div>
+			<div class="msg_comment_block" ng-if="(visibleTo(request.doc_owner_id, document.documentable_type) || visibleTo(request.auditor_id, document.documentable_type)) && request.payment_done_at">
+			  <header class="msg_header msg_comment_2_mod">
+					<div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod ">				  	
+					  	<img ng-src="{{document.auditor.image_url}}" alt="{{document.auditor.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+					  </div>
+					  <div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">
+							<span class="second_style"><b>{{document.owner.name}}</b> has made the payment for <b>${{request.price_for_auth}}</b> on <b>{{request.offer_date_of_auth | date : dd-mm-yyyy}}</b></span>
+					  </div>
+					</div>
+					<div ng-if="stateVisible('rejected', request.next_possible_events) || stateVisible('payment_done', request.next_possible_events)" class="status_block warning datail_mod">Status: In Progress</div>
+			  </header>
+			  <div class="msg_content">
+			  	<div ng-if="visibleTo(request.auditor_id, document.documentable_type) && stateVisible('rejected', request.next_possible_events)">
+						<p>Please Approve or Reject the Authentication</p>
+						<div>
+							<a class="reject_req_butt" href="" ng-click="documentRejected()">Reject</a>
+		    			<a class="accept_req_butt" href="" ng-click="documentApproved()">Approve</a>
+	  		  	</div>
+	  		  </div>
+			  </div>
+			</div>			
+			<div class="msg_comment_block offer_mod" ng-if="visibleTo(request.auditor_id, document.documentable_type) && stateVisible('quoted', request.next_possible_events)">
+			  <header class="msg_header msg_comment_2_mod">
+					<div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod ">
+					  	<img ng-src="{{document.auditor.image_url}}" alt="{{document.auditor.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+					  </div>
+					  <div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">
+							{{document.auditor.name}}
+					  </div>
+					</div>
+					<div class="msg_time">Request by you  /  {{request.created_at | timeAgo }}</div>
+			  </header>
+			  <div class="msg_content">
+					<div class="form_block hor_mod authenticate_mod">
+					  <dl class="form_cell form_cell_v1_mod two_thirds_mod authenticate_mod">
+							<dt class="form_c_hline form_v1_mod hline_hide_mod">
+							  <label for="Authentication">Authentication will be completed by...</label>
+							</dt>
+							<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+							  <input type="text" id="Authentication" placeholder="Authentication will be completed by..." class="f_c_field default_mod" ng-model="quote.offer_date_of_auth" datepicker readonly="readonly"/>
+							</dd>
+					  </dl>
+					  <dl class="form_cell form_cell_v1_mod third_mod authenticate_mod">
+							<dt class="form_c_hline form_v1_mod hline_hide_mod">
+							  <label for="Pricing">$ Pricing</label>
+							</dt>
+							<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+							  <input type="text" gf-number-input id="Pricing" placeholder="$ Pricing" class="f_c_field default_mod " ng-model="quote.price_for_auth">
+							</dd>
+					  </dl>
+					  <dl class="form_cell form_cell_v1_mod full_mod">
+							<dt class="form_c_hline form_v1_mod hline_hide_mod">
+							  <label for="Add_your_message">Add a message with your offer</label>
+							</dt>
+							<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+							  <textarea placeholder="Add a message with your offer" class="f_c_field default_mod textarea_mod_1" ng-model="quote.comment"></textarea>
+							</dd>
+					  </dl>
+					</div>
+					<div class="butt_wrap">
+					  <div class="send_offer_butt" ng-click="createOffer(quote)">Send Offer</div>
+					</div>
+			  </div>
+			</div>
+			<div ng-if="visibleTo(request.doc_owner_id, document.documentable_type) || visibleTo(request.auditor_id, document.documentable_type)">
+				<div class="msg_comment_block" ng-repeat="comment in comments">
+			    <header class="msg_header msg_comment_2_mod">
+						<div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+						  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod ">
+						  	<img ng-src="{{comment.user.image_url}}" alt="{{comment.user.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+						  </div>
+						  <div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">
+						  	{{comment.user.name}}
+								<span class="second_style">/ {{comment.user.title}}</span>
+						  </div>
+						</div>
+						<div class="msg_time">{{comment.created_at | timeAgo}}</div>
+				  </header>
+				  <div class="msg_content">
+						<p>{{comment.text}}</p>
+				  </div>				  
+				</div>
+				<footer class="msg_footer">
+				  <div class="msg_comment_form">
+						<div class="user_block msg_comment_mod ">
+						  <div class="user_avatar_w msg_comment_mod ">
+								<img ng-src="{{user.user_profile_attributes.image.image.thumb.url}}" alt="undefined" class="user_avatar_img msg_comment_mod"/>&ndash;&gt;
+						  </div>
+						</div>
+						<dl class="form_cell form_cell_v1_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="Respond">Respond...</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<input type="text" id="Respond" placeholder="Respond..." class="f_c_field default_mod " ng-model="cmt"/>
+						  </dd>
+						</dl>
+						<div class="butt_wrap msg_comment_mod">
+						  <!-- <div class="attach_butt">Add attachment</div> -->
+						  <div class="butt_comment_send" ng-click="addComment(cmt)">Send</div>
+						</div>
+				  </div>
+				</footer>
+			</div>			
+	  </div>
+	  <article class="document_card_block">
+	  	<h2>Description</h2>
+			<p>{{document.description || "No description available"}}</p>
+	  </article>
+	  <article class="document_card_block">
+	  	<h2>Additional Information</h2>
+			<p>{{document.additional_information || "No information available"}}</p>
+	  </article>
+	</div>
+	<div class="secondary_row layuot_mod_1">
+	  <div class="section_menu mod_1">
+		<h2 class="section_hline certificate_mod">Certificate Info</h2>
+		<div class="doc_image_w">
+		  <img class="doc_image" ng-repeat="document_file in document.document_files | limitTo: 1" ng-src="{{document.document_thumb_image}}" ng-click="showFilePopUp()" alt="{{document.document_name}}">
+		</div>		
+		<ul class="doc_descr_list">
+		  <li class="doc_descr_l_item" ng-repeat="definition in definitions">
+				<dl  ng-switch class="doc_descr" on="definition.input_type">
+				  <dt class="doc_descr_hline">{{definition.name}}</dt>
+				  <dd class="doc_descr_value">
+					<span ng-if="document.definition_value[definition.id]">{{operation.definition_value[definition.id]}}</span>
+					<span ng-if="!document.definition_value[definition.id]">NA</span>
+					<span ng-switch-when="checkbox">{{checkedValues(document.definition_value[definition.id])}}</span>
+					<span ng-switch-when="standard">{{document.merged_definition_value[definition.name]}}</span>
+					<span ng-switch-default>{{document.definition_value[definition.id]}}</span>
+				  </dd>
+				</dl>
+		  </li>
+		</ul>
+	  </div>
+	</div>
+</div>
+<div id="pay_for_authentication" style="display:none" title="Pay ">
+  <div class="ui-dialog-titlebar">
+		<span class="ui-dialog-title">Pay <span class="green_mod">{{request.price_for_auth}}$</span> for Authentication</span>
+  </div>
+  <div class="dialog_content">
+		<div class="dialog_form">
+		  <ul class="payment_way_list">
+				<li class="payment_way_l_item">
+				  <span class="payment_butt amex_mod"></span>
+				</li>
+				<li class="payment_way_l_item">
+				  <span class="payment_butt discover_mod"></span>
+				</li>
+				<li class="payment_way_l_item">
+				  <span class="payment_butt visa_mod"></span>
+				</li>
+				<li class="payment_way_l_item">
+				  <span class="payment_butt master_card_mod"></span>
+				</li>
+				<li class="payment_way_l_item">
+				  <span class="payment_butt flat_mod"></span>
+				</li>
+		  </ul>
+		  <div class="form_block hor_mod">
+				<dl class="form_cell form_cell_v1_mod full_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+						<label for="Full_name_on_credit_card">Full name on credit card</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						<input type="text" gf-char-input id="Full_name_on_credit_card" placeholder="Full name on credit card" class="f_c_field default_mod " ng-model="payment.name">
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod full_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+						<label for="Card_Number">Card Number</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						<input type="text" gf-number-input maxlength="16" id="Card_Number" placeholder="Card Number" class="f_c_field default_mod " ng-model="payment.number">
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod two_thirds_mod card_info_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+						<label for="Expiry_Date">Expiry Date (MM / YY)</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						<input type="text" id="Expiry_Date" placeholder="Expiry Date (MM / YY)" class="f_c_field default_mod " ng-model="payment.exp_month_and_year" min-date="+1m" data-calendar="false" date-format='mm/yy' datepicker readonly="readonly">
+				  </dd>
+				</dl>
+				<dl class="form_cell form_cell_v1_mod third_mod card_info_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+						<label for="CV_Code">CV Code</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						<input type="password" maxlength="3" gf-number-input id="CV_Code" placeholder="CV Code" class="f_c_field default_mod " ng-model="payment.cvc">
+				  </dd>
+				</dl>
+		  </div>
+		</div>
+  </div>
+  <footer class="dialog_footer">
+		<div class="full_butt" ng-click="makePayment(payment)">Pay {{request.price_for_auth}}$</div>
+  </footer>
+</div>
+<div id="document_file_preview_butt" style="display:none">Preview File(s)</div>
+<div id="document_file_preview" style="display:none" title="File preview">
+  <div class="preview_popup_block">
+	<a class="preview_popup_cancel_butt" href=""></a>
+	<header class="preview_popup_header">
+	  <h2 class="preview_popup_hline">{{document.document_name}}</h2>
+	  <div class="preview_doc_count">
+			Viewing
+			<span class="preview_doc_count_current">1</span>
+			out of
+			<span class="preview_doc_amount">1</span>
+	  </div>
+	</header>
+	<div class="preview_doc_list_wrap" ng-if="document">
+	  <ul class="preview_doc_list"  id="carusel_preview" >
+			<li class="preview_doc_l_item" ng-repeat="document_file in document.document_files">
+			  <div id="abc" class="preview_doc_w" data-document-id="{{document_file.id}}" data-document-load="false">
+					<iframe class="preview_doc_image" ng-src="{{preview_url}}" frameborder="0"></iframe>
+			  </div>
+			</li>		
+	  </ul>
+	</div>
+	<footer class="preview_popup_footer">
+	  <a class="preview_popup_file_link" href="{{preview_url}}" title="Click here to see file" download>Download File</a>
+	</footer>
+  </div>
+</div>

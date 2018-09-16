@@ -1,0 +1,279 @@
+<!-- Company toolbar-->
+<div ng-if="current_company">
+  <input id="company_id" type='hidden' value='<%= current_user.company.id %>'>
+  <div class="toolbar_company" ng-if="current_company">
+	<a href="#/add_company" title="Settings" class="user_menu_company_settings"></a>
+	<a class="user_block default_mod h_36_mod hor_mod toolbar_company_mod" href="#/company_public_profile">
+	  <div class="user_avatar_w default_mod h_36_mod hor_mod toolbar_company_mod">
+		<img ng-if="current_company.logo.logo.thumb.url"
+			 ng-src="{{current_company.logo.logo.thumb.url}}"
+			 class="user_avatar_img default_mod h_36_mod hor_mod toolbar_company_mod"/>
+	  </div>
+	  <div class="user_name default_mod h_36_mod hor_mod one_line_mod toolbar_company_mod">
+		{{current_company.name}}
+	  </div>
+	</a>
+	<div class="user_menu_company_block">
+	  <a class="user_menu_company_butt" id="documents_to_audit_button" href="" onclick="window.open('http://ec2-52-74-205-234.ap-southeast-1.compute.amazonaws.com:8080/greenfence');return false" target="_blank" title="<%= I18n.t('assessments') %>"><%= I18n.t('assessments') %></a>
+	</div>
+	<!-- For time being my requirement are not visible to auditor -->
+	<% if current_user.type != 'Auditor' %>
+		<div class="user_menu_company_block">
+		  <a class="user_menu_company_butt dropdown_mod" href="" title="Audit/Survey/Specification"><%= I18n.t('requirements') %></a>
+		  <div class="user_menu_company_w">
+			<div class="user_menu_company_sub_w">
+			  <div class="user_menu_company_header hover_mod accordionTrigger">
+				<%= I18n.t('my_customer_requirements') %>
+			  </div>
+			  <ul class="section_menu_list header_mod sub_menu_mod accordionTarget">
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/list_view/buyer" title="<%= t('view_requirements') %>" class="section_menu_link header_mod"><%= t('view_requirements') %></a>
+				  <a class="section_m_view_butt header_mod" href="#/list_view/buyer"><%= t('view') %></a>
+				</li>
+				<% if current_user.company && current_user.company.name == 'GFSI Company' %>
+					<li class="section_menu_l_item header_mod">
+					  <a href="#/requirement_chart_view" title="View Chart" class="section_menu_link header_mod">View Growth Chart
+					  </a>
+					  <a class="section_m_view_butt header_mod" href="#/requirement_chart_view"><%= t('view') %></a>
+					</li>
+				<% end %>
+			  </ul>
+			</div>
+			<div class="user_menu_company_sub_w">
+			  <div class="user_menu_company_header hover_mod accordionTrigger">
+				<%= I18n.t('my_suppliers_requirements') %>
+			  </div>
+			  <ul class="section_menu_list header_mod sub_menu_mod accordionTarget">
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/view" title="<%= t('view_requirements') %>" class="section_menu_link header_mod"><%= t('view_requirements') %></a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/view"><%= t('view') %></a>
+				</li>
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/assign" title="<%= t('assign_requirements') %>" class="section_menu_link header_mod"><%= t('assign_requirements') %>
+				  </a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/assign"><%= t('view') %></a>
+				</li>
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/add" title="<%= t('add_requirements') %>" class="section_menu_link header_mod"><%= t('add_requirements') %>
+				  </a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/add"><%= t('view') %></a>
+				</li>
+			  </ul>
+			</div>
+			<div class="user_menu_company_sub_w">
+			  <div class="user_menu_company_header hover_mod accordionTrigger">
+				<%= I18n.t('my_internal_requirements') %>
+			  </div>
+			  <ul class="section_menu_list header_mod sub_menu_mod accordionTarget">
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/view" title="<%= t('view_requirements') %>" class="section_menu_link header_mod"><%= t('view_requirements') %></a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/view"><%= t('view') %></a>
+				</li>
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/assign" title="<%= t('assign_requirements') %>" class="section_menu_link header_mod"><%= t('assign_requirements') %>
+				  </a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/assign"><%= t('view') %></a>
+				</li>
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/add" title="<%= t('add_requirements') %>" class="section_menu_link header_mod"><%= t('add_requirements') %>
+				  </a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/add"><%= t('view') %></a>
+				</li>
+			  </ul>
+			</div>
+			<div class="user_menu_company_sub_w">
+			  <div class="user_menu_company_header hover_mod accordionTrigger">
+				<%= I18n.t('governments_requirements') %>
+			  </div>
+			  <ul class="section_menu_list header_mod sub_menu_mod accordionTarget">
+				<li class="section_menu_l_item header_mod">
+				  <a href="#/requirement_list_view/view" title="<%= t('view_requirements') %>" class="section_menu_link header_mod"><%= t('view_requirements') %></a>
+				  <a class="section_m_view_butt header_mod" href="#/requirement_list_view/view"><%= t('view') %></a>
+				</li>
+			  </ul>
+			</div>
+		  </div>
+		</div>
+
+	<% end %>
+	<% if current_user.type == 'Auditor' %>
+		<a class="user_menu_company_butt" id="documents_to_audit_button" href="#/documents_to_audit" title="<%= I18n.t('documents_to_audit') %>"><%= I18n.t('documents_to_audit') %></a>
+	<% end %>
+	<% if current_user.permission_list(nil).include?("view_supply_chain") %>
+		<div class="user_menu_company_block">
+		  <div class="user_menu_company_butt dropdown_mod"><%= t('my_supply_chain') %></div>
+		  <div class="user_menu_company_w">
+			<div class="user_menu_company_header">
+			  <%= t('my_supply_chain') %>
+			</div>
+			<ul class="section_menu_list header_mod">
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/map_view" title="<%= I18n.t('map_view') %>" class="section_menu_link header_mod"><%= I18n.t('map_view') %>
+				</a>
+				<span class="section_m_link_count header_mod" ng-if="false">3k</span>
+				<a class="section_m_view_butt header_mod" href="#/map_view"><%= t('view') %></a>
+			  </li>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/tree_view" title="<%= I18n.t('tree_view') %>" class="section_menu_link header_mod"><%= I18n.t('tree_view') %>
+				</a>
+				<a class="section_m_view_butt header_mod" href="#/tree_view"><%= t('view') %></a>
+			  </li>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/list_view/supplier" title="<%= I18n.t('supplier_list_view') %>" class="section_menu_link header_mod"><%= I18n.t('supplier_list_view') %>
+				</a>
+				<a class="section_m_view_butt header_mod" href="#/list_view/supplier"><%= t('view') %></a>
+			  </li>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/list_view/buyer" title="<%= I18n.t('buyer_list_view') %>" class="section_menu_link header_mod"><%= I18n.t('buyer_list_view') %>
+				</a>
+				<a class="section_m_view_butt header_mod" href="#/list_view/buyer"><%= t('view') %></a>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	<% end %>
+	<div class="user_menu_company_block">
+	  <div class="user_menu_company_butt dropdown_mod"><%= t('add') %></div>
+	  <div class="user_menu_company_w mod_add">
+		<div class="user_menu_company_header">
+		  <%= t('add') %>
+		</div>
+		<ul class="section_menu_list header_mod">
+		  <% if current_user.permission_list(current_user.company).include?("create_operation_profile") %>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/operations" title="<%= I18n.t('add_operations') %>" class="section_menu_link header_mod"><%= I18n.t('add_operations') %>
+				</a>
+				<span class="section_m_link_count header_mod">{{operations.length || <%= current_user.company.operations_count || 0 %>}}</span>
+				<a href="#/operations" title="<%= I18n.t('add_operations') %>" class="section_m_add_butt header_mod"></a>
+				<!-- <span class="section_m_add_butt header_mod"></span> -->
+				<!-- <a class="section_m_edit_butt header_mod" href="#/operations">Edit</a> -->
+			  </li>
+		  <% end %>
+		  <% if current_user.permission_list(nil).include?("add_product") %>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/add_product" title="<%= I18n.t('add_products') %>" class="section_menu_link header_mod"><%= I18n.t('add_products') %>
+				</a>
+				<span class="section_m_link_count header_mod">{{company_products.length || <%= current_user.company.products_count || 0 %>}}</span>
+				<a href="#/add_product" title="<%= I18n.t('add_products') %>" class="section_m_add_butt header_mod"></a>
+				<!-- <span class="section_m_add_butt header_mod"></span> -->
+				<!-- <a class="section_m_edit_butt header_mod" href="#/add_product">Edit</a> -->
+			  </li>
+		  <% end %>
+
+		  <% if current_user.permission_list(nil).include?("add_service") %>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/services" title="<%= I18n.t('add_services') %>" class="section_menu_link header_mod"><%= I18n.t('add_services') %>
+				</a>
+				<span class="section_m_link_count header_mod">{{company_services.length || <%= current_user.company.services.count || 0 %>}}</span>
+				<a href="#/services" title="<%= I18n.t('add_services') %>" class="section_m_add_butt header_mod"></a>
+				<!-- <span class="section_m_add_butt header_mod"></span> -->
+				<!-- <span class="section_m_edit_butt header_mod">Edit</span> -->
+			  </li>
+		  <% end %>
+		  <li class="section_menu_l_item header_mod">
+			<a href="#/add_supply_chain/supplier" title="<%= I18n.t('add_supply_chain') %>" class="section_menu_link header_mod"><%= I18n.t('add_supply_chain') %>
+			</a>
+			<span class="section_m_link_count header_mod">{{<%= current_user.company.upstreams.count + current_user.company.downstreams.count || 0 %>}}</span>
+			<a href="#/add_supply_chain/supplier" title="<%= I18n.t('add_supply_chain') %>" class="section_m_add_butt header_mod"></a>
+			<!-- <span class="section_m_add_butt header_mod"></span> -->
+			<!-- <a class="section_m_edit_butt header_mod" href="#/add_supply_chain">Edit</a> -->
+		  </li>
+		  <% if current_user.permission_list(nil).include?("create_company_document") %>
+			  <li class="section_menu_l_item header_mod">
+				<a href="#/company_documents" title="<%= t('add_company_documents') %>" class="section_menu_link header_mod"><%= t('add_company_documents') %></a>
+				<span class="section_m_link_count header_mod">{{company_documents.items || <%= Document.company_and_its_operations_documents(current_user.company_id).count || 0 %>}}</span>
+				<a href="#/company_documents" title="Add Company Documents" class="section_m_add_butt header_mod"></a>
+				<!-- <span class="section_m_add_butt header_mod"></span> -->
+				<!-- <span class="section_m_edit_butt header_mod">Edit</span> -->
+			  </li>
+		  <% end %>
+		  <li class="section_menu_l_item header_mod">
+			<a href="#/user_documents" title="<%= t('add_personal_documents') %>" class="section_menu_link header_mod"><%= t('add_personal_documents') %></a>
+			<span class="section_m_link_count header_mod">{{user_documents.items || <%= current_user.documents_count || 0 %>}}</span>
+			<a href="#/user_documents" title="<%= t('add_personal_documents') %>" class="section_m_add_butt header_mod"></a>
+			<!-- <span class="section_m_add_butt header_mod"></span> -->
+			<!-- <a class="section_m_edit_butt header_mod" href="#/user_documents">Edit</a> -->
+		  </li>
+		</ul>
+	  </div>
+	</div>
+	<% if current_user.staff_invitable_by?(current_user) %>
+		<div class="invite_employees_butt"><%= t('invite_users') %></div>
+	<% end %>
+  </div>
+
+
+  <div id="invite_users" style="display:none" title="<%= t('invite_users') %>" ng-controller="UserInvitationCtrl">
+	<div class="dialog_content">
+	  <div class="dialog_form">
+		<dl class="form_cell form_cell_v1_mod">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			<label for="name_of_user">Enter name of user</label>
+		  </dt>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			<input type="text" id="name_of_user" placeholder="<%= t('enter_name_of_user') %>" class="f_c_field default_mod" ng-model="invitation.name">
+		  </dd>
+		</dl>
+		<dl class="form_cell form_cell_v1_mod">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			<label for="Enter_email_of_user">Enter email of user</label>
+		  </dt>
+		  <div class="send_invite_butt" style="width: 26%;float: right;padding: 0px;" ng-click="addUser(invitation)"><%= t('add_to_list') %></div>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod" style="width:73%">
+			<input type="text" required="required" id="Enter_email_of_user" placeholder="<%= t('enter_email_of_user') %>" class="f_c_field default_mod" ng-model="invitation.email">
+		  </dd>
+		</dl>
+		<ul class="options_b_value_list checkbox_big_list_dialog">
+		  <li class="options_b_value_l_item checkbox_big_list_dialog">
+			<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			  <input value="User" class="lbl_inp_rb_ch" type="radio" ng-model='invitation.type' name="invitation_type" ng-init="invitation.type='User'">
+			  <span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('invite_as_a_user') %></span>
+			</label>
+		  </li>
+		  <li class="options_b_value_l_item checkbox_big_list_dialog">
+			<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			  <input value="Company" class="lbl_inp_rb_ch" type="radio" ng-model='invitation.type' name="invitation_type">
+			  <span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('invite_as_a_company') %></span>
+			</label>
+		  </li>
+		  <% if current_user.company!=nil %>
+			  <li class="options_b_value_l_item checkbox_big_list_dialog">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input value="CompanyEmployee" class="lbl_inp_rb_ch" type="radio" ng-model='invitation.type' name="invitation_type">
+				  <span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('invite_as_a_company_employee') %></span>
+				</label>
+			  </li>
+		  <% end %>
+		</ul>
+	  </div>
+	  <dl class="options_block">
+		<dt class="options_b_hline">
+		  <a href="" ng-click="import_gmail_contacts()"> + <%= t('import_contacts_from_gmail') %></a>
+		</dt>
+		<dt class="options_b_hline">
+		  <a href="" ng-click="import_yahoo_contacts()"> + <%= t('import_contacts_from_yahoo') %></a>
+		</dt>
+	  </dl>
+	  <div class="added_el_block" ng-if="invitedUsers.length > 0">
+		<div class="users_list_title added_mod">{{invitedUsers.length}} Users Added</div>
+		<ul class="users_list added_mod">
+		  <li class="users_l_item added_mod" ng-repeat="user in invitedUsers">
+			<div class="user_block small_mod hover_mod ">
+			  <div class="user_avatar_w small_mod hover_mod ">
+				<span class="user_avatar_img small_mod hover_mod no_img_mod" ng-if="!user.photo_url"></span>
+				<img ng-if="user.photo_url" ng-src="{{user.photo_url}}" alt="{{user.name}}" class="user_avatar_img small_mod hover_mod"/>
+			  </div>
+			  <div class="user_name small_mod hover_mod">{{user.name + " ("+ user.email + ")"}}</div>
+			</div>
+			<div class="user_remove_butt" ng-click="remove_selected_user($index)"><%= t('remove') %></div>
+		  </li>
+		</ul>
+	  </div>
+	</div>
+	<footer class="dialog_footer">
+	  <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+	  <div id="msg_box"></div>
+	  <div class="send_invite_butt" ng-click='inviteUsers(invitation, invitedUsers)'><%= I18n.t('send_an_Invite') %></div>
+	</footer>
+  </div>
+</div>

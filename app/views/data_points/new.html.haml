@@ -1,0 +1,12 @@
+%section.data-point-form
+  %h1 New Data Point
+  = section "shared/form", locals: {model: [@sensor, @peanut_roasting_sensor_data_point], url: sensor_data_points_path(@sensor)} do |f|
+    .inline-1
+    = f.label :temperature, 'Temperature in degrees Celsius'
+    = f.text_field :temperature
+
+    = f.label :volume, 'Volume in grams'
+    = f.text_field :volume
+
+    = f.label :duration_of_exposure, 'Duration of exposure in seconds'
+    = f.text_field :duration_of_exposure

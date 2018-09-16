@@ -1,0 +1,298 @@
+
+<div ng-controller="ShareCompanyDocumentCtrl">
+  <div id="share_link_folder" style="display:none" title="Share folder">
+    <div class="dialog_content">
+      <div class="dialog_form">
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Enter_name_of_user_group_or_email">Enter name of user, group, or email</label>
+          </dt>
+          <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod">
+          <ui-select ng-model="share.sharee" theme="selectize">
+            <ui-select-match placeholder="Enter name of user, group, or email">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="sharee as sharee in users_and_groups | filter: $select.search" refresh="searchUsers($select.search)" refresh-delay="600">
+              <div ng-bind-html="sharee.name | highlight: $select.search"></div>
+              <small style="font-size: 10px;" ng-bind-html="sharee.description | highlight: $select.search"></small>
+            </ui-select-choices>
+          </ui-select>
+          </dd>
+        </dl>
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Add_message">Add message</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+            <textarea id="Add_message" ng-model="share.message" placeholder="Add message" class="f_c_field default_mod textarea_mod_2 "></textarea>
+          </dd>
+        </dl>
+      </div>
+      <div id="share_folder_msg_box" style="text-align: center; padding: 5px 0px;">
+      </div>
+      <footer class="dialog_footer">
+        <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+        <div class="share_link_folder_butt" ng-click="shareFolder(share)"><%= t('share') %></div>
+      </footer>
+    </div>
+  </div>
+  <div id="share_link_document" style="display:none" title="Share document">
+    <div class="dialog_content">
+      <div class="dialog_form">
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Enter_name_of_user_group_or_email">Enter name of user, group, or email</label>
+          </dt>
+          <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod">
+            <ui-select ng-model="share.sharee" theme="selectize">
+              <ui-select-match placeholder="Enter name of user, group, or email">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="sharee as sharee in users_and_groups | filter: $select.search" refresh="searchUsers($select.search)" refresh-delay="600">
+                <div ng-bind-html="sharee.name | highlight: $select.search"></div>
+                <small style="font-size: 10px;" ng-bind-html="sharee.description | highlight: $select.search"></small>
+              </ui-select-choices>
+            </ui-select>
+          </dd>
+        </dl>
+        <dl class="form_cell form_cell_v1_mod">
+        <dt class="form_c_hline form_v1_mod hline_hide_mod">
+          <label for="Add_message">Add message</label>
+        </dt>
+        <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+          <textarea id="Add_message" ng-model="share.message" placeholder="Add message" class="f_c_field default_mod textarea_mod_2 "></textarea>
+        </dd>
+        </dl>
+      </div>
+      <div id="share_document_msg_box" style="text-align: center; padding: 5px 0px;">
+      </div>
+      <footer class="dialog_footer">
+        <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+        <div class="share_link_folder_butt" ng-click="shareDocument(share)"><%= t('share') %></div>
+      </footer>
+    </div>
+  </div>
+</div>
+<div class="secondary_row layuot_mod_1 search_results_page" ng-controller='AddCompanyRightMenuCtrl'>
+  <div id='company_img_crop' style="display: none">
+    <div class="cropArea">
+      <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+    </div>
+    <div>
+      <div class="butt_save" ng-click="uploadCompanyImage()" style="margin: 0"><%= t('save') %></div>
+    </div>
+  </div>
+  <div class="section_menu">
+    <div class="user_block about_mod wizard_menu_mod ">
+      <div class="user_avatar_w about_mod wizard_menu_mod ">
+        <img ng-if="current_company.logo.logo.thumb.url" ng-src="{{current_company.logo.logo.thumb.url}}" alt="{{current_company.name}}" class="user_avatar_img about_mod wizard_menu_mod">
+        <img ng-hide="current_company.logo.logo.thumb.url" ng-src="/assets/avatar.png" alt="{{current_company.name}}" class="user_avatar_img about_mod wizard_menu_mod">
+      </div>
+      <div class="user_name about_mod wizard_menu_mod">{{current_company.name}}</div>
+      <% if current_user.company && current_user.company.updatable_by?(current_user) %>
+        <button class="user_company_edit_butt about_mod wizard_menu_mod" id="avatar_file" accept="image/*" ng-file-select ng-file-change="upload($files, $event)"><%= t('edit') %></button>
+      <% end %>
+      <% if current_user.company %>
+        <a href="#/company_public_profile/" style="text-decoration: none;" class="user_company_view_butt about_mod wizard_menu_mod"><%= t('view_profile') %></a>
+      <% end %>
+    </div>
+    <div class="menu_cat_cell" ng-controller="OperationFilterCtrl">
+      <div class="menu_cat_title"
+		   ng-class="{active_mod: current_location == 'operation'
+		   							|| current_location == 'operations'
+					   }">
+        <a href="#/operations" class="section_m_add_butt sidebar_mod"></a>
+        <%= I18n.t('operations') %>
+      </div>
+      <div class="menu_cat_amount" ng-if="operations.length">
+        {{operations.length || 0}}
+      </div>
+      <div class="menu_cat_amount" ng-if="!operations.length">0</div>
+        <div class="menu_cat_view">
+          <div class="menu_cat_option_butt filled_mod">
+            <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+          </div>
+          <div class="menu_cat_view_hidden_b">
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <label for="Tape_name_of_operation"><%= I18n.t('tape_name_of_operation') %> </label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <input type="text" id="Tape_name_of_operation" placeholder="<%= I18n.t('tape_name_of_operation') %>" class="f_c_field third_mod menu_cat_search_mod " ng-model="operationText">
+              </dd>
+            </dl>
+            <ul class="menu_cat_search_result">
+              <li class="menu_cat_search_result_item container_mod" ng-repeat="operation in operations | filter:operationText ">
+                <a class="menu_cat_s_result_el container_mod" title="{{operation.name}}" href="#/operation/edit/{{operation.id}}">{{operation.name}}</a>
+                <a href="#/operation/edit/{{operation.id}}" class="section_m_edit_butt"><%= t('edit') %></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+    <% if user_signed_in? %>
+      <div class="menu_cat_cell" ng-controller="ProductFilterCtrl">
+        <div class="menu_cat_title"  ng-class="{active_mod: current_location == 'add_product'}">
+          <a href="#/add_product" class="section_m_add_butt sidebar_mod"></a>
+          <%= I18n.t('products') %>
+        </div>
+        <div class="menu_cat_amount">{{company_products.length || 0}}</div>
+        <div class="menu_cat_view">
+          <div class="menu_cat_option_butt filled_mod">
+            <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+          </div>
+          <div class="menu_cat_view_hidden_b">
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <label for="Tape_name_of_product"><%= I18n.t('tape_name_of') +  I18n.t('products') %> </label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <input type="text" id="Tape_name_of_product" placeholder="<%= I18n.t('tape_name_of') + "  " +  I18n.t('products') %>" class="f_c_field third_mod menu_cat_search_mod " ng-model="productText">
+              </dd>
+            </dl>
+            <ul class="menu_cat_search_result">
+      				<li class="menu_cat_search_result_item container_mod" ng-repeat="company_product in company_products | filter:productText">
+      					<div title="{{company_product.name}}" class="menu_cat_s_result_el container_mod">{{company_product.name}}</div>
+      					<a href="#/add_product" class="section_m_edit_butt"><%= t('edit') %></a>
+      				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="menu_cat_cell" ng-controller="ServiceFilterCtrl">
+      <div class="menu_cat_title"
+		   ng-class="{active_mod: current_location == 'service'
+		   							|| current_location == 'services'
+		   }">
+        <a href="#/services" class="section_m_add_butt sidebar_mod"></a>
+        <%= I18n.t('service')  + "s" %>
+      </div>
+      <div class="menu_cat_amount">{{company_services.length || 0}}</div>
+      <div class="menu_cat_view">
+        <div class="menu_cat_option_butt filled_mod">
+          <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+        </div>
+        <div class="menu_cat_view_hidden_b">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <label for="Tape_name_of_service"><%= I18n.t('tape_name_of') + " "+  I18n.t('service') %> </label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <input type="text" id="Tape_name_of_service" placeholder="<%= I18n.t('tape_name_of') + " "+  I18n.t('service') %>" class="f_c_field third_mod menu_cat_search_mod " ng-model="serviceText">
+            </dd>
+          </dl>
+          <ul class="menu_cat_search_result">
+      			<li class="menu_cat_search_result_item container_mod" ng-repeat="service in company_services | filter:serviceText">
+      				<a class="menu_cat_s_result_el container_mod" title="{{service.name}}" href="#/service/edit/{{service.id}}">{{service.name}}</a>
+      				<a href="#/service/edit/{{service.id}}" class="section_m_edit_butt"><%= t('edit') %></a>
+      			</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <% if user_signed_in? %>
+      <div class="menu_cat_cell" ng-controller="SupplierFilterCtrl">
+        <div class="menu_cat_title"  ng-class="{active_mod: current_location == 'supplier'}">
+          <a href="#/add_supply_chain/supplier" class="section_m_add_butt sidebar_mod"></a>
+          <%= I18n.t('suppliers') %>
+        </div>
+        <div class="menu_cat_amount">{{suppliers.length || 0}}</div>
+        <div class="menu_cat_view">
+          <div class="menu_cat_option_butt filled_mod">
+            <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+          </div>
+          <div class="menu_cat_view_hidden_b">
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <label for="Type_name_of_suppliers"><%= I18n.t('type_name_of') + " " + I18n.t('suppliers') %></label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <input type="text" id="Type_name_of_suppliers" placeholder="<%= I18n.t('type_name_of') + " " + I18n.t('suppliers') %>" class="f_c_field third_mod menu_cat_search_mod " ng-model="supplierText">
+              </dd>
+            </dl>
+            <ul class="menu_cat_search_result">
+      				<li class="menu_cat_search_result_item container_mod" ng-repeat="supplier in suppliers | filter:supplierText">
+      				  <a class="menu_cat_s_result_el container_mod" title="{{supplier.name}}" href="#/supplier/{{supplier.id}}">{{supplier.name}}</a>
+      				  <!--<a href="#/supplier/{{supplier.id}}" class="section_m_edit_butt">Edit</a>-->
+      				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <% if user_signed_in? %>
+      <div class="menu_cat_cell" ng-controller="BuyerFilterCtrl">
+        <div class="menu_cat_title"
+			 ng-class="{active_mod: current_location == 'add_supply_chain'
+			 						|| current_location == 'buyer'
+			 }">
+          <a href="#/add_supply_chain/buyer" class="section_m_add_butt sidebar_mod"></a>
+          <%= I18n.t('buyers') %>
+        </div>
+        <div class="menu_cat_amount">{{buyers.length || 0}}</div>
+        <div class="menu_cat_view">
+          <div class="menu_cat_option_butt filled_mod">
+            <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+          </div>
+          <div class="menu_cat_view_hidden_b">
+            <dl class="form_cell form_cell_v1_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <label for="Type_name_of_customers"><%= I18n.t('type_name_of') + " " + I18n.t('buyers') %></label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+                <input type="text" id="Type_name_of_customers" placeholder="<%= I18n.t('type_name_of') + " " + I18n.t('buyers') %>" class="f_c_field third_mod menu_cat_search_mod " ng-model="buyerText">
+              </dd>
+            </dl>
+            <ul class="menu_cat_search_result">
+      				<li class="menu_cat_search_result_item container_mod" ng-repeat="buyer in buyers | filter:buyerText">
+      					  <a class="menu_cat_s_result_el container_mod" title="{{buyer.name}}" href="#/buyer/{{buyer.id}}">{{buyer.name}}</a>
+      					  <!--<a href="#/buyer/{{buyer.id}}" class="section_m_edit_butt">Edit</a>-->
+      				</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="menu_cat_cell" ng-controller="CompanyDocumentFilterCtrl">
+      <div class="menu_cat_title"
+		   ng-class="{active_mod: current_location == 'company_documents'
+		   							|| current_location == 'company_document'}">
+
+        <a href="#/company_documents" class="section_m_add_butt sidebar_mod"></a>
+        <%= I18n.t('certificates')  + " /"  +  I18n.t('documents')  %>
+      </div>
+      <div class="menu_cat_amount">{{company_documents.items || 0}}</div>
+      <div class="menu_cat_view">
+        <div class="menu_cat_option_butt filled_mod">
+          <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+        </div>
+        <div class="menu_cat_view_hidden_b">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <label for="Tape_name_of_documentfolder"><%= I18n.t('tape_name_of') %> document/folder</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <input type="text" id="Tape_name_of_documentfolder" placeholder="Type name of document/folder" class="f_c_field third_mod menu_cat_search_mod" ng-model="docText">
+            </dd>
+          </dl>
+          <div class="folders_block">
+            <!--todo css need optimise -->
+            <div class="folder_block">
+              <div class="folder_block_list">
+                <div class="folder_b_head" ng-repeat="folder in company_folders | filter:docText">
+                  <div class="folder_b_head_title">{{folder.folder_name}}</div>
+                  <div class="folder_b_amount" style="right: 45px;">{{folder.documents.length || 0}}</div>
+                  <div title="Share" class="doc_action folder folders_mod share_mod" ng-click="shareFolderDetails(folder.id, folder.folder_name)" style="color: #bfbfbf;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="document_block">
+              <div class="doc_block folders_mod" ng-repeat="document in company_documents.documents | filter:docText">
+                <div class="doc_title folders_mod">
+                <a href="#/company_document/edit/{{document.id}}" title="{{document.document_name}}" style="text-decoration: none;">{{document.document_name}}</a></div>
+                <div title="Share" class="doc_action document folders_mod share_mod" ng-click="shareDocumentDetails(document.id, document.document_name)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

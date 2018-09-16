@@ -1,0 +1,14 @@
+<div class="user_block contact_mod">
+  <span class="corner_ico user_mod"></span>
+  <div class="detail_header user_auth" ng-class="{ authenticated: data.authenticated || data.verified }">
+  <a class="user_avatar_w contact_mod " href="#user_public_profile/{{data.id}}">
+	  <img ng-src="{{data.image.image.thumb.url}}" alt="{{data.name}}" class="user_avatar_img contact_mod">
+  </a></div>
+  <a class="user_name contact_mod" href="#user_public_profile/{{data.id}}">{{data.name}}</a>
+  <div class="user_info contact_mod">{{data.title}}</div>
+  <div class="user_text contact_mod">{{data.summary}}</div>
+  <div class="user_b_footer contact_mod primary_mod">
+  	<div class="user_follow_butt contact_mod primary_mod"><%= t('follow') %></div>
+  	<div class="user_msg_2_butt contact_mod primary_mod">Message</div>
+  </div>
+</div>

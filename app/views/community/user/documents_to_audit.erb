@@ -1,0 +1,63 @@
+<!--  Auditor Documents-->
+<div id="docs_to_audit" class="documents_block">
+  <header class="documents_b_header my_personal_d_mod">
+	<h1 class="content_headline"><%= t('documents_to_audit') %></h1>
+  </header>
+  <div class="documents_b_content">
+
+		<table class="documents_b_table" >
+		  <thead>
+			<tr>
+			  <th ng-click="setOrder(filter.order_by = 'document_uploader_name', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('posted_by') %></th>
+			  <th ng-click="setOrder(filter.order_by = 'document_uploader_type', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('purpose') %></th>
+			  <th ng-click="setOrder(filter.order_by = 'document_name', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('name') %></th>
+			  <th ng-click="setOrder(filter.order_by = 'document_type', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('subject') %></th>
+			  <th ng-click="setOrder(filter.order_by = 'audit_stage', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('status') %></th>
+			  <th ng-click="setOrder(filter.order_by = 'posted_date', filter.order = filter.order == 'asc' ? 'desc' : 'asc')">Posted <br/> Date</th>
+			  <th ng-click="setOrder(filter.order_by = 'audit_by', filter.order = filter.order == 'asc' ? 'desc' : 'asc')">Complete <br/> Review By</th>
+			  <th ng-click="setOrder(filter.order_by = 'action', filter.order = filter.order == 'asc' ? 'desc' : 'asc')"><%= t('actions') %></th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr ng-repeat="document in audit_documents">
+			  <td>{{document.document_uploader_name}}</td>
+			  <td>{{document.document_uploader_type}}</td>
+			  <td>
+				<a href="#/user_document/{{document.document_id}}/sharing_record_detail">{{document.document_name}}</a>
+			  </td>
+			  <td>{{document.document_type}}</td>
+			  <td ng-class="document.audit_stage">{{document.audit_stage}}</td>
+			  <td>{{document.posted_date | date : shortDate : timezone  || 'NA'}}</td>
+			  <td>{{document.audit_by | date : shortDate : timezone  || 'NA'}}</td>
+			  <td class="action_mod">
+				<ul class="table_action_list" ng-if="document.action">
+				  <li class="table_action_l_item" >
+					<a href="#/user_document/{{document.document_id}}/sharing_record_detail">{{document.action}}</a>
+				  </li>
+				</ul>
+			  </td>
+			</tr>
+		  </tbody>
+		  <tfoot>
+	      <tr>
+	        <td id="pagination_container" style="width: 300%;" colspan="5"></td>
+	      </tr>
+	    </tfoot>
+		</table>
+		<div id="doc_to_audit_list_pagination_view_container">
+	    <span id="pagination_view">
+	      View:
+	    </span>
+	    <span>
+	      <select id="pagination_select" ng-model="filter.per_page" ng-change="search()">
+	        <option value="6">6</option>
+	        <option value="10">10</option>
+	        <option value="25">25</option>
+	        <option value="50">50</option>
+	      </select>
+	    </span>
+	  </div>
+  </div>
+</div>
+
+<!--  Auditor Documents Ends-->

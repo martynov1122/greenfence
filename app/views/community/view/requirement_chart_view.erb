@@ -1,0 +1,55 @@
+<div class="content_block full_page">
+  <div class="tabs_v1">
+		<ul class="dialog_tab_list white_mod">
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_1" title="" class="dialog_tab_1_butt white_mod ">Growth Analysis</a>
+		
+		  </li>
+		</ul>
+		<div id="tab_1" class="tab_block">
+		  <header class="add_info_main_header mod_static_two">
+				<h1 class="content_headline requirements_mod"></h1>
+				<dl class="form_cell form_cell_v1_mod requirements_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+						<label for="select_company_operation">Select Company/Operation:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+						<select style="width:200px;" ng-model="filters.buyer" class="f_c_field third_mod white_bg_mod appearance_mod"
+              ng-options="opt.name for opt in company_operations track by opt.uuid" ng-change="chartView()">
+              <option value=""> All Company/Operation</option>
+            </select>
+				  </dd>
+				</dl>
+
+				<h1 class="content_headline requirements_mod"></h1>
+				<dl class="form_cell form_cell_v1_mod requirements_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+						<label for="select_company_operation">Select Specification:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+						<select style="width:200px;" ng-model="filters.cert" class="f_c_field third_mod white_bg_mod appearance_mod"
+              ng-options="certificate for certificate in certificates track by certificate" ng-change="chartView()">
+            	<option value=""> All Specifications</option>
+            </select>
+				  </dd>
+				</dl>
+
+				<h1 class="content_headline requirements_mod"></h1>
+				<dl class="form_cell form_cell_v1_mod requirements_mod">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+						<label for="select_company_operation">Select Country:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+						<select style="width:200px;" ng-model="filters.country" class="f_c_field third_mod white_bg_mod appearance_mod"
+              ng-options="country.name for country in countries track by country.name" ng-change="chartView()">
+            	<option value="">All Countries</option>
+            </select>
+				  </dd>
+				</dl>
+		  </header>
+		  <div class="table_wrap requirements_mod">
+			  <div id="chart_div" style="width: 900px; height: 500px;"></div>
+		  </div>
+		</div>
+  </div>
+</div>

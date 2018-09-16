@@ -1,0 +1,218 @@
+<div ng-controller="ShareUserDocumentCtrl">
+  <div id="share_link_folder" style="display:none" title="Share link to “folder/document name”">
+  <div class="dialog_content">
+    <div class="dialog_form">
+    <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      <label for="Name_of_folder">Name of folder</label>
+      </dt>
+      <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      <ui-select ng-model="share.folder_id" theme="selectize">
+        <ui-select-match placeholder="Name of folder">{{$select.selected.folder_name}}</ui-select-match>
+        <ui-select-choices repeat="user_folder.id as user_folder in user_folders | filter: $select.search" refresh="searchFolders($select.search)" refresh-delay="600">
+        <div ng-bind-html="user_folder.folder_name | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+      </dd>
+    </dl>
+    <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      <label for="Enter_name_of_user_group_or_email">Enter name of user, group, or email</label>
+      </dt>
+      <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod">
+      <ui-select ng-model="share.user_id" theme="selectize">
+        <ui-select-match placeholder="Enter name of user, group, or email">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="user.id as user in users | filter: $select.search" refresh="searchUsers($select.search)" refresh-delay="600">
+        <div ng-bind-html="user.name | highlight: $select.search"></div>
+        <small style="font-size: 10px;" ng-bind-html="user.email | highlight: $select.search"></small>
+        </ui-select-choices>
+      </ui-select>
+      </dd>
+    </dl>
+    <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      <label for="Add_message">Add message</label>
+      </dt>
+      <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      <textarea id="Add_message" ng-model="share.message" placeholder="Add message" class="f_c_field default_mod textarea_mod_2 "></textarea>
+      </dd>
+    </dl>
+    </div>
+    <div id="share_folder_msg_box" style="text-align: center; padding: 5px 0px;">
+    </div>
+    <footer class="dialog_footer">
+    <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+    <div class="share_link_folder_butt" ng-click="shareFolder(share)">Share</div>
+    </footer>
+  </div>
+  <div id="share_link_document" style="display:none" title="Share link to “folder/document name”">
+    <div class="dialog_content">
+    <div class="dialog_form">
+      <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+        <label for="Name_of_folder">Name of Document</label>
+      </dt>
+      <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+        <ui-select ng-model="share.document_id" theme="selectize">
+        <ui-select-match placeholder="Name of document">{{$select.selected.document_name}}</ui-select-match>
+        <ui-select-choices repeat="user_document.id as user_document in user_documents | filter: $select.search" refresh="searchDocuments($select.search)" refresh-delay="600">
+          <div ng-bind-html="user_document.document_name | highlight: $select.search"></div>
+        </ui-select-choices>
+        </ui-select>
+      </dd>
+      </dl>
+      <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+        <label for="Enter_name_of_user_group_or_email">Enter name of user, group, or email</label>
+      </dt>
+      <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod">
+        <ui-select ng-model="share.user_id" theme="selectize">
+        <ui-select-match placeholder="Enter name of user, group, or email">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="user.id as user in users | filter: $select.search" refresh="searchUsers($select.search)" refresh-delay="600">
+          <div ng-bind-html="user.name | highlight: $select.search"></div>
+          <small style="font-size: 10px;" ng-bind-html="user.email | highlight: $select.search"></small>
+        </ui-select-choices>
+        </ui-select>
+      </dd>
+      </dl>
+      <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+        <label for="Add_message">Add message</label>
+      </dt>
+      <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+        <textarea id="Add_message" ng-model="share.message" placeholder="Add message" class="f_c_field default_mod textarea_mod_2 "></textarea>
+      </dd>
+      </dl>
+    </div>
+    <div id="share_document_msg_box" style="text-align: center; padding: 5px 0px;">
+    </div>
+    <footer class="dialog_footer">
+      <div class="dialog_cancel_butt">Cancel</div>
+      <div class="share_link_folder_butt" ng-click="shareDocument(share)">Share</div>
+    </footer>
+    </div>
+  </div>
+  </div>
+</div>
+<div class="secondary_row layuot_mod_1">
+
+  <!-- <div id='crop' style="display: none">
+    <div class="cropArea">
+      <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+    </div>
+    <div>
+      <div class="butt_save" ng-click="uploadUserImage()" style="margin: 0"><%= t('save') %></div>
+    </div>
+  </div> -->
+
+  <div class="user_block about_mod " ng-if="false">
+    <div class="user_avatar_w about_mod "><img ng-src="{{user.user_profile_attributes.image.image.thumb.url}}" alt="{{user.name}}" class="user_avatar_img about_mod" style="width: 100%" />
+    </div>
+    <div class="user_name about_mod">{{user.name}}</div>
+    <div class="user_info about_mod">{{user.user_profile_attributes.title}}</div>
+    <button class="user_edit_ava_butt about_mod" id="avatar_file" accept="image/*" ng-file-select ng-file-change="upload($files, $event)"><%= I18n.t('edit_Picture') %></button>
+  </div>
+
+
+  <div style="margin: 0px !important;" class="section_menu menu_cat_cell" ng-controller="UserDocumentFilterCtrl" ng-if="false">
+    <div class="menu_cat_title">   <%= I18n.t('certificates')  + " /"  +  I18n.t('documents')  %> </div>
+      <div class="menu_cat_amount">{{documents.length}}</div>
+      <div class="menu_cat_view">
+        <div class="menu_cat_option_butt filled_mod">
+          <div data-option-text="View All" data-option-open-text="Collapse" class="menu_cat_option_butt_text filled_mod"></div>
+        </div>
+        <div class="menu_cat_view_hidden_b">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <label for="Tape_name_of_documentfolder"><%= I18n.t('tape_name_of') %> document/folder</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+              <input type="text" id="Tape_name_of_documentfolder" placeholder="Tape name of document/folder" class="f_c_field third_mod menu_cat_search_mod " ng-model="docText">
+            </dd>
+          </dl>
+          <div class="folders_block">
+            <div class="folders_head">
+              <div class="folders_head_hline">Filter by Folder</div>
+              <div class="folders_head_butt add_edit_mod"><%= I18n.t('edit') + "/"  +  I18n.t('add')   %>    </div>
+            </div>
+            <div class="folder_block">
+              <div class="folder_block_list">
+                <div class="folder_b_head" ng-repeat="user_folder in user_folders | filter:docText">
+                  <div class="folder_b_head_title">{{user_folder.folder_name}}</div>
+                  <div class="folder_b_amount">{{user_folder.documents.length}}</div>
+                </div>
+              </div>
+              <ul class="folder_b_action_list">
+                <li class="folder_b_action_l_item"><span class="folder_b_action"><%= I18n.t('edit') %> </span></li>
+                <li class="folder_b_action_l_item"><span class="folder_b_action share_mod">Share</span></li>
+              </ul>
+            </div>
+            <div class="document_block">
+              <div class="doc_block folders_mod" ng-repeat="document in documents | filter:docText">
+                <div class="doc_title folders_mod "><a href="#/user_document/edit/{{document.id}}" style="text-decoration: none;">{{document.document_name}}</a></div>
+                <div title="Share" class="doc_action folders_mod share_mod"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <% if user_signed_in? %>
+    <% if current_user.company && current_user.company.updatable_by?(current_user) %>
+      <!-- Don't touch this block. No edit company block, if the user one-->
+      <!--<a href="#/add_company" style="display: none;">-->
+        <!--<div class="create_profile_butt">-->
+          <!--<div class="first_line company_exists_mod"><%= I18n.t('edit_your_business_profile') %> </div>-->
+          <!--<a href="#/add_company"-->
+             <!--title="Edit company"-->
+             <!--class="get_started_butt">-->
+            <!--Edit company-->
+          <!--</a>-->
+        <!--</div>-->
+      <!--</a>-->
+
+    <% elsif current_user.company == nil %>
+	  <div class="create_profile_butt">
+		<h2 class="first_line"><%= I18n.t('create_your_business_profile') %></h2>
+		<p class="second_line"><%= I18n.t('create_your_business_profile_text') %></p>
+		<a href="#/add_company" title="<%= I18n.t('get_started') %>" class="get_started_butt"><%= I18n.t('get_started') %></a>
+	  </div>
+    <% end %>
+  <% end %>
+  <% if current_user.staff_invitable_by?(current_user) %>
+    <div ng-if="false" class="invite_users_butt" ><%= I18n.t('invite_users') %></div>
+  <% end %>
+</div>
+<!-- <div id="invite_users" title="Invite Users" ng-controller="UserInvitationCtrl" style="width: 530px; display: none;">
+  <div class="dialog_content" >
+    <div class="dialog_form"  style="width: 530px">
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Enter_name_of_user1">  Enter name of user</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+              <input type="text" ng-model='invitation.name' name="name" id="Enter_name_of_user1" placeholder="Enter name of user" class="f_c_field default_mod ">
+          </dd>
+        </dl>
+        <dl class="form_cell form_cell_v1_mod">
+          <dt class="form_c_hline form_v1_mod hline_hide_mod">
+            <label for="Enter_email_of_user">Enter email of user</label>
+          </dt>
+          <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+            <input type="email" ng-model='invitation.email' name="email" id="Enter_email_of_user" placeholder="Enter email of user" class="f_c_field default_mod">
+          </dd>
+          <input type="radio" value="User" ng-model='invitation.type' name="invitation_type" ng-init="invitation.type='User'">Invite as a User
+          <input type="radio" value="Company" ng-model='invitation.type' name="invitation_type" >Invite as a Company
+          <% if current_user.company!=nil %>
+            <input type="radio" value="CompanyEmployee" ng-model='invitation.type' name="invitation_type">Invite as a Company Employee
+          <% end %>
+        </dl>
+      <div class="invite_another_user_butt" ng-click='invite_Another_User()'  ><%= I18n.t('invite_Another_User') %>  </div>
+    </div>
+    <div id='msg_box'></div>
+  </div>
+  <footer class="dialog_footer" style="width:530px !important">
+    <div> <input type="button" value="<%= I18n.t('cancel')%>" type="submit" class="dialog_cancel_butt" style="padding: 0;border: none; background: none" /> </div>
+    <div><input type="button" ng-click='inviteUsers(invitation,invitation_form)' value="<%= I18n.t('send_an_Invite')%>" type="submit" class="send_invite_butt" /> </div>
+  </footer>
+</div> -->

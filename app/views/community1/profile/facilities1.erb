@@ -1,0 +1,327 @@
+<div id='upload-container'>
+  <div class="upload_top">
+    <ul class="upload_list">
+      <li><a href="javascript:void(0)" onclick="load_facilities()" class="active">Add facility</a></li>
+      <li><a href="javascript:void(0)">Edit Facilities</a></li>
+    </ul>
+  </div>
+
+  <div class='upload-tab active'>
+    <div class="upload_facilities">
+      <div class="upload_inputs">
+        <%= form_for @new_facility , url: {action: 'add_new_facility'} do |f| %>
+          <%= f.text_field :name , class: 'input', placeholder: "Facility/Farm Name" %>
+          <%= f.text_area :description, class: 'input', placeholder: "Description" %>
+
+          <%= f.fields_for :address do |a| %>
+            <%= a.text_field :street1, class: 'input', placeholder: "Street 1" %>
+            <%= a.text_field :street2, class: 'input', placeholder: "Street 2" %>
+            <%= a.text_field :locality, class: 'input', placeholder: "City" %>
+            <%= a.text_field :administrative_area, class: 'input', placeholder: "State" %>
+            <%= a.text_field :postal_code, class: 'input', placeholder: "Zip code" %>
+            <%= a.select :country, options_for_select(country_list), prompt: "Country" %>
+          <%end%>
+          <%= f.text_field :phone, class: 'input', placeholder: "Phone" %> 
+          <center><%= f.submit "Save",class: 'green',id: "facility_save" %></center>
+        <% end %>
+      </div>
+    </div>
+  </div> 
+  <div class='upload-tab'>
+      <div style='margin-bottom:25px'><input type='text' placeholder='Facility' id='facility' name='facility'></div>
+      <div class='section'>Upload Certificate</div>
+      <div class="upload_certificate" id="upload_certificate_id" style='display:none'>
+        <div class="upload_inputs">
+          <%= form_for @new_certificate ,url:{action: 'add_new_certificate'} do |f| %>
+            
+            <div>
+              <%= f.text_field :certificate_name, class: 'input',  placeholder: "Certificate Name"%>
+            </div>
+            <div>
+              <%= f.hidden_field :facility_id, class: 'input', placeholder: "Facility"%>
+              <%= f.text_field :certificate_category, class: 'input', placeholder: "Certificate Category"%>
+            </div>
+            <div>
+              <%= f.text_field :certificate_template_id, class: 'input',  placeholder: "Certificate Scheme"%>
+              <%= f.text_field :access_level, class: 'input', placeholder: "Access level"%>
+            </div>
+            <div>
+              <%= f.text_field :need_verification_from_cb, class: 'input', placeholder: "Would you like the certificate verified by C.B. ? "%>
+              <%= f.text_field :auditor_name, class: 'input', placeholder: "Auditor Name"%>
+            </div>
+            <div id="is_verified_by_cb">
+              <%= f.text_field :certification_body_id, class: 'input', placeholder: "Certification Body"%>
+              
+            </div>
+            <div class='half'>
+              <%= f.text_field :score, class: 'input', placeholder: "Score"%>
+              <%= f.text_field :scope, class: 'input', placeholder: "Scope"%>
+            </div>
+            <div class='half'>
+              <%= f.text_field :certificate_number, class: 'input', placeholder: "Certificate Number"%>
+              <%= f.text_field :audit_date, class: 'input', placeholder: "Audit date"%>
+            </div>
+            <div class='half'>
+              <%= f.text_field :issued_date, class: 'input', placeholder: "Issued date"%>
+              <%= f.text_field :expiration_date, class: 'input', placeholder: "Expiration date"%>
+            </div>
+            <div>
+              <%= f.file_field :document, class: 'input', placeholder: "Select File"  %>
+            </div>
+        
+        <center><center><%= f.button "Upload",class: 'green',id: "certificate_save" %></center>
+        <% end %>
+        </div>
+      </div>
+      <div class='section'>Add Products</div>
+      <div class="upload_products" style='display:none'>
+        <div class="upload_inputs"> 
+          <form id="product_form">
+            <input type='text' placeholder='Product Category' id='product_category' name='product_category'/>
+            <input type='text' placeholder='Products' id='products' name='products'/>
+            <input type='hidden' placeholder='Facility' id='product_facilities' name='id'/>
+          </form>
+        </div>
+        <center> <input type='button' class="green" id="submit_products" value="Add"/>  </center>
+        
+      </div>
+    </div>
+</div>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'facilities.js' %>"></script>
+<script>
+    $('#new_farm').on('submit', function(e){
+      e.preventDefault()
+      company_id = "<%= current_user.company.id %>"
+      var farm_json = {};
+      $("#new_farm input").each(function(){
+        farm_json[$(this).attr("name")] = $(this).val();
+      });
+      farm_json['farm[description]'] = $('#farm_description').val();
+      farm_json['farm[address_attributes][country]'] = $('#farm_address_attributes_country').val();
+      $.ajax({
+        url:'/api/v2.2/farms.json',
+        data: farm_json,
+        type: 'POST',
+        success: function(response){
+           $('.upload_list li:last-child').click()
+           $('#facility').select2('data', {id: response.id, text: response.name})
+           $('.upload-tab .section').fadeIn()
+           $('html,body').animate({ scrollTop: 0 })
+           ss_alert("success" , "Facility saved successfully");
+           $("#new_farm input.input").each(function(){
+            $(this).val('');
+          });
+        },
+        error: function (errors,response){
+          
+          submitting=false
+          ss_alert("error",errors.responseText);
+          closeLoadingModal();
+        }
+      });
+    });
+
+$("#certificate_save").on('click', function(e) {
+    e.preventDefault()
+    var certificate_name = $("#certificate_certificate_name").val()
+    var facility = $("#certificate_facility_id").val()
+    var category = $("#certificate_certificate_category").val()
+    var scheme = $("#certificate_certificate_template_id").val()
+    var cert_number = $("#certificate_certificate_number").val()
+    var certification_body = $("#certificate_certification_body_id").val()
+    // var verifying_user = $("#certificate_verifying_user_id").val()
+    var auditor_name = $("#certificate_auditor_name").val()
+    var audit_date = $("#certificate_audit_date").val()
+    var issued_date = $("#certificate_issued_date").val()
+    var expiration_date = $("#certificate_expiration_date").val()
+    var cert_document =  $("#certificate_document")
+    var need_verification = $("#certificate_need_verification_from_cb").val() == "No" ? false : true
+
+    if (certificate_name == '') { ss_alert('error', 'Certificate name required.') }
+    else if (facility == '') { ss_alert('error', 'Facility name required.') }
+    else if (category == '') { ss_alert('error', 'Certificate category required.') }
+    else if (scheme == '') { ss_alert('error', 'Certificate scheme required.') }
+    else if (need_verification && certification_body == '') { ss_alert('error', 'Certification body required.') }
+    // else if (need_verification && verifying_user == '') { ss_alert('error', 'Verifying user required.') }
+    else if (need_verification && auditor_name == '') { ss_alert('error', 'Auditor name required.') }
+    else if (cert_number == '') { ss_alert('error', 'Certificate number required.') }
+    else if (audit_date == '') { ss_alert('error', 'Audit date required.') }
+    else if (issued_date == '') { ss_alert('error', 'Issued date required.') }
+    else if (expiration_date == '') { ss_alert('error', 'Expiration date required.') }
+    else if (cert_document.val() == '') { ss_alert('error', 'Certificate document required.') }
+    else {
+      showModal('loading_modal')
+      submitting= true;
+      var formData = new FormData();
+      formData.append("certificate[certificate_name]", certificate_name);
+      formData.append("certificate[facility_id]", facility);
+      formData.append("certificate[certificate_template_id]", scheme);
+      formData.append("certificate[certification_body_id]", certification_body);
+      formData.append("certificate[certificate_number]", cert_number);
+      // formData.append("certificate[verifying_user_id]", verifying_user);
+      formData.append("certificate[auditor_name]", auditor_name);
+      formData.append("certificate[audit_date]", audit_date);
+      formData.append("certificate[issued_date]", issued_date);
+      formData.append("certificate[expiration_date]", expiration_date);
+      formData.append("certificate[access_level]",  $("#certificate_access_level").val());
+      formData.append("certificate[scope]", $("#certificate_scope").val());
+      formData.append("certificate[score]", $("#certificate_score").val());
+      formData.append("certificate[need_verification_from_cb]", need_verification);
+      var file =  cert_document[0].files[0];
+      formData.append('certificate[document]' , file);
+
+      $.ajax({
+        url: '/api/v2.2/community/certificates.json?facility_id='+facility,
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data : formData, 
+        success: function(res){
+          //@profile_title= response1.title
+          ss_alert("success" , "certificate created successfully");
+          submitting= false;
+          closeModal();
+          closeLoadingModal();
+          location.reload(true);
+
+        },
+        error: function (errors,response){
+          submitting= false;
+          closeLoadingModal();
+          // ss_alert("success",errors.responseText);
+          ss_alert("error",errors.responseText);
+        }
+      })
+    }
+  }) ;
+$('#certificate_access_level').select2({
+    minimumResultsForSearch: 10,
+    dropdownCssClass: 'organization',
+    data: [{id:'Private',text:'Private'},{id:'Public',text:'Public'},{id:'Protected',text:'Protected'}]
+  })
+  $('#certificate_need_verification_from_cb').select2({
+    minimumResultsForSearch: 10,
+    dropdownCssClass: 'organization',
+    data: [{id:'Yes',text:'Yes'},{id:'No',text:'No'}]
+  })
+$("#submit_products").on('click', function(e) {
+      e.preventDefault()
+      var form_data = $("#product_form").serialize() ;
+      var has_errors = false ;
+      // basic validations
+      $("#product_form input").each(function(){
+        if (! $(this).select2("val") ) {
+          ss_alert("error" , $(this).attr("placeholder") + " is required") ;
+          has_errors = true ;
+          return ;
+        }
+
+      } ) ;
+      
+      if($("#product_category").val() == '') {
+        ss_alert("error" , "Product category is required") ;
+          has_errors = true ;
+          return ;
+      } else if($("#products").val() == '') {
+        ss_alert("error" , "Product is required") ;
+        has_errors = true ;
+        return ;
+      }
+      if (! has_errors) {
+        showModal('loading_modal')
+        submitting=true;
+        $.ajax({
+          url: '/api/v2.2/facilities/associate_products.json' , 
+          data: form_data ,
+          type: 'POST' , 
+          success: function(response) {  
+            closeModal();
+            closeLoadingModal();
+            $("#products").select2("val", "");
+            $("#product_categories").select2("val" , "");
+            $("#product_facilitiess").select2("val" , "");
+            ss_alert("success" , "Product(s) added") ;
+            location.reload(true);
+            submitting=false;
+          } ,
+          error: function (errors, response){
+            closeLoadingModal();
+            submitting=false;
+            ss_alert("error", errors.responseText);   
+          }
+
+        }) ;
+      }
+      
+      
+
+    }) ;
+
+$('#facility').on('change', function(){
+  $('.upload-tab .section').fadeIn()
+})
+
+$('.upload-tab .section').click(function(){
+  $(this).next().fadeIn()
+  $('#certificate_facility_id, #product_facilities').val($('#facility').select2('val'))
+})
+
+$('#certificate_facility_ids').select2({
+        minimumResultsForSearch: 10,
+        dropdownCssClass: 'organization',
+        data: { results: facilities_map}
+      })
+      $('#certificate_certificate_category').select2({
+        minimumResultsForSearch: 10,
+        dropdownCssClass: 'organization',
+        data: { results: certificate_category_map}
+      }).on("change", function(e) {
+          category = $("#certificate_certificate_category").val();
+          $.ajax({
+            url: '/api/v2.2/community/certificate_templates/get_certificate_templates',
+            data: {category:category},
+            type: 'GET',
+            success: function(response){
+              var i = 0
+              response.certificate_templates.forEach(function(certificate_template){
+                var data = new Object();
+                data.id = certificate_template.id
+                data.text = certificate_template.type_of_certificate_scheme
+                certificate_template_map[i] = data
+                i++
+              });
+            }
+          });
+      })
+    $('#certificate_certification_body_id').select2({
+      minimumResultsForSearch: 10,
+      dropdownCssClass: 'organization',
+      data: { results: certification_bodies_map}
+    }).on("change", function(e) {
+        cb_id = $("#certificate_certification_body_id").val();
+    })                
+    $('#certificate_certificate_template_id').select2({
+      minimumResultsForSearch: 10,
+      dropdownCssClass: 'organization',
+      data: { results: certificate_template_map}
+    })
+    // $('#certificate_verifying_user_id').select2({
+    //   minimumResultsForSearch: 10,
+    //   dropdownCssClass: 'organization',
+    //   data: { results: certification_body_users_map}
+    // })
+
+    $("#product_facilitiess").select2({
+      minimumResultsForSearch: 10,
+      dropdownCssClass: 'organization',
+      data: { results: facilities_map}
+    })
+    $("#facility").select2({
+      minimumResultsForSearch: 10,
+      dropdownCssClass: 'organization',
+      data: { results: facilities_map}
+    })
+</script>

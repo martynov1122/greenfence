@@ -1,0 +1,76 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+    <h1 class="content_headline"><%= t('add_or_edit_a_product') %></h1>
+    <a class="wizard_delete_butt" ><%= t('delete') %></a>
+    <a class="wizard_add_butt_v2" ng-click="saveProducts()"><%= t('save') %></a>
+  </div>
+  <div class="add_info_block">
+    <div class="add_info_header">
+      <div class="add_info_title"><%= t('select_operation') %></div>
+      <div class="add_info_colapse_butt operation_box"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block operation_box">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category">Select name of operation</label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <ui-select id="operations_list" ng-model="operation.selected" theme="selectize" on-select="getAssociatedProducts($item, $model)">
+                <ui-select-match placeholder="<%= t('select_an_operation_in_the_list_or_search_his_name') %>">{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="operation in operations |  filter: $select.search">
+                  <div ng-bind-html="operation.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_info_block" >
+    <div class="add_info_header">
+      <div class="add_info_title"><%= t('product_category') %></div>
+      <div class="add_info_colapse_butt"></div>
+    </div>
+    <div class="add_info_content_block">
+      <div class="add_info_form_block">
+        <div class="add_info_form_w">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category"><%= t('select_product_category') %></label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <select gf-multiselect data='categories' gf-placeholder='<%= t('select_product_category') %>' gf-class='' id="product_categories" ng-model="product_categories" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+                ng-options="opt as opt.name for opt in categories track by opt.id" >
+              </select>
+            </dd>
+          </dl>
+          <dl class="form_cell form_cell_v1_mod select_add_product">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category"><%= t('select_products') %></label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <select gf-multiselect data='products' gf-placeholder='<%= t('select_products') %>' gf-class='' id="products" ng-model="category_products" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+                ng-options="opt as opt.name group by opt.product_category for opt in products track by opt.id | orderBy:'product_category'" >
+              </select>
+            </dd>
+          </dl>
+          <div class="category_wrap">
+            <div ng-repeat="list in selected_list">
+              <h2 ng-if="list.value.length > 0" class="category_hline">{{list.name}}</h2>
+              <ul ng-if="list.value.length > 0" class="category_list">
+                <li class="category_list_item" ng-repeat="product in list.value">
+                  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+                    <input name="Example"  type="checkbox" checked="true" class="lbl_inp_rb_ch" ng-click="deselect($event)"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod">{{product.name}}</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

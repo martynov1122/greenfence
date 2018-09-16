@@ -1,0 +1,206 @@
+<div class="company-intro">
+    <!--<div class="cover" style="background: url('img/cover.png');">
+        <div class="cover-gradient"></div>
+    </div>-->     
+</div>
+
+<div class="content_main">
+    
+    <!-- Products -->
+    <div class="company-products">
+        <h3 class="count"></h3>
+    </div>
+    
+    <!-- Facilities -->
+    <div class="company-facilities">
+        <h3 class="count"></h3>
+    </div>
+    
+    <!-- Certificates -->
+    <div class="company-certificates">
+        <h3 class="count"></h3>
+    </div>
+    
+    <!-- Employees -->
+    <div class="company-employees">
+        <h3 class="count"></h3>
+    </div>
+    
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="company">
+    <div class="company-gist">
+        {{#company}}
+        <div class="content_main">
+            <div class="avatar">
+                {{#logo}}
+                    {{#logo}}
+                        {{#thumb}}
+                            {{#url}}
+                                <img src = {{url}} width="140" height="140" alt="company image" id="company_image">
+                            {{/url}}
+                            {{^url}}
+                                <img src = "https://secure.gravatar.com/avatar/eb2f3b2e6536d999517c92976b0be665?d=mm" width="140" height="140" alt="company image" id="company_image">
+                            {{/url}}
+                        {{/thumb}}
+                    {{/logo}}
+                {{/logo}}
+            </div>
+            <div class="company-info">
+                <h2 class="company-title">{{company_name}} <span class="verified"></span></h2>
+                <span class="location-meta">{{company_location}} / {{type}}</span>
+                <br>
+                <button class="subscribe-btn">Subscribe</button>
+                <p class="company-desc">
+                    {{company_desc}}
+                </p>
+                <div class="company-stats">
+                    <div class="stat">
+                        <span class="figure">{{products_count}}</span>
+                        <span class="legend">Products</span>
+                    </div>
+                    <div class="stat">
+                        <span class="figure">{{facilities_count}}</span>
+                        <span class="legend">Facilities</span>
+                    </div>
+                    <div class="stat">
+                        <span class="figure">{{certificates_count}}</span>
+                        <span class="legend">Certificates</span>
+                    </div>
+                    <div class="stat">
+                        <span class="figure">{{users_count}}</span>
+                        <span class="legend">Employees</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/company}}
+    </div>   
+</script>
+
+<script type="x-tmpl-mustache" id="products_list">    
+    <div id="slider1" class="product-grid">
+        <ul class="parentUl">
+            {{#company_products}}
+                <li class='parentLi'>
+                    <div class="product-image">
+                        <span class="product-tag" style="text-overflow: ellipsis; overflow: hidden; width: 100px; white-space: nowrap;">{{name}}</span>
+                        <a href="#" class="product-info-icon"></a>
+                        <div class="product-hover" style="z-index: 50;">
+                            <h4>{{name}}</h4>
+                            <p>{{description}}</p>
+                            <a href="product_detail?id={{id}}" class="view-product">View</a>
+                        </div>
+                        <img src = <%= asset_path 'freeapp/tea.png' %> />
+                    </div>
+                </li>
+            {{/company_products}}                
+        </ul>
+    </div>
+    <div class="controls">
+        <a href="#" class="carousel-btn left prev-slide"></a>
+        <a href="#" class="carousel-btn right next-slide"></a>
+    </div>
+    <a href="#" id = "products-list-view" class="list-view">List View</a>
+</script>
+
+<script type="x-tmpl-mustache" id="facilities_list">        
+    <div id="slider2" class="facilities-grid">
+        <ul class="parentUl">
+            {{#facilities}}
+                <li class='parentLi'>
+                    <div class="facilities-thumb">
+                        <img src = <%= asset_path 'freeapp/tea.png' %> />
+                    </div>
+                    <div class="facilities-gist">
+                        <h4><a href="facility_profile?id={{id}}">{{name}}</a></h4>
+                        <p>{{description}}</p>
+                        <span class="expires">Expires: 10/10/10</span>
+                    </div>
+                    
+                </li>
+            {{/facilities}}
+        </ul>
+    </div>
+    <div class="controls">
+        <a href="#" class="carousel-btn left prev-slide"></a>
+        <a href="#" class="carousel-btn right next-slide"></a>
+    </div>
+    <a href="#" id = "facilities-list-view" class="list-view">List View</a>
+</script>
+
+<script type="x-tmpl-mustache" id="certificates_list">
+    <div id="slider3" class="facilities-grid">
+        <ul class="certificates-grid parentUl">
+            {{#company_certificates}}
+                <li class='parentLi'>
+                    <h4>{{certificate_name}}</h4>
+                    <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue. Cras justo odio, dapibus ac facilisis in, egestas eget quam.</p>
+                    <a href="certificate_detail?id={{id}}" class="view-link">View Certificate</a>
+                    <span class="expires">Expires: {{expiration_date}}</span>
+                </li>
+            {{/company_certificates}}
+        </ul>
+    </div>
+    <div class="controls">
+        <a href="#" class="carousel-btn left prev-slide"></a>
+        <a href="#" class="carousel-btn right next-slide"></a>
+    </div>
+    <a href="#" id = "certificates-list-view" class="list-view">List View</a>
+</script>
+
+<script type="x-tmpl-mustache" id="employees_list">   
+    <div id="slider4" class="employees-grid">
+        <ul class="parentUl">
+            {{#company_employees}}
+                <li class='parentLi'>
+                    <a href="profile_public?id={{id}}" style="min-height: 40px;">
+                        <div class="user-avatar">
+                            {{#image}}
+                                {{#image}}
+                                    {{#thumb}}
+                                        {{#url}}
+                                            <img src = {{url}}>
+                                        {{/url}}
+                                        {{^url}}
+                                            <<img src = <%= asset_path 'freeapp/avatar.jpg' %> >
+                                        {{/url}}
+                                    {{/thumb}}
+                                {{/image}}
+                            {{/image}}                                
+                        </div>
+                        <h4>{{name}}</h4>
+                        <span>{{profile_title}}</span>
+                    </a>
+                </li>
+            {{/company_employees}}
+        </ul>
+    </div>
+    <div class="controls">
+        <a href="#" class="carousel-btn left prev-slide"></a>
+        <a href="#" class="carousel-btn right next-slide"></a>
+    </div>
+    <!--<a href="#" id = "employees-list-view" class="list-view-all">View all</a>-->
+    <a href="list_view_employees" class="list-view">List View</a>
+</script>
+
+<script type="x-tmpl-mustache" id="no_data">
+    <span class="no-data">No data available.</span>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'company_profile_public.js' %>"></script>
+<script type="text/javascript">
+    $(document).ready(function(){   
+
+        var company_id = gf.getQueryVariable("id");
+        if(company_id == null) {   
+            company_id= '<%= current_user.try(:company).try(:id) %>'
+        }
+
+        cpp.init(company_id)
+    })
+</script>

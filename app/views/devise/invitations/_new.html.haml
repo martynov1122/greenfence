@@ -1,0 +1,33 @@
+%h1 Send Invitation
+
+.inline-2
+  = f.label :first_name
+  = f.text_field :first_name
+.inline-2
+  = f.label :last_name
+  = f.text_field :last_name
+.clear
+
+.inline-1
+  - resource_class.invite_key_fields.each do |field|
+    = f.label field
+    = f.text_field field
+.clear
+
+.inline-1
+  = f.label :role
+  - sel = select_tag :role, options_for_select(@invitable_roles.for_select, @invitable_roles.default)
+  = section 'shared/drop_down', locals: {select: sel}
+.clear
+
+#company-name-fields
+  = f.label :new_company_name
+  = f.text_field :new_company_name
+
+.inline-1
+  = f.label :invitation_message
+  = f.text_area :invitation_message
+.clear
+
+%script
+  new InviteForm()

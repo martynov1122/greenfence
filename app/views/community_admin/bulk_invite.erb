@@ -1,0 +1,162 @@
+<%= csrf_meta_tags %>
+<div class="container-fluid all_father">
+	<div class="row header" style="margin-bottom: 0px;">
+		<h4> Bulk Invite Suppliers </h4>
+		<hr/>
+		<h5><a class="link" href="/admin">Back</a> </h5>
+	</div>
+	<div class="row section" style="margin-bottom: 1px;">
+		<span class="badge">Step 1</span> Select Company
+		<div class="form-group col-md-12">
+			<label for="company_id">Choose Corporation</label>
+			<select name="company_id" id="company_id">
+				<option value="">Select...</option>
+			</select>
+		</div>
+	</div>
+	<div class="row section" style="margin-bottom: 1px;">
+		<span class="badge">Step 2</span> Select CSV
+		<form action="/community_admin/bulk_invite_save" id="upload_form" enctype="multipart/form-data">
+			<div class="form-group col-md-5">
+				<label for="Browse_files">Upload File</label>
+				<input type="file" name="data_csv" id="Browse_files" placeholder="Select CSV">
+				<p class="help-block">Upload the file containing the records. You will be given a chance to review the data before any changes are made</p>
+			</div>
+			<div class="form-group col-md-12">
+				<span class="badge">Step 3</span>
+				<button type="button" class="btn btn-success btn-sm" id="upload">Upload</button>
+			</div>
+		</form>
+	</div>
+	<div class="row section" style="margin-bottom: 1px;">
+		<span class="badge">Step 4</span> Review and Invite
+		<table id="data_table" class="table">
+			<thead id="data_table_header">
+				<tr>
+					<th>Supplier Operation</th>
+					<th>Supplier Company</th>
+					<th>Supplier Contact</th>
+					<th>Supplier Contact Email</th>
+					<th>Products</th>
+					<th>Requirements</th>
+					<th>Division Name</th>
+					<th width="100%;">Errors</th>
+				</tr>	
+			</thead>
+			<tbody id="data_table_body">				
+			</tbody>
+			<tfoot >
+				<tr id="commit_section">
+					<td><button type="button" class="btn btn-success btn-sm" id="commit">Invite Suppliers</button> <td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+	<div class="row section" style="margin-bottom: 1px;">
+		<div id="created_count" class="alert alert-success" role="alert"></div>
+		<div id="failed_count" class="alert alert-danger" role="alert"></div>
+	</div>
+	<div class="row">
+		<table id="error_table" class="table">
+			<thead >	
+				<tr>
+					<th>Name</th>
+					<th>Error</th>
+				</tr>
+			</thead>
+			<tbody id="error_table_body">				
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<style>
+td:not(:last-child) {
+    white-space: nowrap;
+}
+td:nth-child(8) {
+    color: #ff0000;
+}
+</style>
+
+<script type="text/javascript">
+	$("#commit_section").hide();
+	$("#created_count").hide();
+	$("#failed_count").hide();
+	$("#error_table").hide() ;
+	$.ajax({
+	    type: 'GET',
+	    url: '/community_admin/get_corporations.json',
+	    success: function(data) {
+	      for (var i = 0; i < data.corporations.length; i++) {
+	        $('#company_id').append('<option value=' + data.corporations[i].id + '>' + data.corporations[i].name + '</option>');
+	      }
+	    }
+  	})
+	function after_commit(data) {
+		$("#created_count").text(data.created_count + " Items created") ;
+		$("#failed_count").text(data.failed_count + " Items not created") ;
+		$("#created_count").show();
+		$("#failed_count").show();
+	} 
+	function commit_data(event) {
+		var token = $('meta[name=csrf-token]').attr('content')
+		var values = $('input:checkbox:checked').map(function () {
+			return this.value;
+		}).get();
+		csvdata = {}
+		csvdata['data'] = values
+		csvdata['authenticity_token'] = token
+		csvdata['company_id'] = $('#company_id').val()
+		$.ajax({
+			type: 'POST',
+			url: "/community_admin/bulk_invite_send.json" , 
+			data: csvdata,
+			success: after_commit ,
+		});
+	}
+	function populate_table(data, status, jqXHR) {
+		$("#commit_section").show();
+		$.each(data.data, function(i, v) {
+			var row_data = JSON.parse(v)
+			var row = $('<tr></tr>');  
+			row.append("<td>").children('td:last').append($('<input />', {name: 'invite', type: 'checkbox', value: row_data.id, checked: row_data.id, disabled: !row_data.id})).append(row_data.operation_name);
+			row.append("<td>").children('td:last').text(row_data.operation_company);
+			row.append("<td>").children('td:last').text(row_data.operation_contact_name);
+			row.append("<td>").children('td:last').text(row_data.operation_contact_email);
+			row.append("<td>").children('td:last').text(row_data.products);
+			row.append("<td>").children('td:last').text(row_data.requirements);
+			row.append("<td>").children('td:last').text(row_data.division_name);
+			row.append("<td>").children('td:last').text(row_data.errors);
+			$("#data_table_body").append(row);
+		});
+		$("#commit").click(data, commit_data);
+	}
+	function handle_submit() {
+		var formData = new FormData(document.getElementById('upload_form'));
+		formData.append("company_id" , $('#company_id').val())
+		var token = $('meta[name=csrf-token]').attr('content')
+		formData.append("authenticity_token" , token)
+		//Server script to process data
+		$.ajax({
+	        url: '/community_admin/bulk_invite_save.json',
+	        type: 'POST',
+	        //Custom XMLHttpRequest
+	        xhr: function() {
+	        	var myXhr = $.ajaxSettings.xhr();
+	        	//Check if upload property exists
+	            if(myXhr.upload){
+	            	//For handling the progress of the upload
+	                //myXhr.upload.addEventListener('progress', progressHandlingFunction, false);
+	            }
+	            return myXhr;
+	        },
+	        data: formData,
+	        success: populate_table,
+	        cache: false,
+	        contentType: false,
+	        processData: false
+        });
+	}
+	$("#upload").click(handle_submit) ;
+</script>

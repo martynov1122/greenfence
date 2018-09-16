@@ -1,0 +1,25 @@
+<div id="shared_by_me" class="view_container" style="padding: 0rem;">
+  <h1 class="content_headline"> Filled Requirements by {{supplier.supplier.name}}</h1>
+  <div class="add_info_block" style="border-bottom: 1px solid #F1F1F1;">
+    <div class="table-container">
+        <table class="greenfence-table">
+          <thead>
+            <tr>
+              <th>Requirement Name</th>
+              <th>Uploaded Document Type</th>
+              <th>Document</th>
+              <th>Shared By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="requirement in assigned_requirements">
+              <td>{{requirement.document_type}}</td>
+              <td>{{requirement.supplier_document_definition}}</td>
+              <td><div class="doc_title folders_mod "><a href="#/user_document/{{requirement.supplier_document_id}}/sharing_record_detail" style="color: #48c988;">{{requirement.supplier_document}}</a></div></td>
+              <td>{{requirement.shared_by_user}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>

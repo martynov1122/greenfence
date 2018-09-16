@@ -1,0 +1,37 @@
+<div class="secondary_row layuot_mod_1" ng-controller="RequirementRightMenuCtrl">
+  <div class="section_menu mod_1">
+		<h2 class="section_hline">{{requirement_msg}}</h2>
+		<ul class="section_menu_list">
+			<li class="section_menu_l_item">
+			  <div class="section_menu_form_wrap">
+					<dl class="form_cell form_cell_v1_mod requirements_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+							<label for="select_company_operation">Customers/Supplier</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+							<select id="select_company_operation" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="selected"
+								ng-options="opt.name for opt in company_operations track by opt.uuid" ng-change="getEntities(selected)">
+							</select>
+						</dd>
+					</dl>
+			  </div>
+			</li>
+		  <li class="section_menu_l_item" ng-repeat="entity in entities">
+				<div class="section_menu_link hovered_5_mod sectionMenuHiddenTrigger" ng-click="toggleBuyer($event, entity.id, entity.type)">
+				  {{entity.name}}
+				  <span class="section_m_link_count">{{entity.supply_chain_requirements_count}}</span>
+				</div>
+				<div class="section_menu_hidden" style="display: none;">
+					<dd class="form_c_f_w form_v1_mod hline_hide_mod menu_cat_search_mod">
+					  <input type="text" id="type_name_of_requirement" placeholder="Type name of requirement" class="f_c_field third_mod menu_cat_search_mod" ng-model="docText">
+					</dd>
+				  <ul class="menu_cat_search_result">
+						<li ng-repeat="requirement in entity.requirements  | filter:docText" class="menu_cat_search_result_item container_mod ng-scope">
+						  <a class="menu_cat_s_result_el container_mod ng-binding" title="" href="#/requirement/{{requirement.id}}?requirement_type={{requirement_type}}">{{requirement.name}}</a>
+						</li>
+				  </ul>
+				</div>
+		  </li>
+		</ul>
+  </div>
+</div>

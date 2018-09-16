@@ -1,0 +1,19 @@
+<div class="user_block contact_mod selected_mod" ng-class="{ selected_mod: data.authenticated || data.verified }">
+  <span class="corner_ico user_mod"></span>
+  <a class="user_avatar_w contact_mod" href="#user_public_profile/{{data.id}}">
+	<img ng-src="{{data.profile.thumb_url}}" alt="{{data.name}}" class="user_avatar_img contact_mod">
+  </a>
+  <a class="user_name contact_mod" href="#user_public_profile/{{data.id}}">{{data.name}}</a>
+  <div class="user_info contact_mod">{{data.profile.title}}</div>
+  <div class="user_text contact_mod" style="white-space: pre-line;" ng-if="data.profile.summary">{{data.profile.summary}}</div>
+  <div class="user_b_footer contact_mod">
+	<div class="user_follow_butt contact_mod"><%= t('follow') %></div>
+	<div class="user_msg_2_butt contact_mod"><%= t('message') %></div>
+  </div>
+  <div class="user_text search_mod" ng-if="data.scheme_types[0]">
+	<b>Schemes:</b>
+	<ul class="options_b_value_list">
+	  <li class="options_b_value_l_item" ng-repeat="scheme in data.scheme_types">{{scheme}}{{$last ?"" :","}}</li>
+	</ul>
+  </div>
+</div>

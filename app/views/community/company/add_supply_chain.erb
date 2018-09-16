@@ -1,0 +1,252 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+		<h1 class="content_headline"><%= t('invite_supplier_or_customer') %></h1>
+  </div>
+  <div class="tabs_v1">
+		<ul class="dialog_tab_list white_mod">
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_1" title="" class="dialog_tab_1_butt white_mod "><%= t('suppliers') %></a>
+		  </li>
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_2" title="" class="dialog_tab_1_butt white_mod "><%= t('customers') %></a>
+		  </li>
+		</ul>
+		<div id="tab_1" class="tab_block">
+		  <div class="add_info_block suppliers_mod">
+				<div class="add_info_content_block">
+				  <div class="add_info_form_block open_mod second_style_mod">
+						<div class="add_info_form_w second_style_mod">
+						  <dl class="form_cell form_cell_v1_mod">
+								<dt class="form_c_hline form_v1_mod hline_hide_mod">
+								  <label for="Enter_name">Supplier name</label>
+								</dt>
+								<dd id="supply_chain" class="form_c_f_w form_v1_mod hline_hide_mod">
+								  <ui-select ng-model="inviteSupplier.inviting_entity" theme="selectize">
+										<ui-select-match placeholder="<%= t('select_the_buyer_company_or_operation_from_list_below') %>">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices ui-disable-choice='entity.id == null' repeat="entity in company_operations |  filter: $select.search">
+										  <div ng-if="!entity.parent" style="line-height: 3rem;" ng-bind-html="entity.name | highlight: $select.search"></div>
+										  <div ng-if="entity.parent" ng-bind-html="entity.name | highlight: $select.search"></div>
+										  <small ng-if="entity.parent" style="font-size: 10px;" ng-bind-html="entity.parent | highlight: $select.search"></small>
+											<div ng-if="$last" ng-click="loadMoreEntities()" style="line-height: 3rem; text-align: center;" ng-bind-html="load_more"></div>
+										</ui-select-choices>
+								  </ui-select>
+								</dd>
+								<dd id="supply_chain" class="form_c_f_w form_v1_mod hline_hide_mod">
+								  <ui-select ng-model="inviteSupplier.invited_entity" theme="selectize" ng-change="supplierProducts({{$select.selected}})">
+										<ui-select-match placeholder="<%= t('select_the_supplier_company_or_operation_from_list_below') %>">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices ui-disable-choice='suppliable.id == null' repeat="suppliable in suppliableBuyable |  filter: $select.search" refresh="searchSuppliableBuyable($select.search)" refresh-delay="600">
+											<div ng-if="!suppliable.parent" style="line-height: 3rem;" ng-bind-html="suppliable.name | highlight: $select.search"></div>
+										  <div ng-if="suppliable.parent" ng-bind-html="suppliable.name | highlight: $select.search"></div>
+										  <div ng-if="suppliable.parent" style="font-size: 10px;" ng-bind-html="suppliable.parent | highlight: $select.search"></div>
+											<div ng-if="$last" ng-click="loadMoreSuppliableBuyable()" style="line-height: 3rem; text-align: center;" ng-bind-html="load_more"></div>
+										</ui-select-choices>
+								  </ui-select>
+								</dd>
+						  </dl>
+						  <dl id="supplier_products" class="form_cell form_cell_v1_mod" style="display:none;">
+								<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+								  <label for="Enter_name_of_category"><%= t('select_products') %></label>
+								</dt>
+								<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+								  <select id='supplier_product_select' gf-multiselect data='supplier_products' gf-placeholder='<%= t('select_products') %>' gf-class='' ng-model="inviteSupplier.selected_supplier_products" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+								  	ng-options="product as product.name for product in supplier_products track by product.id">
+								  </select>
+								</dd>
+						  </dl>
+						</div>
+						<div class="add_info_tabs_block tabs_v1 suppliers_tab">
+						  <div class="add_info_tabs_b_header">
+								<div class="add_info_tabs_b_header_text">
+								  <p>(<%= t('showing') %> {{accepted_suppliers_count + pending_suppliers_count + rejected_suppliers_count}} <%= t('suppliers') %>)</p>
+								</div>
+						  </div>
+						  <ul class="dialog_tab_list suppliers_mod add_info_mod">
+								<li class="dialog_tab_l_item grey_mod add_info_mod">
+								  <a href="#suppliers_tab_1" title="Added" class="dialog_tab_1_butt grey_mod add_info_mod">{{accepted_suppliers_count}} <%= t('added') %></a>
+								</li>
+								<li class="dialog_tab_l_item grey_mod add_info_mod" >
+								  <a href="#suppliers_tab_2" title="<%= t('pending') %>" class="dialog_tab_1_butt grey_mod add_info_mod ">{{pending_suppliers_count}} <%= t('pending') %></a>
+								</li>
+								<li class="dialog_tab_l_item grey_mod add_info_mod" >
+								  <a href="#suppliers_tab_3" title="<%= t('rejected') %>" class="dialog_tab_1_butt grey_mod add_info_mod ">{{rejected_suppliers_count}} <%= t('rejected') %></a>
+								</li>
+						  </ul>
+						  <div id="suppliers_tab_1" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="supplier in accepted_suppliers">
+										<div class="user_block small_mod supply_mod ">
+									  	<div class="user_avatar_w small_mod supply_mod ">
+												<img  ng-src="{{supplier.profile_image || default_avatar_image }}"  alt="{{current_company.name}}" alt="" class="user_avatar_img small_mod supply_mod">
+									  	</div>
+									  	<div class="user_name small_mod supply_mod">{{supplier.name}}</div>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="added_supplier_pagination"></div>
+						  </div>
+						  <div id="suppliers_tab_2" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="pending_supplier in pending_suppliers">
+										<div class="user_block small_mod supply_mod ">
+										  <div class="user_avatar_w small_mod supply_mod ">
+												<img ng-src="{{pending_supplier.profile_image || '/assets/avatar.jpg'}}" alt="" class="user_avatar_img small_mod supply_mod">
+										  </div>
+										  <div class="user_name small_mod supply_mod">{{pending_supplier.name}}</div>
+										</div>
+										<div class="gl_action_block supply_mod">
+									  	<a href="" title="" class="gl_action_trigger_butt supply_options_butt">Options</a>
+									  	<ul class="gl_action_list supply_mod">
+												<li class="gl_action_item supply_mod">
+										  		<a href="" title="Add to group" class="gl_action_butt supply_mod add_to_group_mod">Add to group</a>
+												</li>
+												<li class="gl_action_item supply_mod">
+												  <a href="" title="<%= t('remove') %>" class="gl_action_butt supply_mod remove_mod"><%= t('remove') %></a>
+												</li>
+									  	</ul>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="pending_supplier_pagination"></div>
+						  </div>
+						  <div id="suppliers_tab_3" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="rejected_supplier in rejected_suppliers">
+										<div class="user_block small_mod supply_mod ">
+										  <div class="user_avatar_w small_mod supply_mod ">
+												<img ng-src="{{rejected_supplier.profile_image || '/assets/avatar.jpg'}}" alt="" class="user_avatar_img small_mod supply_mod">
+										  </div>
+										  <div class="user_name small_mod supply_mod">{{rejected_supplier.name}}</div>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="rejected_supplier_pagination"></div>
+						  </div>
+						</div>
+						<div class="add_info_footer sub_mod">
+					  	<a class="wizard_add_butt_v2_1" ng-click="supplierInvite(inviteSupplier)"><%= t('invite') %></a>
+						</div>
+				  </div>
+				</div>
+		  </div>
+		</div>
+		<div id="tab_2" class="tab_block">
+		  <div class="add_info_block suppliers_mod">
+				<div class="add_info_content_block">
+				  <div class="add_info_form_block open_mod second_style_mod">
+						<div class="add_info_form_w second_style_mod">
+						  <dl class="form_cell form_cell_v1_mod">
+								<dt class="form_c_hline form_v1_mod hline_hide_mod">
+								  <label for="Enter_name">Customer name</label>
+								</dt>
+								<dd id="supply_chain" class="form_c_f_w form_v1_mod hline_hide_mod">
+								  <ui-select ng-model="inviteBuyer.invited_entity" theme="selectize">
+										<ui-select-match placeholder="<%= t('select_the_buyer_company_or_operation_from_list_below') %>">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices ui-disable-choice='buyable.id == null' repeat="buyable in suppliableBuyable |  filter: $select.search">
+										  <div ng-if="!buyable.parent" style="line-height: 3rem;" ng-bind-html="buyable.name | highlight: $select.search"></div>
+										  <div ng-if="buyable.parent" ng-bind-html="buyable.name | highlight: $select.search"></div>
+										  <small ng-if="buyable.parent" style="font-size: 10px;" ng-bind-html="buyable.parent | highlight: $select.search"></small>
+											<div ng-if="$last" ng-click="loadMoreSuppliableBuyable()" style="line-height: 3rem; text-align: center;" ng-bind-html="load_more"></div>
+										</ui-select-choices>
+								  </ui-select>
+								</dd>
+								<dd id="supply_chain" class="form_c_f_w form_v1_mod hline_hide_mod">
+								  <ui-select ng-model="inviteBuyer.inviting_entity" theme="selectize" ng-change="buyerProducts({{$select.selected}})">
+										<ui-select-match placeholder="<%= t('select_the_supplier_company_or_operation_from_list_below') %>">{{$select.selected.name}}</ui-select-match>
+										<ui-select-choices ui-disable-choice='entity.id == null' repeat="entity in company_operations |  filter: $select.search">
+										  <div ng-if="!entity.parent" style="line-height: 3rem;" ng-bind-html="entity.name | highlight: $select.search"></div>
+										  <div ng-if="entity.parent" ng-bind-html="entity.name | highlight: $select.search"></div>
+										  <small ng-if="entity.parent" style="font-size: 10px;" ng-bind-html="entity.parent | highlight: $select.search"></small>
+											<div ng-if="$last" ng-click="loadMoreEntities()" style="line-height: 3rem; text-align: center;" ng-bind-html="load_more"></div>
+										</ui-select-choices>
+								  </ui-select>
+								</dd>
+						  </dl>
+						  <dl id="buyer_products" class="form_cell form_cell_v1_mod select_buyer_product" style="display:none;">
+								<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+								  <label for="Enter_name_of_category"><%= t('select_products') %></label>
+								</dt>
+								<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+								  <select id='buyer_product_select' gf-multiselect data='buyer_products' gf-placeholder='<%= t('select_products') %>' gf-class='' ng-model="inviteSupplier.selected_buyer_products" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+								  	ng-options="product as product.name for product in buyer_products track by product.id">
+								  </select>
+								</dd>
+						  </dl>
+						</div>
+						<div class="add_info_tabs_block tabs_v1 buyers_tab">
+						  <div class="add_info_tabs_b_header">
+								<div class="add_info_tabs_b_header_text">
+
+								  <p>(<%= t('showing') %> {{accepted_buyers_count + pending_buyers_count + rejected_buyers_count}} <%= t('buyers') %>)</p>
+								</div>
+						  </div>
+						  <ul class="dialog_tab_list suppliers_mod add_info_mod " >
+								<li class="dialog_tab_l_item grey_mod add_info_mod ">
+								  <a href="#buyers_tab_1" title="<%= t('added') %>" class="dialog_tab_1_butt grey_mod add_info_mod ">{{accepted_buyers_count}} <%= t('added') %></a>
+								</li>
+								<li class="dialog_tab_l_item grey_mod add_info_mod " >
+								  <a href="#buyers_tab_2" title="Pending" class="dialog_tab_1_butt grey_mod add_info_mod " >{{pending_buyers_count}} <%= t('pending') %></a>
+								</li>
+								<li class="dialog_tab_l_item grey_mod add_info_mod " >
+								  <a href="#buyers_tab_3" title="<%= t('rejected') %>" class="dialog_tab_1_butt grey_mod add_info_mod " >{{rejected_buyers_count}} <%= t('rejected') %></a>
+								</li>
+						  </ul>
+						  <div id="buyers_tab_1" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="buyer in accepted_buyers">
+										<div class="user_block small_mod supply_mod ">
+										  <div class="user_avatar_w small_mod supply_mod ">
+												<img ng-src="{{buyer.profile_image || '/assets/avatar.jpg'}}" alt="" class="user_avatar_img small_mod supply_mod">
+										  </div>
+										  <div class="user_name small_mod supply_mod">{{buyer.name}}</div>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="added_buyer_pagination"></div>
+						  </div>
+						  <div id="buyers_tab_2" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="pending_buyer in pending_buyers">
+										<div class="user_block small_mod supply_mod ">
+										  <div class="user_avatar_w small_mod supply_mod ">
+												<img ng-src="{{pending_buyer.profile_image || '/assets/avatar.jpg'}}" alt="" class="user_avatar_img small_mod supply_mod">
+										  </div>
+										  <div class="user_name small_mod supply_mod">{{pending_buyer.name}}</div>
+										</div>
+										<div class="gl_action_block supply_mod">
+										  <a href="" title="" class="gl_action_trigger_butt supply_options_butt"><%= t('options') %></a>
+										  <ul class="gl_action_list supply_mod">
+												<li class="gl_action_item supply_mod">
+												  <a href="" title="Add to group" class="gl_action_butt supply_mod add_to_group_mod">Add to group</a>
+												</li>
+												<li class="gl_action_item supply_mod">
+												  <a href="" title="<%= t('remove') %>" class="gl_action_butt supply_mod remove_mod"><%= t('remove') %></a>
+												</li>
+										  </ul>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="pending_buyer_pagination"></div>
+						  </div>
+						  <div id="buyers_tab_3" class="tab_block">
+								<ul class="info_b_sub_list">
+								  <li class="info_b_sub_list_item suppliers_mod" ng-repeat="buyer in rejected_buyers">
+										<div class="user_block small_mod supply_mod ">
+										  <div class="user_avatar_w small_mod supply_mod ">
+												<img ng-src="{{buyer.profile_image || '/assets/avatar.jpg'}}" alt="" class="user_avatar_img small_mod supply_mod">
+										  </div>
+										  <div class="user_name small_mod supply_mod">{{buyer.name}}</div>
+										</div>
+								  </li>
+								</ul>
+								<div class="supply_chain_pagination" id="rejected_buyer_pagination"></div>
+						  </div>
+						</div>
+						<div class="add_info_footer sub_mod">
+						  <a class="wizard_add_butt_v2_1" ng-click="buyerInvite(inviteBuyer)"><%= t('invite') %></a>
+						</div>
+				  </div>
+				</div>
+		  </div>
+		</div>
+	</div>
+</div>

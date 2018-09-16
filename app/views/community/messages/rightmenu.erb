@@ -1,0 +1,121 @@
+<div class="secondary_row layuot_mod_1 messages_center_page_mod" ng-controller="MessageCenterRightMenuCtrl">
+  <div class="compose_msg_butt"><%= I18n.t('compose_a_message') %></div>
+  <div class="create_new_group_butt">  <%= I18n.t('create_a_New_Group') %></div>
+  <div class="section_menu">
+    <h2 class="section_hline"><%= I18n.t('filter_Feed_By') %> </h2>
+    <ul class="section_menu_list">
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link click_mod hovered_1_mod notifications_mod" ng-click="filterType('/filter/notifications',$event)"><%= I18n.t('notifications') %> <span class="section_m_link_count">{{user.notifications_list_count}}</span></div>
+      </li>
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link click_mod hovered_1_mod notifications_mod" ng-click="filterType('/filter/messages',$event)"><%= I18n.t('messages') %> <span class="section_m_link_count">{{user.messages_list_count}}</span></div>
+      </li>
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link click_mod hovered_1_mod internal_operations_mod" ng-click="filterType('/filter/internal_operations',$event)"><%= I18n.t('internal_operations') %> <span class="section_m_link_count">{{user.internal_operations_list_count}}</span></div>
+      </li>
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link click_mod hovered_1_mod requests_mod" ng-click="filterType('/filter/requests',$event)"><%= I18n.t('requests') %> <span class="section_m_link_count">{{user.requests_list_count}}</span></div>
+      </li>
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link click_mod hovered_1_mod sent_mod" ng-click="filterType('/filter/sent',$event)" style="text-transform: capitalize;"><%= I18n.t('sent') %> <span class="section_m_link_count">{{user.sent_list_count}}</span></div>
+      </li>
+
+      <li class="section_menu_l_item">
+        <div class="section_menu_link groups_mod"><%= I18n.t('groups') %> <span class="section_m_link_count">{{user.groups_list_count}}</span></div>
+        <ul class="section_menu_sub_list groups_scroll_mod" ng-if="user.groups[0]">
+          <li class="section_menu_l_item" ng-repeat="group in user.groups">
+            <div class="section_menu_link"><a href="#/messages_center/filter/groups/{{group.id}}" style="text-decoration: none;">{{group.name}}</a></div>
+          </li>
+        </ul>
+      </li>
+
+      <!-- <li class="section_menu_l_item">
+        <div class="section_menu_link network_mod"><%= I18n.t('your_Network') %> <span class="section_m_link_count">2</span></div>
+        <ul class="section_menu_sub_list">
+          <li class="section_menu_l_item"><a href="" title="" class="user_block section_menu_mod ">
+              <div class="user_avatar_w section_menu_mod"><img ng-src="" alt="Michael Abehsera" class="user_avatar_img section_menu_mod"/></div>
+              <div class="user_name section_menu_mod">Michael Abehsera</div></a>
+          </li>
+          <li class="section_menu_l_item"><a href="" title="" class="user_block section_menu_mod ">
+              <div class="user_avatar_w section_menu_mod"><img ng-src="" alt="Michael Abehsera" class="user_avatar_img section_menu_mod"/></div>
+              <div class="user_name section_menu_mod">Michael Abehsera</div></a>
+          </li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+
+<div id="create_new_group" style="display:none" title="Create a New Group" ng-controller="MessageCenterRightMenuCtrl">
+  <div class="dialog_content">
+    <div class="dialog_form">
+      <gf-text-input
+      id="'Enter_name_of_group'"
+	  p-title="'Enter name of group'"
+      dl-class="" containers-class="" field-class="'default_mod'"
+      model="group.name"></gf-text-input>
+
+      <dl class="form_cell form_cell_v1_mod">
+        <dt class="form_c_hline form_v1_mod hline_hide_mod">
+          <label for="Enter_name_of_user">Enter name of user</label>
+        </dt>
+        <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+          <input type="text" id="Enter_name_of_user" placeholder="Enter name of user" class="f_c_field default_mod ">
+        </dd>
+      </dl>
+
+    </div>
+
+    <dl class="options_block">
+      <dt class="options_b_hline" >
+        <a href="" ng-click="import_gmail_contacts()"> + Import Contacts From Gmail</a>
+      </dt>
+      <dt class="options_b_hline">
+        <a href="" ng-click="import_yahoo_contacts()"> + Import Contacts From Yahoo</a>
+      </dt>
+    </dl>
+
+    <div class="added_el_block" ng-if="addedUsersToGroup.length">
+      <div class="users_list_title added_mod">{{group.member_ids.length}} Users Added</div>
+      <ul class="users_list added_mod">
+        <li class="users_l_item added_mod"  ng-repeat="user in addedUsersToGroup">
+          <div class="user_block small_mod hover_mod ">
+            <div class="user_avatar_w small_mod hover_mod ">
+      			  <span class="user_avatar_img small_mod hover_mod no_img_mod" ng-if="!user.photo_url"></span>
+      			  <img ng-if="user.photo_url" ng-src="{{user.photo_url}}" alt="{{user.label}}" class="user_avatar_img small_mod hover_mod" />
+            </div>
+            <div class="user_name small_mod hover_mod">{{user.label}}</div>
+          </div>
+          <div class="user_remove_butt" ng-click="remove_selected_user($index)">Remove</div>
+        </li>
+      </ul>
+    </div>
+    <dl class="options_block">
+      <dt class="options_b_hline">Privacy Options</dt>
+      <dd class="options_b_value_item">
+        <div class="options_b_value_hline">Make this group:</div>
+        <ul class="options_b_value_list">
+          <li class="options_b_value_l_item">
+            <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+              <input name="access" type="radio" checked="checked" class="lbl_inp_rb_ch" ng-model="group.privacy_type" value="private"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Private</span>
+            </label>
+          </li>
+          <li class="options_b_value_l_item">
+            <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+              <input name="access" type="radio" class="lbl_inp_rb_ch" ng-model="group.privacy_type" value="public"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Public</span>
+            </label>
+          </li>
+        </ul>
+      </dd>
+    </dl>
+  </div>
+  <footer class="dialog_footer">
+    <div class="dialog_cancel_butt">Cancel</div>
+    <div class="create_group_butt" ng-click="create_new_group()">Create Group</div>
+  </footer>
+</div>

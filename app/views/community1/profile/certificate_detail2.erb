@@ -1,0 +1,193 @@
+<li id="first_li" style="display:none"><img src="<%= asset_path 'freeapp/green_checkmark.png'%>" style="margin-right: 7px;" width="25" height="25" alt="Green checkmark">Certificate Approved</li>
+<div class="clear"></div>
+<div class="content_certificate">
+  
+  <% if current_user.company.type == "CertificationBody" && Certificate.find_by_id(params[:id]).status == "Waiting for approval" && Certificate.find_by_id(params[:id]).certification_body_id%>
+
+    <div class='green' id='authenticate' style="margin-left:110px">Authenticate</div>
+    <div class='green' id='reject' style="display:inline-block">Reject</div>
+  <% elsif current_user.company.type != "CertificationBody" %>
+    
+    <% if Certificate.find_by_id(params[:id]).status == "Rejected" %>
+      <div class='green' id='delete_certificate' style="display:inline-block;margin-left: 42px;">Delete</div>
+      <div class='green' id='send_for_reapproval' style="display:inline-block">Send for re approval</div>
+      <div class='green' id='edit_certificate' style="display:inline-block">Edit</div>
+    <% else %>
+      <div class='green' id='delete_certificate' style="margin-left: 210px;">Delete</div>
+    <%end%>
+  <%end%>
+</div>
+
+<script type="x-tmpl-mustache" id='certificate_detail'>
+<div class="supplier_top">
+    <ul class="breadcrumbs" style="margin: 0 0 -31px -38px;">
+      <li><a href="my_facilities">Facilities</a></li>
+      <li>></li>
+      {{#facility}}
+      <li><a href="facility_profile?id={{id}}">{{name}}</a></li>
+      {{/facility}}
+      <li>></li>
+      <li><a href="#" class="active_link">{{certificate_name}}</a></li>
+    </ul>
+  </div>
+  <div class="clear"></div>
+<div class="certificate_wrap">
+  <div class="certificate_info">
+    <h3><a href="#" class="link_cn">{{certificate_name}}</a></h3>
+    <p>{{description}}</p>
+    <div style='width:520px;height:400px;text-align:center;position:relative;' class="certificate_img">
+      <a href={{original_source}} target="_blank"><img src={{cert_image}}  alt=""></a>
+    </div>
+    <div class="clear"></div>
+    <ul id="cert_detail_id">
+      {{#status_approved}}
+      <li><img src="<%= asset_path 'freeapp/green_checkmark.png'%>" style="margin-right: 7px;" width="25" height="25" alt="Green checkmark">Certificate Approved</li>
+      {{/status_approved}}
+      <li id= "cert_expire">Certificate expiring on: {{expiration_date}}</li>
+      <li>Audit date: {{audit_date}}</li>
+      <li>Date issued: {{issued_date}}</li>
+      <li>Auditor name: {{auditor_name}}</li>
+      {{#cert_body}}
+      <li>Certification body: {{name}}</li>
+      {{/cert_body}}
+    </ul>
+  </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+  var certificate_id
+  var performable_id
+  $(document).ready(function(){
+    certificate_id = gf.getQueryVariable('id');
+    performable_id = gf.getQueryVariable('performable_id');
+    loadCertificate(certificate_id, 1)
+  }) ;
+  
+  function loadCertificate(certificate_id){
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id,
+      type: 'GET',
+      success: function(response){
+        if(response.status == "Approved")
+          response.status_approved = true
+
+        var template = $('#certificate_detail').html();
+        Mustache.parse(template);
+        var rendered = Mustache.render(template, response);
+        $(".content_certificate").prepend(rendered) ;
+      }
+    }) ;
+  }
+
+  $('#send_for_reapproval').click(function(){
+    showModal('reapproval-comment-modal')
+  })
+
+  $('#submit_reapproval_comment').click(function(){
+    closeModal();
+    showModal('loading_modal')
+    var comment_text = $('#reapproval_comment').val()
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+'/reapproval_comment',
+      data: {comment_text: comment_text},
+      type: 'POST',
+      success: function(response) {  
+        ss_alert("success" , "Comment created successfully.") ;
+        $.ajax({
+          url: '/api/v2.2/community/certificates/'+certificate_id+'/send_for_reapproval',
+          data: {id: certificate_id, performable_id: performable_id},
+          type: 'GET',
+          success: function(response) {
+            closeLoadingModal();
+            ss_alert("success" , "Certificate is sent for reapproval.") ;
+            location.reload(true);
+          } ,
+          error: function (errors, response){
+             ss_alert("error", "Error occured in sending for reapproval.");
+             closeLoadingModal();
+          }
+        }) ;
+      } ,
+      error: function (errors, response){
+         ss_alert("error", "Error occured in comment creation.");
+      }
+    }) ;
+    
+  })
+
+  $('#delete_certificate').click(function(){
+    showModal('loading_modal')
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id,
+      type: 'DELETE',
+      success: function(response) {  
+        ss_alert("success" , "Certificate deleted successfully.") ;
+        window.location.replace("/community/profile/"+response.redirect_to_page);
+        closeLoadingModal();
+      } ,
+      error: function (errors, response){
+         ss_alert("error", "Error occured in deletion.");
+         closeLoadingModal();
+      }
+    }) ;
+  })
+
+  $('#authenticate').click(function(){
+    showModal('loading_modal')
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+'/authenticate_reject_certificate',
+      data: {req_type: "Authenticate",performable_id: performable_id},
+      type: 'GET',
+      success: function(response) {  
+        $('#authenticate').css("display","none")
+        $('#reject').css("display","none")
+        var li_obj = $('#first_li')
+        li_obj.css("display", "block")
+        $('#cert_expire').before(li_obj);
+        closeLoadingModal();
+        ss_alert("success" , "Certificate authenticated successfully.") ;
+      } ,
+      error: function (errors, response){
+         ss_alert("error", "Error occured in authentication.");
+         closeLoadingModal();
+      }
+    }) ;
+  })
+  $('#reject').click(function(){
+    showModal('comment-modal')
+  })
+
+  $('#submit_comment').click(function(){
+    closeModal();
+    showModal('loading_modal')
+    var comment_text = $('#comment_text').val()
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+'/rejection_comment',
+      data: {comment_text: comment_text},
+      type: 'POST',
+      success: function(response) {  
+        ss_alert("success" , "Comment created successfully.") ;
+        $.ajax({
+          url: '/api/v2.2/community/certificates/'+certificate_id+'/authenticate_reject_certificate',
+          data: {id: certificate_id, req_type: "Reject",performable_id: performable_id},
+          type: 'GET',
+          success: function(response) {  
+            $('#authenticate').css("display","none")
+            $('#reject').css("display","none")
+            closeLoadingModal();
+            ss_alert("success" , "Certificate rejected successfully.") ;
+          } ,
+          error: function (errors, response){
+             ss_alert("error", "Error occured in rejection.");
+             closeLoadingModal();
+          }
+        }) ;
+      } ,
+      error: function (errors, response){
+         ss_alert("error", "Error occured in comment creation.");
+      }
+    }) ;
+    
+  })
+</script>

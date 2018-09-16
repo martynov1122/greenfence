@@ -1,0 +1,30 @@
+<input type="hidden" value="<%= current_user.company.id %>" id="current_company_id"/>
+<input type="hidden" value="<%= current_user.id %>" id="current_user_id"/>
+<div class="view_container">
+  <div class="add_info_main_header">
+		<h1 class="content_headline" ng-hide="store.id"><%= t('requirements_by') %> {{buyer.buyer.name}}</h1>
+		<a class="wizard_delete_butt"><%= t('delete') %></a>
+		<a href="" class="wizard_add_butt_v2" ng-click="submit_filled_requirements(filled_requirements)"><%= t('save') %></a>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_content_block">
+		  <div class="add_info_content note_mod">
+				<p>Note any document(s) requirement to fulfill the customer's requirement must be uploaded and authenticated(if necessary) before associating them to the corresponding requirement.</p>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('requirements_by') %> {{buyer.buyer.name}}</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+			<div class="add_info_form_w">
+			  <div id="d_structure">
+			  </div>
+			</div>
+		  </div>
+		</div>
+  </div>
+</div>

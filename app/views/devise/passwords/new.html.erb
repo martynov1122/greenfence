@@ -1,0 +1,59 @@
+<div class="wrapper layuot_login_mod">
+  <div class="base layuot_login_mod">
+    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
+      <div class="ui-dialog dialog_color_schema_1_mod dialog_g_size_1 local_mod">
+        <div class="content_box sign_mod">
+          <div class="ui-dialog-titlebar">
+            <div class="ui-dialog-title"><%= t('retrieve_your_password') %></div>
+          </div>
+          <div class="dialog_content">
+            <div class="dialog_form">
+              <dl class="form_cell form_cell_v1_mod">
+                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                  <label for="Enter_email">t('enter_email')</label>
+                </dt>
+                <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                  <%= f.email_field :email , id: 'Enter_email', class: "f_c_field default_mod" , placeholder: t('enter_email') , autofocus: true %>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <footer class="dialog_footer">
+          <button type="submit" class="send_new_password_butt"> <%= t('send_new_password') %> </button>
+        </footer>
+        </div>
+        <div class="dialog_second_footer">
+          <dl class="question_b">
+            <dt class="question_b_title"><%= t('have_an_account') %>  </dt>
+            <dd class="question_b_value"><a href="/users/sign_in" title=""><%= t('login') %>  </a></dd>
+          </dl>
+          <dl class="question_b">
+            <dt class="question_b_title"><%= t('dont_have_an_account') %> </dt>
+            <dd class="question_b_value"><a href="/users/register" title=""><%= t('sign_up')%></a></dd>
+          </dl>
+        </div>
+      </div>
+      <script>
+        $(document).ready(function() {
+
+          var alert = function(type, text) {
+            $('#alert').text(text).fadeIn().addClass(type)
+            setTimeout(function(){
+              $('#alert').fadeOut()
+            }, 4000)
+            setTimeout(function(){
+              $('#alert').text('').removeClass(type)
+            }, 4600)
+          }
+          $('.layuot_login_mod form').submit(function() {
+            var email = $('#Enter_email').val();
+            if (email == '') { alert('error', 'Email required.'); return false;}
+            else {
+              //alert('success', 'An email has been send, please check your email for more details.')
+            }
+          });
+        })
+      </script>
+    <% end %>
+  </div>
+</div>

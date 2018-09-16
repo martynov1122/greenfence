@@ -1,0 +1,158 @@
+<div class="content_main">
+  <div class="search_top">      
+    <h1 id="search_counts"></h1>
+  </div>
+  <div class="clear"></div>
+  <div class="left_column" id="left_column">
+  </div>
+  <div class="right_column">
+    <div class='title'>Filter results by</div>
+    <div id='filters'>
+      <div class='filter'>
+        <label>
+          <input type='checkbox' id="filter_user" name="filter_user">
+          <span>People</span>
+        </label>
+      </div>
+      <div class='filter'>
+        <label>
+          <input type='checkbox' id="filter_company" name="filter_company">
+          <span>Companies</span>
+        </label>
+      </div>
+      <div class='accordians'>
+        <div class='accordian'>
+          <div class='title'>
+            <span>Product Category</span>
+            <div class='typcn typcn-chevron-right'></div>
+          </div>
+          <div class='filters'>
+            <div class='filter'>
+              <input placeholder="Product Type" name="filter_product_category" id="filter_product_category"/>
+            </div>
+          </div>
+        </div>        
+        <div class='accordian'>
+          <div class='title'>
+            <span>Product</span>
+            <div class='typcn typcn-chevron-right'></div>
+          </div>
+          <div class='filters'>
+            <div class='filter'>
+              <input placeholder="Product" name="filter_product" id="filter_product"/>
+            </div>
+          </div>
+        </div>
+        <div class='accordian'>
+          <div class='title'>
+            <span>Certificate Scheme</span>
+            <div class='typcn typcn-chevron-right'></div>
+          </div>
+          <div class='filters'>
+            <div class='filter'>
+              <input placeholder="Scheme" name="filter_scheme" id="filter_scheme"/>
+            </div>
+          </div>
+        </div>
+        <!-- <div class='accordian'>
+          <div class='title'>
+            <span>Country</span>
+            <div class='typcn typcn-chevron-right'></div>
+          </div>
+          <div class='filters'>
+            <div class='filter'>
+              <input placeholder="Country" name="filter_country"/>
+            </div>
+          </div>
+        </div> -->
+        <input type="button" value="Filter" class="button green" id="filter">
+        <input type="button" value="Clear" class="button green" id="clear_filters">
+      </div>        
+    </div>      
+  </div>
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="tmp_companies">
+  {{#search_results}}
+  <div class="results">
+    <div class="left_result">
+      <img src="{{profile.thumb_url}}" style="margin-right: 20px;" align="left" width="70" height="70" alt="">
+    </div>
+    <div class="result_info">
+      <h3 class="link_title"><a href="company_profile_public?id={{id}}" class="link_cn"> {{name}}</a><span class="fn"></span></h3>
+      <p></p>
+    </div>
+  </div>
+  {{/search_results}}
+</script>
+
+<script type="x-tmpl-mustache" id="tmp_users">  
+  {{#results}}
+  <div class="results">
+    <div class="left_result">
+      <img src="{{profile.thumb_url}}" style="margin-right: 20px;" align="left" width="70" height="70" alt="">
+    </div>
+    <div class="result_info">
+      
+      <h3 class="link_title"><a href="{{profile_url}}" class="link_cn">{{name}}</a>
+        {{#Facility}}
+          <span class="fn">This facility is owned by {{company.name}}</span>
+        {{/Facility}}
+        {{#Product}}
+          <span class="fn">This product is owned by {{company.name}}</span>
+        {{/Product}}
+      </h3>
+
+      {{#User}}
+        {{#profile}}
+          {{#title}}
+            <p class="user_title" style="margin-top: 5px">{{title}} at <!--<a href="company_profile_public?id={{company.id}}">{{company.name}}</a>-->{{company.name}}</p>
+          {{/title}}
+          {{^title}}
+            <p class="user_title" style="margin-top: 5px">Belongs to <!--<a href="company_profile_public?id={{company.id}}">{{company.name}}</a>-->{{company.name}}</p>
+          {{/title}}
+        {{/profile}}
+      {{/User}}
+
+      <p >{{profile.summary}}</p>
+
+      {{#User}}
+        {{#profile}}
+          <span><img src="<%= asset_path 'freeapp/location.png' %>" style="margin-right: 7px; margin-top: -1px;" width="12" height="16" alt="'">{{location}}</span>        
+        {{/profile}}
+      {{/User}}
+
+      {{#Company}}
+        {{#profile}}
+        <p><a href="list_view_products?id={{id}}">Products: {{products_count}}</a>  <a href="list_view_facilities?id={{id}}">Facilities: {{facilities_count}} </a>  <a href="list_view_certificates?id={{id}}">Certificates: {{certificates_count}}  </a><a href="list_view_employees?id={{id}}">Employees:  {{employees_count}}</a></p>
+        {{/profile}}
+      {{/Company}}
+
+      {{#Facility}}
+        <p><a href="view_all_products?id={{id}}">Products: {{profile.products_count}} </a> <a href="facility_profile?id={{id}}"> Certificates: {{profile.certificates_count}} </a></p>
+      {{/Facility}}
+    </div>
+  </div> 
+  {{/results}}
+</script>
+
+<script type="x-tmpl-mustache" id="tmp_pagination">
+  <div class="results" id="pagination_container">
+  </div>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'search_results.js' %>"></script>
+<script type="text/javascript">
+  $( document ).ready(function() {
+    var search_term = "<%= @search_query -%>";    
+    sr.init(search_term)
+  });
+</script>
+
+
+
+

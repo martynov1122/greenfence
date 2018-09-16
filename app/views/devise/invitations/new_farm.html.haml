@@ -1,0 +1,6 @@
+- if @invitable_roles.empty?
+  %p There are no invitable roles defined for this Farm.
+- else
+  %section.invitations-new
+    = section 'shared/form', locals: { model: resource, url: farm_user_invitations_path(@farm.id), submit_text: "Send Invitation" } do |f|
+      = render partial: 'new', locals: {f: f}

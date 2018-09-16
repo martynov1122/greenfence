@@ -1,0 +1,189 @@
+<div class="view_container">
+	 <div class="add_info_main_header">
+  		<h1 class="content_headline"><%=t('payment_setting') %></h1>
+  		<a class="wizard_add_butt_v2" ng-click="savePaymentSetting(payment,tokenDetail)"><%= t('save') %></a>
+  	</div>
+   	<div class="add_info_block">
+      <div class="add_info_header">
+        <div class="add_info_title">Name</div>
+        <div class="add_info_colapse_butt"></div>
+      </div>
+      <div class="add_info_content_block">
+       	<div class="add_info_form_block">
+	        <div class="add_info_form_w">
+		       <div class="form_block hor_mod">
+		          <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="Name">
+		                First Name
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <input type="text" id="firstName" placeholder="First Name" ng-model="payment.legal_entity.first_name" class="f_c_field default_mod ">
+		            </dd>
+		          </dl>
+		          <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="Address">
+		                Last Name
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <input type="text" id="lastName" placeholder="Last Name" class="f_c_field default_mod " ng-model="payment.legal_entity.last_name">
+		            </dd>
+		          </dl>
+		        </div>
+		    </div>
+      	</div>
+    </div>
+   </div>
+   <div class="add_info_block">
+	<div class="add_info_header">
+	  <div class="add_info_title">Date of birth</div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">  
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		  <div class="form_block hor_mod location_mod">
+			<dl class="form_cell form_cell_v1_mod third_mod payments_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="year">Year</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		           <input type="text" id="year" placeholder="Year(YYYY)" ng-model="payment.legal_entity.dob.year" class="f_c_field default_mod ">
+			  </dd>
+			</dl>
+			<dl class="form_cell form_cell_v1_mod third_mod payments_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="month">Month</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				 <input type="text" id="month" placeholder="Month(MM)" ng-model="payment.legal_entity.dob.month" class="f_c_field default_mod ">    
+			  </dd>
+			</dl>
+			<dl class="form_cell form_cell_v1_mod third_mod payments_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="day">Day</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<input type="text" id="day" placeholder="Day(DD)" class="f_c_field default_mod " ng-model="payment.legal_entity.dob.day">
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+   
+    <div class="add_info_block">
+      <div class="add_info_header">
+        <div class="add_info_title">For Identity Verification</div>
+        <div class="add_info_colapse_butt"></div>
+      </div>
+      <div class="add_info_content_block">
+       	<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<div class="form_block hor_mod">
+			  <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+				<dt class="form_c_hline form_v1_mod hline_hide_mod">
+				  <label for="personal_id_number">
+					Personal Id Number
+				  </label>
+				</dt>
+				<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				  <input type="text" id="personalIdNumber" placeholder="Enter personal id number" ng-model="payment.legal_entity.personal_id_number" class="f_c_field default_mod ">
+				</dd>
+			  </dl>
+			  <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+				<dt class="form_c_hline form_v1_mod hline_hide_mod">
+				  <label for="ssn">
+					Social Security Number
+				  </label>
+				</dt>
+				<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				  <input type="text" id="ssn" placeholder="Social Security Number(last 4 digits)" class="f_c_field default_mod " ng-model="payment.legal_entity.ssn_last_4">
+				</dd>
+			  </dl>
+			</div>
+			<div class="category_wrap">
+			  <ul class="category_list">
+				<li class="category_list_item">
+				  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+					<input name="tos" type="checkbox" class="lbl_inp_rb_ch" ng-model="payment.tos">
+					<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod ng-binding">Terms of service accepted.</span>
+				  </label>
+				</li>
+			  </ul>
+			</div>
+		    </div>
+      	</div>
+    </div>
+   </div>
+   <div class="add_info_block">
+      <div class="add_info_header">
+        <div class="add_info_title">Bank detail</div>
+        <div class="add_info_colapse_butt"></div>
+      </div>
+      <div class="add_info_content_block">
+       	<div class="add_info_form_block">
+	        <div class="add_info_form_w">
+		       <div class="form_block hor_mod">
+		          <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="bankaccount">
+		                Bank Account 
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <input type="text" id="bankaccount" placeholder="Bank Account" class="f_c_field default_mod " ng-model="tokenDetail.account_number">
+		            </dd>
+		          </dl>
+		          <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="ssn">
+		                routing number
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <input type="text" id="ssn" placeholder="Routing Number" class="f_c_field default_mod " ng-model="tokenDetail.routing_number">
+		            </dd>
+		          </dl>
+		           <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="bankaccount">
+		                Country 
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		              <ui-select ng-model="tokenDetail.country" theme="selectize">
+		                <ui-select-match placeholder="Select country">{{$select.selected.name}}</ui-select-match>
+		                <ui-select-choices repeat="country.code as country in countries | filter: $select.search">
+		                  <div ng-bind-html="country.name | highlight: $select.search"></div>
+		                </ui-select-choices>
+              			</ui-select>
+		            </dd>
+		          </dl>
+		          <dl class="form_cell form_cell_v1_mod half_mod payments_mod">
+		            <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		              <label for="currency">
+		                Currency
+		              </label>
+		            </dt>
+		            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+		            	<ui-select ng-model="tokenDetail.currency" theme="selectize">
+		                <ui-select-match placeholder="Select currency">{{$select.selected.name}}</ui-select-match>
+		                <ui-select-choices repeat="currency.code as currency in currencies | filter: $select.search">
+		                  <div ng-bind-html="currency.name | highlight: $select.search"></div>
+		                </ui-select-choices>
+              			</ui-select>
+		            </dd>
+		          </dl>
+		          
+		        </div>
+		    </div>
+      	</div>
+    </div>
+   </div>
+
+</div>

@@ -1,0 +1,184 @@
+<div class="view_container static_mod">
+  <div class="add_info_main_header mod_static_three">
+	<h1 class="content_headline">Follow &amp; Configure {{public_company.name}}</h1>
+	<span class="follow_all_notif_page_butt">Follow all notification</span>
+  </div>
+  <div class="tabs_v1">
+	<ul class="dialog_tab_list white_mod">
+	  <li class="dialog_tab_l_item white_mod">
+		<a href="#tab_1" title="" class="dialog_tab_1_butt white_mod"><%= I18n.t('all') %></a>
+	  </li>
+	  <li class="dialog_tab_l_item white_mod">
+		<a href="#tab_2" title="" class="dialog_tab_1_butt white_mod"><%= I18n.t('operations') %></a>
+	  </li>
+	  <li class="dialog_tab_l_item white_mod">
+		<a href="#tab_3" title="" class="dialog_tab_1_butt white_mod"><%= I18n.t('services') %></a>
+	  </li>
+	  <li class="dialog_tab_l_item white_mod">
+		<a href="#tab_4" title="" class="dialog_tab_1_butt white_mod"><%= I18n.t('products') %></a>
+	  </li>
+	  <li class="dialog_tab_l_item white_mod">
+		<a href="#tab_5" title="" class="dialog_tab_1_butt white_mod"><%= I18n.t('certificates_and_documents') %></a>
+	  </li>
+	</ul>
+	<div id="tab_1" class="tab_block">
+	  <div ng-if="operations.length > 0 || services.length > 0 || products.length > 0 || documents.length > 0">
+		<ul class="follow_list" ng-repeat="operation in operations" ng-if="operations[0].name">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="operation.profile_picture.profile_picture.thumb.url != '/assets/avatar.jpg'" ng-src="{{operation.profile_picture.profile_picture.thumb.url}}" alt="{{operation.name}}" class="user_avatar_img section_menu_mod">
+				<span ng-if="operation.profile_picture.profile_picture.thumb.url == '/assets/avatar.jpg'" class="user_avatar_img section_menu_mod no_img_mod operation_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{operation.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!operation.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(operation)"><%= I18n.t('follow') %></div>
+			<div ng-if="operation.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(operation)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+		<ul class="follow_list" ng-repeat="service in services">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="service.service_image != '/assets/avatar.jpg'" ng-src="{{service.service_image}}" alt="{{service.name}}" class="user_avatar_img section_menu_mod">
+				<span ng-if="service.service_image == '/assets/avatar.jpg'" class="user_avatar_img section_menu_mod no_img_mod service_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{service.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!service.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(service)"><%= I18n.t('follow') %></div>
+			<div ng-if="service.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(service)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+		<ul class="follow_list" ng-repeat="product in products">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<!--todo need add product img-->
+				<img ng-if="false" ng-src="/assets/avatar.png" alt="{{product.name}}" class="user_avatar_img section_menu_mod">
+				<span class="user_avatar_img section_menu_mod no_img_mod product_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod truncate_text" title="{{product.name}}">{{product.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!product.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(product)"><%= I18n.t('follow') %></div>
+			<div ng-if="product.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(product)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+		<ul class="follow_list" ng-repeat="document in documents">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="document.profile_picture.profile_picture.thumb.url != '/assets/document.png'" ng-src="{{document.profile_picture.profile_picture.thumb.url}}" alt="Name of operation goes here" class="user_avatar_img section_menu_mod">
+				<span ng-if="document.profile_picture.profile_picture.thumb.url == '/assets/document.png'" class="user_avatar_img section_menu_mod no_img_mod document_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{document.document_name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!document.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(document)"><%= I18n.t('follow') %></div>
+			<div ng-if="document.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(document)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="follow_list mod_none" ng-if="operations.length == 0 && services.length == 0 && products.length == 0 && documents.length == 0">
+	   <%= t('there_are_currently_no') %> <b><%= I18n.t('operations') %></b>, <b><%= I18n.t('services') %></b>, <b><%= I18n.t('products') %></b>, <b><%= t('certificates') %></b>, or <b><%= t('document') %></b>.
+	  </div>
+	</div>
+	<div id="tab_2" class="tab_block">
+	  <div ng-if="operations.length > 0">
+		<ul class="follow_list" ng-repeat="operation in operations track by $index">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="operation.profile_picture.profile_picture.thumb.url != '/assets/avatar.jpg'" ng-src="{{operation.profile_picture.profile_picture.thumb.url}}" alt="{{operation.name}}" class="user_avatar_img section_menu_mod">
+				<span ng-if="operation.profile_picture.profile_picture.thumb.url == '/assets/avatar.jpg'" class="user_avatar_img section_menu_mod no_img_mod operation_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{operation.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!operation.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(operation)"><%= I18n.t('follow') %></div>
+			<div ng-if="operation.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(operation)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="follow_list mod_none" ng-if="operations.length == 0">
+		You currently no <b>operations</b>.
+	  </div>
+	</div>
+	<div id="tab_3" class="tab_block">
+	  <div ng-if="services.length > 0">
+		<ul class="follow_list" ng-repeat="service in services track by $index">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="service.service_image != '/assets/avatar.jpg'" ng-src="{{service.service_image}}" alt="{{service.name}}" class="user_avatar_img section_menu_mod">
+				<span ng-if="service.service_image == '/assets/avatar.jpg'" class="user_avatar_img section_menu_mod no_img_mod service_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{service.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!service.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(service)"><%= I18n.t('follow') %></div>
+			<div ng-if="service.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(service)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="follow_list mod_none" ng-if="services.length == 0">
+		  <%= t('there_are_currently_no') %> <b><%= I18n.t('services') %></b>.
+	  </div>
+	</div>
+	<div id="tab_4" class="tab_block">
+	  <div ng-if="products.length > 0">
+		<ul class="follow_list" ng-repeat="product in products">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<!--todo need add product img-->
+				<img ng-if="false" ng-src="/assets/avatar.png" alt="{{product.name}}" class="user_avatar_img section_menu_mod">
+				<span class="user_avatar_img section_menu_mod no_img_mod product_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod truncate_text" title="{{product.name}}">{{product.name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!product.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(product)"><%= I18n.t('follow') %></div>
+			<div ng-if="product.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(product)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="follow_list mod_none" ng-if="products.length == 0">
+		  <%= t('there_are_currently_no') %> <b><%= t('products') %></b>.
+	
+	  </div>
+	</div>
+	<div id="tab_5" class="tab_block">
+	  <div ng-if="documents.length > 0">
+		<ul class="follow_list" ng-repeat="document in documents">
+		  <li class="follow_list_item">
+			<div class="user_block section_menu_mod ">
+			  <div class="user_avatar_w section_menu_mod ">
+				<img ng-if="document.profile_picture.profile_picture.thumb.url != '/assets/document.png'" ng-src="{{document.profile_picture.profile_picture.thumb.url}}" alt="Name of operation goes here" class="user_avatar_img section_menu_mod">
+				<span ng-if="document.profile_picture.profile_picture.thumb.url == '/assets/document.png'" class="user_avatar_img section_menu_mod no_img_mod document_mod"></span>
+			  </div>
+			  <div class="user_name section_menu_mod">{{document.document_name}}</div>
+			</div>
+			<div class="follow_list_info">
+			</div>
+			<div ng-if="!document.followed_by_current_user" class="follow_list_butt" ng-click="follow_me(document)"><%= I18n.t('follow') %></div>
+			<div ng-if="document.followed_by_current_user" class="follow_list_butt" ng-click="unfollow_me(document)"><%= I18n.t('unfollow') %></div>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="follow_list mod_none" ng-if="documents.length == 0">
+		 <%= t('there_are_currently_no') %> <b><%= t('certificates') %></b> or <b><%= t('document') %></b>.
+	  </div>
+	</div>
+  </div>
+</div>
+

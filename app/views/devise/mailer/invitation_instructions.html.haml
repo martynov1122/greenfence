@@ -1,0 +1,24 @@
+%div{ style: "background-color: #f2f2f2; width: 100%; padding: 40px 0;" }
+
+  %div{ style: "font-family: Lucida Grande, Lucida Sans, Lucida Sans Unicode, Arial, Helvetica, Verdana, sans-serif; background-color: #ffffff; color:#777777; font-size:16px; line-height: 1.5em; width: 698px; margin: 0 auto;" }
+
+    = link_to "http://greenfence.com" do
+      = image_tag "http://f.cl.ly/items/3q3c1b2Q3O0F1V2C0X3E/logo.png", size: "400x60", alt: "Greenfence"
+
+    %div{ style: "padding: 0 30px 10px" }
+      %p
+        Hello #{@resource.name},
+
+      %p
+        #{@resource.invited_by.name} from #{@resource.invited_by.company.name} has invited you to join Greenfence Community.
+      %p 
+        = link_to 'Accept invitation', accept_invitation_url(@resource, :invitation_token => @token), style: "text-decoration:none"
+
+      %p
+        By signing up for the Greenfence Community, you will better be able to manage your customers’ and your suppliers’ compliance documentation records.
+
+      %p
+        As an integral part of any supplier verification program, you will have real-time access to all your suppliers’ required certifications and audits.
+        Also, you only need to upload your compliance documents in one place to distribute to all your customers.
+        For more information, please visit www.greenfence.com.
+

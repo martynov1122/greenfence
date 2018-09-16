@@ -1,0 +1,154 @@
+<div class="profile_header ">
+  <div class="video_back_block mod_h_2">
+    <div class="video_back mod_h_2">
+      <video autoplay="" poster="<%= asset_path 'test.jpg' %>" loop="" class="video_block" ng-if="false">
+        <source src="<%= asset_path 'test.webm' %>" type="video/webm">
+        <source src="<%= asset_path 'test.mp4' %>" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="profile_header_w public_operation_mod">
+	<ul class="breadcrumbs_list">
+	  <li class="breadcrumbs_l_item">
+		<a class="breadcrumbs_l_link"  href="#/company_public_profile/{{public_operation.company.id}}" title="{{public_operation.company.name}}">{{public_operation.company.name}}</a>
+
+	  </li>
+	  <li class="breadcrumbs_l_item">
+		<a class="breadcrumbs_l_link" href="#/operation_public_profile/{{public_operation.id}}" title="{{public_operation.name}}">{{public_operation.name}}</a>
+	  </li>
+	</ul>
+    <div class="user_block profile_mod ">
+      <div class="user_avatar_w profile_mod" ng-class="!public_operation.profile_picture.profile_picture.thumb.url ? 'no_img_mod':''">
+        <img ng-if="public_operation.profile_picture.profile_picture.thumb.url" class="user_avatar_img profile_mod user_profile_mod" ng-src="{{public_operation.profile_picture.profile_picture.thumb.url}}" alt="{{public_operation.name}}"/>
+		    <span ng-if="!public_operation.profile_picture.profile_picture.thumb.url" class="user_avatar_img profile_mod user_profile_mod no_img_mod" ></span>
+      </div>
+      <div ng-if="public_operation.name" class="user_name profile_mod">{{public_operation.name}}</div>
+	  <footer class="user_b_footer profile_mod"
+			  ng-if="
+					public_operation.business_type
+					|| public_operation.address_attributes.city
+					|| public_operation.company.name
+					">
+		<div class="user_location profile_mod"
+			 ng-if="public_operation.address_attributes.city">{{public_operation.address_attributes.city}}
+		</div>
+		<div class="public_business_type profile_mod"
+			 ng-if="public_operation.business_type">
+		  {{public_operation.business_type.name}}
+		</div>
+		<div class="public_company profile_mod"
+			 ng-if="public_operation.company.name">
+		  {{public_operation.company.name}}
+		</div>
+	  </footer>
+    </div>
+    <div class="profile_header_butt_w" ng-if="current_user_id != public_operation.primary_contact_user.id">
+      <a class="follow_configure_butt" href="#/company_follow_configure/{{public_operation.company.id}}">
+        <%= I18n.t('follow_and_configure') %>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="profile_body">
+  <div class="profile_about">
+    <h1 class="profile_headline"><%= t('about') %></h1>
+    <div class="profile_about_text">
+	  <div ng-if="public_operation.id != current_company.id && !public_operation.description">
+		Oops, it looks like {{public_operation.name}} has not included any information here yet.
+	  </div>
+      <!-- TODO: implement modal dialog -->
+      <div ng-if="public_operation.description">
+        <p>
+          {{ public_operation.description | limitTo : 380 : 0}}
+          <span ng-if="public_operation.description.length > 380">
+            ... <a href="" class="view_more_show link_highlight_mod">Read More</a>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="profile_contact_info">
+    <ul class="profile_contact_list">
+      <li class="profile_contact_l_item">
+        <a ng-if="public_operation.company_profile_attributes.email"
+           href="mailto:{{public_operation.company_profile_attributes.email}}"
+           title="{{public_operation.company_profile_attributes.email}}"
+           class="profile_contact_link mail_mod">
+          {{public_operation.company_profile_attributes.email}}</a>
+        <span ng-if="!public_operation.company_profile_attributes.email">
+          <span class="profile_contact_link mail_mod"
+             ng-if="public_operation.id != current_company.id"><%= t('no_email_address_added') %></span>
+          <a ng-if="public_operation.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link mail_mod link_highlight_mod">+ <%= t('add_a_contact_email') %></a>
+        </span>
+      </li>
+      <li class="profile_contact_l_item">
+        <a ng-if="public_operation.company_profile_attributes.website"
+           href="public_operation.company_profile_attributes.website"
+           title=""
+           class="profile_contact_link site_mod">
+          {{public_operation.company_profile_attributes.website}}</a>
+        <span ng-if="!public_operation.company_profile_attributes.website">
+          <span class="profile_contact_link site_mod"
+             ng-if="public_operation.id != current_company.id"><%= t('no_website_address_added') %></span>
+          <a ng-if="public_operation.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link site_mod link_highlight_mod">+ <%= t('add_your_website_link') %></a>
+        </span>
+      </li>
+      <li class="profile_contact_l_item">
+        <a ng-if="public_operation.company_profile_attributes.phone"
+           href="public_operation.company_profile_attributes.phone"
+           title=""
+           class="profile_contact_link tel_mod">
+          {{public_operation.company_profile_attributes.phone}}</a>
+        <span ng-if="!public_operation.company_profile_attributes.phone">
+          <span class="profile_contact_link tel_mod"
+             ng-if="public_operation.id != current_company.id"><%= t('no_phone_number_added') %></span>
+          <a ng-if="public_operation.id == current_company.id"
+             href="#/add_company"
+             class="profile_contact_link tel_mod link_highlight_mod">+ <%= t('add_a_phone_number') %></a>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="profile_tabs" ng-controller="OperationPublicProfileRightMenuCtrl">
+  <ul class="section_menu_list profile_tabs_mod">
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'featured'}"
+		   ng-click="filterType('/filter/featured',$event)" data-count="{{public_operation.featured_count}}"><%= t('featured') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'products'}"
+		   ng-click="filterType('/filter/products',$event)" data-count="{{public_operation.products_count}}"><%= t('products') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'services'}"
+		   ng-click="filterType('/filter/services',$event)" data-count="{{public_operation.services_count}}"><%= t('services') %>
+
+	  </div>
+	</li>
+	<li class="section_menu_l_item profile_tabs_mod">
+	  <div class="section_menu_link profile_tabs_mod"
+		   ng-class="{active_mod: current_location == 'documents'}"
+		   ng-click="filterType('/filter/documents',$event)" data-count="{{public_operation.documents_count}}"><%= t('certificates') %> &amp; <%= t('documents') %>
+	  </div>
+	</li>
+  </ul>
+</div>
+<div id="profile_view_more" title="About"  style="display:none">
+  <div class="dialog_content text_block_mod" style= "white-space: pre-line;">
+    <p class="view_more_text" style="text-align:justify"> 
+      {{public_operation.description}}
+    </p>
+  </div>
+</div>

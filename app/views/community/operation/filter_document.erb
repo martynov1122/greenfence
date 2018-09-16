@@ -1,0 +1,37 @@
+<article class="profile_card_block">
+  <span class="corner_ico certificate_mod"></span>
+  <div class="user_block profile_card_mod "  ng-class="{selected_mod: data.authenticated}">
+	<a class="user_avatar_w profile_card_mod" href="#/user_document/{{data.id}}/sharing_record_detail">
+	  <span class="user_avatar_img profile_card_mod no_img_mod document_mod"></span>
+	</a>
+	<a class="user_name profile_card_mod" href="#/user_document/{{data.id}}/sharing_record_detail">{{data.document_name}}</a>
+	<div class="user_info profile_card_mod">{{data.documentable}}</div>
+	<div class="user_text profile_card_mod">
+	  <p><b>Expiration Date:</b> {{data.expiration_date || "No Expiration Date"}}</p>
+
+	  <p><b>Description:</b> {{data.description || "No description Available"}}</p>
+	</div>
+  </div>
+  <footer class="profile_card_b_footer" ng-if="current_user_id != data.documentable_owner.id">
+  	<div ng-controller="CompanyPublicProfileFollowCtrl">
+  	  <div ng-if="!data.followed_by_current_user">
+  		  <div class="card_follow_butt" ng-click="follow_me(data)"><%= t('follow') %></div>
+  	  </div>
+  	  <div ng-if="data.followed_by_current_user">
+  		  <div class="card_follow_butt" ng-click="unfollow_me(data)"><%= t('unfollow') %></div>
+  	  </div>
+  	</div>
+  </footer>
+  <div ng-controller="CompanyPublicProfileDocumentCtrl" ng-if="false">
+	<figure class="post_img_b">
+	  <div class="post_img_w">
+		<a href="#/user_document/{{data.id}}/sharing_record_detail">
+		  <img src="/assets/defaultcertificate.jpg" alt="">
+		</a>
+	  </div>
+	  <figcaption class="post_img_caption">
+		<p>{{data.description}}</p>
+	  </figcaption>
+	</figure>
+  </div>
+</article>

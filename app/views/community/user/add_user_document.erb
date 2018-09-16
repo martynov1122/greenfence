@@ -1,0 +1,376 @@
+<div class="view_container">
+  <div>
+	<div class="add_info_main_header">
+	  <h1 class="content_headline" ng-if="!store.id"><%= t('add_personal_document_or_certificates') %></h1>
+	  <h1 class="content_headline" ng-if="store.id"><%= t('edit_personal_document_or_certificates') %></h1>
+	  <a class="wizard_delete_butt" ><%= t('delete') %></a>
+	  <a ng-if="!store.id" href="" class="wizard_add_butt_v2" ng-click="createDocument(document)"><%= t('add') %></a>
+	  <a ng-if="store.id" href="" class="wizard_add_butt_v2" ng-click="createDocument(document)"><%= t('save') %></a>
+	</div>
+	<div class="add_info_block">
+	  <div class="add_info_header">
+		<div class="add_info_title required_mod"><%= t('document_type') %></div>
+		<div class="add_info_colapse_butt operation_box"></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div ng-if="store.document_definition" class="add_info_content">
+		  <p>{{store.document_definition.document_type}}</p>
+		</div>
+		<div class="add_info_form_block operation_box">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Operation_type"><%= t('document_type') %></label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				<ui-select ng-model="document.document_definition_id" theme="selectize" ng-change="getDocumentTypeData({{$select.selected.id}})" ng-disabled="document.id && store.document_definition_id">
+				  <ui-select-match placeholder="<%= t('select_a_document_type_in_the_list_or_search_its_name') %>">{{$select.selected.text}}</ui-select-match>
+				  <ui-select-choices repeat="document_type.id as document_type in documentTypes |  filter: $select.search">
+					<div ng-bind-html="document_type.text | highlight: $select.search"></div>
+				  </ui-select-choices>
+				</ui-select>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="add_info_block title_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title required_mod"><%= t('name_of_document') %></div>
+		<div class="add_info_colapse_butt"></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div ng-if="store.id" class="add_info_content">
+		  <p>{{store.document_name}}</p>
+		</div>
+		<div class="add_info_form_block" style="display: none;">
+		  <div class="add_info_form_w">
+			<gf-text-input
+			id="'Enter_name_of_document'"
+			p-title="'<%=t('enter_name_of_document') %>'"
+			dl-class="" containers-class="" field-class="'default_mod'"
+			model="document.document_name"></gf-text-input>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="add_info_block upload_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title required_mod"><%= t('upload_file') %>(s)</div>
+		<div class="add_info_colapse_butt"></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div ng-if="store.id" class="add_info_content">
+		  <p>
+			<a ng-if="store.document_files" ng-repeat="file in store.document_files" href="" ng-click="showFile(file)" title="Click here to see file" class="file_link ng-scope">View File</a>
+		  </p>
+		</div>
+		<div class="add_info_form_block" style="display: none;">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Browse_files">Browse files</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<input type="file" id="Browse_files" placeholder="Browse files" ng-model="document.document_files_attributes[0].file" base-sixty-four-input class="f_c_field default_mod file_mod "><span class="f_c_field_file_field"><span class="f_c_field_file_text">{{document.document_files_attributes[0].file.filename || "Browse files"}}</span><span class="f_c_field_file_butt"><%= t('choose_file') %></span></span>
+			  </dd>
+			</dl>
+		  </div>
+		  <div class="butt_wrap add_info_form_mod">
+			<div class="attach_butt image_mod" ng-click="attach_multiple_files($event)"><%= t('attach_another_file') %></div>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div id="dynamic_content">
+	  <content-item-document 
+	  ng-repeat="definition in definitions" 
+	  data="definition" 
+	  auditor="auditorDirectory(scheme_id)">
+	  </content-item-document>
+	</div>
+	<div class="add_info_block radio_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title"><%= t('make_document_private_or_public') %></div>
+		<div class="add_info_colapse_butt"></div>
+	  </div>
+	  <div class="add_info_content_block">
+	  	<div class="add_info_content" ng-if="store.access_level">
+		  <p>{{store.access_level}}</p>
+	  	</div>
+		<div class="add_info_form_block" style="display: none;">
+		  <div class="add_info_form_w">
+			<ul class="options_b_value_list">
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="privacy" type="radio" class="lbl_inp_rb_ch" value="private" ng-model="document.access_level" ng-init="document.access_level='private'"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('private') %></span>
+				</label>
+			  </li>
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="privacy" type="radio" class="lbl_inp_rb_ch" value="public" ng-model="document.access_level"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('public') %></span>
+				</label>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="add_info_block new_folder_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title"><%= t('drop_document_inside_existing_folder') %></div>
+		<div class="create_new_folder_butt"><%= t('create_new_user_folder') %></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div class="add_info_form_block open_mod">
+		  <div class="folders_block_v2">
+			<div class="folder_list_b_v2_header">
+			  <div class="folder_list_b_v2_header_title">{{folders.length || 0}} Folders</div>
+			</div>
+			<ul class="folders_list_v2" ng-if="folders.length > 0">
+			  <li class="folders_list_item" ng-repeat="folder in folders">
+				<div class="doc_block folder_list_mod">
+				  <div class="doc_title folder_list_mod folder_ico_mod">{{folder.folder_name}}</div>
+				  <div class="doc_info folder_list_mod files_count_mod">{{folder.documents.length}} Document(s)</div>
+				  <div title="<%= t('add_to_this_folder') %>" class="doc_action folder_list_mod add_to_folder_mod" ng-click="addFilesToFolder(folder.folder_name, folder.id)"><%= t('add_to_this_folder') %></div>
+				</div>
+			  </li>
+			</ul>
+		  </div>
+		  <div class="add_info_form_w" ng-if="folders.length > 0">
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="add_info_block textarea_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title"><%= t('description') %></div>
+		<div class="add_info_colapse_butt"></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div ng-if="store.id" class="add_info_content">
+		  <p>{{store.description}}</p>
+		</div>
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Add_your_description"><%= t('add_your_description') %></label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<textarea id="Add_your_description" placeholder="<%= t('add_your_description') %>" class="f_c_field default_mod textarea_mod_1 " ng-model="document.description" style="white-space: pre-line;"></textarea>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div ng-if="authenticationProcess()" class="add_info_block radio_mod auth">
+	  <div class="add_info_header">
+		<div class="add_info_title required_mod"><%= t('authenticate_this_document') %>?</div>
+		<div class="add_info_colapse_butt" ng-click="collapseButt($event)"></div>
+	  </div>
+	  <div class="add_info_content_block">
+	  	<div class="add_info_content" ng-switch="store.requires_authentication">
+		  <p ng-switch-when="true"><%= t('yes') %></p>
+		  <p ng-switch-when="false">No</p>
+		</div>
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<ul class="options_b_value_list">
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="authenticate" type="radio" class="lbl_inp_rb_ch" ng-value="true" ng-model="document.requires_authentication"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('yes') %></span>
+				</label>
+			  </li>
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="authenticate" type="radio" class="lbl_inp_rb_ch" ng-value="false" ng-model="document.requires_authentication"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">No</span>
+				</label>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	  <div ng-show="document.requires_authentication" class="add_info_content_block party">
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<ul class="options_b_value_list">
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="1" ng-model="document.authentication_mode"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('first_party') %></span>
+				</label>
+			  </li>
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="2" ng-model="document.authentication_mode"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('second_party') %></span>
+				</label>
+			  </li>
+			  <li class="options_b_value_l_item">
+				<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+				  <input name="authentication_mode" type="radio" class="lbl_inp_rb_ch" ng-value="3" ng-model="document.authentication_mode"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod"><%= t('third_party') %></span>
+				</label>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+	  </div>
+	  <div class="add_info_content_block" ng-show="(document.requires_authentication) && (document.authentication_mode == '1' || document.authentication_mode == '2' )">
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Enter_name_of_document">Enter email of user</label>
+			  </dt>
+			  <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				<ui-select ng-model="document.authentication_auditor_id" theme="selectize">
+				  <ui-select-match placeholder="<%= t('select_an_auditor_in_the_list_or_search_its_name') %>">{{$select.selected.email}}</ui-select-match>
+				  <ui-select-choices repeat="auditor.id as auditor in searchedAuditors | filter: $select.search" refresh="searchAuditors(($select.search),document.authentication_mode)" refresh-delay="600">
+					<div ng-bind-html="auditor.name | highlight: $select.search"></div>
+					<small style="font-size: 10px;" ng-bind-html="auditor.email | highlight: $select.search"></small>
+				  </ui-select-choices>
+				</ui-select>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	  <div class="add_info_content_block" ng-show="(document.requires_authentication) && (document.authentication_mode == '3') && auditors.length == 0">
+		<div class="add_info_content" ng-if="auditorNotFound">
+		  <p style="padding-top: 15px">{{auditorNotFound}}</p>
+		</div>
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Enter_name_of_document">Enter email of user</label>
+			  </dt>
+			  <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				<ui-select ng-model="document.authentication_auditor_id" theme="selectize">
+				  <ui-select-match placeholder="<%= t('select_an_auditor_in_the_list_or_search_its_name') %>">{{$select.selected.email}}</ui-select-match>
+				  <ui-select-choices repeat="auditor.id as auditor in searchedAuditors | filter: $select.search" refresh="searchAuditors(($select.search),document.authentication_mode)" refresh-delay="600">
+					<div ng-bind-html="auditor.name | highlight: $select.search"></div>
+					<small style="font-size: 10px;" ng-bind-html="auditor.email | highlight: $select.search"></small>
+				  </ui-select-choices>
+				</ui-select>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<div class="add_info_block browse_list_mod" ng-show="document.authentication_mode == '3' && auditors.length != 0">
+	  <div class="add_info_header">
+		<div class="add_info_title"><%= t('browse_auditor_directory') %></div>
+		<div class="add_info_colapse_butt"></div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div class="add_info_form_block auditor_box">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Operation_type">Select an Auditor</label>
+			  </dt>
+			  <dd id="users_list" class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+				<ui-select ng-model="document.authentication_auditor_id" theme="selectize">
+				  <ui-select-match placeholder="<%= t('select_an_auditor_in_the_list_or_search_its_name') %>">{{$select.selected.name}}</ui-select-match>
+				  <ui-select-choices repeat="auditor.id as auditor in auditors |  filter: $select.search">
+					<div ng-bind-html="auditor.name | highlight: $select.search"></div>
+					<small style="font-size: 10px;" ng-bind-html="auditor.email | highlight: $select.search"></small>
+				  </ui-select-choices>
+				</ui-select>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!-- block for operation additional_information -->
+	<div class="add_info_block textarea_mod">
+	  <div class="add_info_header">
+		<div class="add_info_title">
+		  		<%= t('additional_information') %>
+
+		</div>
+		<div class="add_info_colapse_butt">
+		</div>
+	  </div>
+	  <div class="add_info_content_block">
+		<div class="add_info_content" ng-if="store.additional_information">
+		  <p>
+			{{store.additional_information}}
+		  </p>
+		</div>
+		<div class="add_info_form_block">
+		  <div class="add_info_form_w">
+			<dl class="form_cell form_cell_v1_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Enter_additional_information">
+				  Enter Addtional Information
+				</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<textarea id="Enter_additional_information" placeholder="<%= t('enter_additional_information') %>" class="f_c_field default_mod textarea_mod_1 " ng-model="document.additional_information"></textarea>
+			  </dd>
+			</dl>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<!-- end -->
+  </div>
+</div>
+<div id="create_user_folder" style="display:none" title="Create a folder" ng-controller="UserFolderCtrl">
+  <div class="dialog_content">
+	<div class="dialog_form">
+	  <gf-text-input
+	  id="'Name_of_folder'"
+	  p-title="'Name of folder'"
+	  dl-class="" containers-class="" field-class="'default_mod'"
+	  model="folder.folder_name"></gf-text-input>
+
+	  <dl class="form_cell form_cell_v1_mod">
+		<dt class="form_c_hline form_v1_mod hline_hide_mod">
+		  <label for="Enter_names_of_documemntscertificates_to_add_to_this_folder">Folder Description</label>
+		</dt>
+		<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		  <textarea id="Enter_names_of_documemntscertificates_to_add_to_this_folder" placeholder="Folder Description" class="f_c_field default_mod textarea_mod_1" ng-model="folder.description"></textarea>
+		</dd>
+	  </dl>
+	</div>
+	<div id="user_folder_msg_box" style="text-align: center; padding: 5px 0px;">
+	</div>
+  </div>
+  <footer class="dialog_footer">
+	<div class="dialog_cancel_butt"><%= t('cancel') %></div>
+	<div class="create_folder_butt" ng-click="createFolder(folder)"><%= t('create') %></div>
+  </footer>
+</div>
+<div id="user_document_file_preview_butt" style="display:none"><%= t('preview_file') %>(s)</div>
+<div id="user_document_file_preview" style="display:none" title="File preview">
+  <div class="preview_popup_block">
+		<a class="preview_popup_cancel_butt" href="#"></a>
+		<header class="preview_popup_header">
+		  <h2 class="preview_popup_hline">{{store.document_name}}</h2>
+		  <div class="preview_doc_count">
+				Viewing
+				<span class="preview_doc_count_current">1</span>
+				out of
+				<span class="preview_doc_amount">1</span>
+		  </div>
+		</header>
+		<div class="preview_doc_list_wrap" ng-if="document">
+		  <ul class="preview_doc_list" id="carusel_preview">
+				<li class="preview_doc_l_item" ng-repeat="document_file in document.document_files">
+				  <div class="preview_doc_w">
+						<iframe class="preview_doc_image" ng-src="{{preview_url}}" frameborder="0"></iframe>
+				  </div>
+				</li>
+		  </ul>
+		</div>
+		<footer class="preview_popup_footer">
+		  <a class="preview_popup_file_link" href="{{preview_url}}" title="Click here to see file" download>Download File</a>
+		</footer>
+  </div>
+</div>

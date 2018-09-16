@@ -1,0 +1,97 @@
+<!--todo Please, ruby guys optimize it!!!-->
+<% if current_user.sign_in_count == 1 && current_user.is_welcome_message_closed == false %>
+	<body ontouchstart=""
+		class="no_animation develop_mod"
+		ng-app='community'
+		ng-class="{ 'company_toolbar_mod' : current_company }"
+		ng-controller='HomeCtrl'>
+<% else %>
+	<body ontouchstart=""
+		class="no_animation develop_mod video_back_block_closed"
+		ng-class="{ 'company_toolbar_mod' : current_company }"
+		ng-app='community' ng-controller='HomeCtrl'>
+<% end %>
+<div id='alert'></div>
+<ng-include src="template.header"></ng-include>
+<div class="wrapper" ng-class="modifier.layout">
+	<div class="base" ng-class="modifier.base">
+		<ng-include src="template.slider"></ng-include>
+		<div class="row_wrap" ng-class="modifier.wrap">
+			<ng-include src="template.main"></ng-include>
+			<div class="main_row" ng-class="modifier.main_row" ng:view></div>
+			<ng-include src="template.rightmenu"></ng-include>
+		</div>
+	</div>
+</div>
+<!-- toolbars start-->
+	<div id="private_messages_popup" style="display:none">
+		<div class="ui-dialog-titlebar">
+			<span class="ui-dialog-title"><%= t('private_messages') %> ({{unread_in_messages.length}})</span>
+		</div>
+		<div class="dialog_content">
+		  <ul class="notification_list">
+				<li class="notification_l_item" ng-repeat = "message in unread_in_messages|limitTo:5">
+				  <div class="user_block small_mod notification_mod checking_mod ">
+						<div class="user_avatar_w small_mod notification_mod checking_mod "><img ng-src="{{message.from.photo_url}}" alt="{{message.from.name}}" class="user_avatar_img small_mod notification_mod checking_mod">
+						</div>
+						<div class="user_name small_mod notification_mod checking_mod">{{message.from.name}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod">{{message.message_text}}</div>
+						<div class="user_time small_mod notification_mod checking_mod">{{message.updated_at}}</div>
+				  </div>
+				</li>
+		  </ul>
+		</div>
+		<div class="dialog_footer"><a href="javascript:void(0)" class="notification_butt" ng-click="read_all_messages()"><%= t('all_private_messages') %> →</a></div>
+	</div>
+	<div id="invitations_popup" style="display:none">
+		<div class="ui-dialog-titlebar">
+			<span class="ui-dialog-title"><%= t('invitations') %> ({{unread_requests.length}})</span>
+		</div>
+		<div class="dialog_content">
+		  <ul class="notification_list">
+				<li class="notification_l_item" ng-repeat = "request in unread_requests|limitTo:5">
+				  <div class="user_block small_mod notification_mod checking_mod ">
+						<div class="user_avatar_w small_mod notification_mod checking_mod "><img ng-src="{{request.sender.photo_url}}" alt="{{request.sender.name}}" class="user_avatar_img small_mod notification_mod checking_mod">
+						</div>
+						<div class="user_name small_mod notification_mod checking_mod">{{request.sender.name}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="request.activity_key == 'group_user_invited'">{{request.sender.name}} invited you to {{'“' + request.object.group.name + '”'}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="request.activity_key == 'friendship_request'">{{request.sender.name}} requested you to be a friend</div>
+						<div class="user_time small_mod notification_mod checking_mod">{{request.updated_at}}</div>
+				  </div>
+				</li>
+		  </ul>
+		</div>
+		<div class="dialog_footer"><a href="javascript:void(0)" class="notification_butt" ng-click="read_all_invitations()"><%= t('all_invitations') %> → </a></div>
+	</div>
+	<div id="notifications_popup" style="display:none">
+		<div class="ui-dialog-titlebar">
+			<span class="ui-dialog-title"><%= t('notifications') %> ({{unread_notifications.length}})</span>
+		</div>
+		<div class="dialog_content">
+		  <ul class="notification_list">
+				<li class="notification_l_item" ng-repeat = "notification in unread_notifications|limitTo:5">
+				  <div class="user_block small_mod notification_mod checking_mod ">
+						<div class="user_avatar_w small_mod notification_mod checking_mod "><img ng-src="{{notification.sender.photo_url}}" alt="{{notification.sender.name}}" class="user_avatar_img small_mod notification_mod checking_mod">
+						</div>
+						<div class="user_name small_mod notification_mod checking_mod">{{notification.sender.name}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'friendship_request_accept'">{{notification.sender.name}} accepted your connect request</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'friendship_request_decline'">{{notification.sender.name}} declined your connect request</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'friendship_request_cancel'">{{notification.sender.name}} have canceled the request</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'friendship_disconnect'">{{notification.sender.name}} disconnected with you</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'group_user_invitation_accept'">{{notification.sender.name}} accepted your invitation to {{'“' + notification.object.group.name + '”'}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'group_user_invitation_decline'">{{notification.sender.name}} declined your invitation to {{'“' + notification.object.group.name + '”'}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'user_general_change'">{{notification.sender.name}} has updated his {{notification.parameters.changed_fields.join(" and ")}}.</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'operation_general_change'">{{notification.sender.name}} has updated the fields {{notification.parameters.changed_fields.join(" and ")}} of the operation {{'“' + notification.object.name + '”'}}.</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'service_general_change'">{{notification.sender.name}} has updated the fields {{notification.parameters.changed_fields.join(" and ")}} of the service {{'“' + notification.object.name + '”'}}.</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'operation_new_product_added'">{{notification.sender.name}} has added new product {{'“' + notification.parameters.product.name + '”'}}</div>
+						<div class="user_msg small_mod notification_mod checking_mod" ng-if="notification.activity_key == 'document_general_change'">{{notification.sender.name}} has updated the fields {{notification.parameters.changed_fields.join(" and ")}} of the document {{'“' + notification.object.document_name + '”'}}.</div>
+						<div class="user_time small_mod notification_mod checking_mod">{{notification.updated_at}}</div>
+				  </div>
+				</li>
+		  </ul>
+		</div>
+		<div class="dialog_footer"><a href="javascript:void(0)" class="notification_butt" ng-click="read_all_notifications()"><%= t('all_notifications') %> →</a></div>
+	</div>
+<!-- toolbars end-->
+</body>
+

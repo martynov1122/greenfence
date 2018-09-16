@@ -1,0 +1,208 @@
+<%= csrf_meta_tags %>
+<div class="container-fluid all_father">
+  <div class="row header">
+    <h4> Upload Data  </h4>
+    <hr/>
+    <h5><a class="link" href="/admin">Back</a> </h5>
+  </div>
+
+  <div class="row">
+  	<form action="/community_admin/upload_companies_confirm" id="upload_form" enctype="multipart/form-data">
+  		<div class="form-group col-md-5">
+  			<label for="entity">What do you want to upload ?</label>
+  			<select class="form-control" id="entity">
+          <option value="Company">Company</option>
+          <option value="User">User</option>
+          <option value="Operation">Operation</option>
+          <option value="SupplyChain">SupplyChain</option>
+          <option value="Service">Service</option>   
+        </select>
+  		</div>
+  		<div class="form-group col-md-5">
+        <label for="Browse_files">Upload File</label>
+        <input type="file"  name="company_csv" id="Browse_files" placeholder="Select CSV">
+        <p class="help-block">Upload the file containing the records. You will be given a chance to review the data before any changes are made</p>
+      </div>
+      <div class="form-group col-md-4">
+         <div>
+           <label>
+             <input type="radio" name="mode" value="insert"> Insert
+           </label>
+         </div>
+         <div>
+           <label>
+             <input type="radio" name="mode" value="update"> Update
+           </label>
+         </div>
+
+         
+      </div>
+      <div class="form-group col-md-12">
+        <button type="button" class="btn btn-success" id="upload">Upload</button>
+      </div>
+
+  	</form>
+  </div>
+  <div class="row">
+  	<table id="data_table" class="table">
+			<thead id="data_table_header">	
+			</thead>
+			<tbody id="data_table_body">				
+			</tbody>
+			<tfoot >
+				<tr id="commit_section">
+					<td><button type="button" class="btn btn-success" id="commit">Save</button> <td>
+				</tr>
+			</tfoot>
+		</table>
+  </div>
+  <div class="row">
+  	<div id="created_count" class="alert alert-success" role="alert"></div>
+  	<div id="failed_count" class="alert alert-danger" role="alert"></div>
+  </div>
+  <div class="row">
+  	<table id="error_table" class="table">
+			<thead >	
+				<tr>
+					<th>Name</th>
+					<th>Error</th>
+				</tr>
+			</thead>
+			<tbody id="error_table_body">				
+			</tbody>
+			
+		</table>
+  </div>
+  
+</div>
+
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+   $("#commit_section").hide();
+   $("#created_count").hide();
+   $("#failed_count").hide();
+   $("#error_table").hide() ;
+	 
+	 
+   function after_commit(data) {
+   	console.log(data);
+   	$("#created_count").text(data.created_count + " Items created") ;
+   	$("#failed_count").text(data.failed_count + " Items not created. See details below") ;
+   	$.each(data.failed, function(k, v) {
+   		var row = $('<tr> </tr>')
+   		var nametd = $('<td> </td>').text(v.name);
+   		var errortd = $('<td> </td>').text(v.error) ;
+   		row.append(nametd);
+   		row.append(errortd);
+   		$("#error_table_body").append(row);
+   		console.log();
+   	});
+   	$("#created_count").show();
+    $("#failed_count").show();
+    $("#error_table").show() ;
+
+   } 
+	 function commit_data(event) {
+	 	var token = $('meta[name=csrf-token]').attr('content')
+	 	
+	 	csvdata = {}
+	 	csvdata['data'] = event.data
+	 	csvdata['authenticity_token'] = token
+	 	csvdata['mode'] =  $("input[name=mode]:checked").val()
+	 	csvdata['entity'] = $("#entity").val()
+
+	 	$.ajax({
+	 		type: 'POST',
+	 		url: "/community_admin/upload_companies_commit.json" , 
+	 		data: csvdata,
+	 		success: after_commit ,
+	 		
+	 	});
+	 }
+
+
+
+
+
+	function populate_table(data, status, jqXHR) {
+		$("#upload").hide();
+		$("#commit_section").show();
+		var header_row = $('<tr> </tr>');
+		
+		$.each(data, function(i, v){
+						
+			var row = $('<tr> </tr>');  
+			$.each(v , function(key, value) {
+				var rowdata = $('<td> </td>') ;
+				rowdata.text(value);
+				row.append(rowdata);
+				if (i == 0) {
+          var header_data = $('<th> </th>');
+          header_data.text(key) ;
+					header_row.append(header_data);
+				}
+			}) ;
+			
+      row.append($('<td> </td>')); 
+			$("#data_table_body").append(row);
+			
+			if (i==0) {
+				// var status_header = $('<th> </th>').text('Status');
+			 //  header_row.append(status_header);
+			  $("#data_table_header").append(header_row);
+			}
+			
+
+
+		});
+
+		$("#commit").click(data, commit_data);
+	}
+
+	function handle_submit() {
+		var formData = new FormData(document.getElementById('upload_form'));
+		var token = $('meta[name=csrf-token]').attr('content')
+		formData.append("authenticity_token" , token)
+		$.ajax({
+        url: '/community_admin/upload_companies_confirm.json',  //Server script to process data
+        type: 'POST',
+        xhr: function() {  // Custom XMLHttpRequest
+        	var myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // Check if upload property exists
+                // myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+              }
+              return myXhr;
+            },
+
+            data: formData,
+            success: populate_table, 
+
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+
+
+	}
+
+
+	$("#upload").click(handle_submit) ;
+
+	</script>
+
+	
+
+
+
+
+
+
+
+

@@ -1,0 +1,340 @@
+    <div id="container"> 
+
+
+        <div class="clear"></div>
+             
+            <div class="content_main setting">
+                
+                <div class='title'>Settings</div>
+                <div class='tabs'>
+                    <div class='tab active'>Personal</div>
+                    <% if current_user.company.present? %>
+                        <% if current_user.permission_changable_by?(current_user) %>
+                            <div class='tab'>Company</div>
+                        <% end %>
+                    <% end %>
+                </div>
+                <div class='tab-content'>
+                    <div id='personal' class='tab active'>
+                        <form id='personal_form'>
+                            <div class='input'>
+                                <label>First name</label>
+                                <input type='text' name='first_name' class='first_name' placeholder='First name' value='<%=current_user.first_name%>'>
+                            </div>
+                            <div class='input'>
+                                <label>Last name</label>
+                                <input type='text' name='last_name' class='last_name' placeholder='Last name'  value='<%=current_user.last_name%>'>
+                            </div>
+                            <div class='input'>
+                                <label>Password</label>
+                                <input type='password' name='password' class='password' placeholder='Password'  value='<%=current_user.password%>'>
+                            </div>
+                            <div class='input'>
+                                <label>Password confirmation</label>
+                                <input type='password' name='password_confirmation' class='password_confirmation'  placeholder='Password confirmation'  value='<%=current_user.password_confirmation%>'>
+                            </div>
+
+                            <input id="personal_submit" class="green" type="button" value="Save">
+                         </form>
+                    </div>
+                    <!-- <div id='company' class='tab'>
+                        <div class='section' id='admin-section'>
+                            <div class='title'>Admins</div>                        
+                        </div>
+                        <div class='section' id='invite-section'>
+                            <div class='title'>Invite Employees</div>
+                            <div class='input'>
+                                <label>Enter email</label>
+                                
+                            </div>
+                            <div class='buttons'>
+                                <div class='button' id='add_more'>Add More</div>
+                                <div class='button green-outline' id="invite_coworkers">Send</div>
+                            </div>
+                        </div>
+                        <div class='section' id='pending-invitation-section'>
+                            <div class='title'>Pending invitations</div>
+                            <% if current_company && current_company.users.first %>
+                                <div class='invited'>
+                                    <% current_company.users.invited.each do |user| %>
+                                        <div class='admin'>
+                                            <%= user.email %>
+                                        </div>
+                                    <% end %>
+                                </div>
+                            <% end %>
+                        </div>                        
+                    </div> -->
+                    <!-- ****block Company***-->
+                    <div id='s_company' class='tab'>
+                        <div class='input mb_inp'>
+                            <label>Assign permissions to users</label>
+                            <input type='text' placeholder='users' name="user_list" id="user_list" style="width: 80%">
+                        </div>
+                        <!--<div class="avatar_block mb_inp">
+                            <div class='avatar'><img src = <%= asset_path 'freeapp/avatar.jpg' %> ></div>
+                            <div class="company_name fl_s">
+                                Michael Abehsera
+                            </div>
+                        </div>
+                        <div class="fl_s">Permissiom for Michael</div>
+                        <div class="fr_s">
+                           <div class="one_check">
+                            <input id="user_s" type="radio" name="radio_companies" checked hidden />
+                            <label for="user_s">Role: User</label> 
+                        </div>
+                        <div class="one_check">
+                            <input id="admin" type="radio" name="radio_companies"  hidden />
+                            <label for="admin">Admin</label>
+                        </div>
+                        </div> -->
+                        <div id="permission_container">
+
+                        </div>                        
+                        
+                        <button class="green s_b" id = "assign_permission">Assign</button>
+                    </div>
+                </div>
+
+            </div>    
+        <div class="clear"></div>
+
+    </div>
+
+        <script>
+        
+             var current_user_id = <%= current_user.id %>
+            $('.tabs .tab').click(function(){
+                $('.tab-content .tab').removeClass('active')
+                $('.tab-content .tab:eq(' + $(this).index() + ')').addClass('active')
+                $('.tabs .tab').removeClass('active')
+                $('.tabs .tab:eq(' + $(this).index() + ')').addClass('active')
+            })
+
+
+            $('#assign_permission').click(function() {
+                var permission_ids = []; 
+                $('#permission_container input:checked').each(function() { 
+                    permission_ids.push($(this).val()); 
+                });
+                var to_user_id = $("#user_list").val()
+                if(to_user_id == ""){
+                    ss_alert("error","Please select user.")
+                }
+                if(permission_ids.length == 0){
+                  ss_alert("error","Please select permissions to assign.")   
+                }
+                $.ajax({
+                  url: '/api/v2.2/users/'+current_user_id+'/associate_permissions.json',
+                  type: "POST",
+                  data : {'permission_ids':permission_ids,'to_user_id':to_user_id},
+                  success: function(response1){ 
+                    ss_alert("success" , response1.name +" permissions updated successfully."); 
+                    setTimeout(function() {
+                        // Do something after 5 seconds
+                    location.reload();//reload page
+                    }, 3000);
+                    
+                  },
+                  error: function (errors, response){
+                    ss_alert("error", errors.responseText);
+                  }
+                })
+
+            })
+
+            $('#personal_submit').click(function(){
+                var first_name = $('#personal_form').find('input.first_name').val()
+                var last_name = $('#personal_form').find('input.last_name').val()
+                var password = $('#personal_form').find('input.password').val()
+                var password_confirmation = $('#personal_form').find('input.password_confirmation').val()
+                if(first_name.trim()==""){
+                    ss_alert('error',"First name can't be blank");
+                }
+                else if(last_name.trim()==""){
+                    ss_alert('error',"Last name can't be blank");
+                }
+                else if (password != '') { if(password_confirmation == '') {ss_alert('error', 'Password Confirmation required.') }}
+                else if (password_confirmation != '') {ss_alert('error', 'Password required.') }
+                if (password != password_confirmation) { ss_alert('error', 'Password doesn\'t match the confirmation.')}
+                else{
+
+                    var personal = {};
+                    personal['first_name']= first_name
+                    personal['last_name']= last_name
+                    if(password != ""){personal['password']= password}
+                    if(password_confirmation != ""){personal['password_confirmation']= password_confirmation}
+                    $.ajax({
+                      url: '/community/update_personal_info',
+                      type: "POST",
+                      data : {'personal_info':personal},
+                      success: function(response1){ 
+
+                        $('#logged_in_user_name').text(response1['first_name'] + " " + response1['last_name']);
+                            ss_alert("success" , "Uers's personal details updated successfully."); 
+
+                        },
+                        error: function (errors, response){
+                          ss_alert("error", errors.responseText);
+                        }
+                    })
+                }
+                
+            });
+
+            var j = 1;
+            $('#add_more').click(function() {
+                j=j+1;
+                var template1 = $('#add_employee_template').html();
+                Mustache.parse(template1); 
+                var rendered1 = Mustache.render(template1, {i :j});
+                $("#invite-section .input").append(rendered1);
+            });
+
+
+            var change_permissions = function(e) {
+                $.ajax({
+                    url: '/api/v2.2/permissions/company_user_permissions.json' ,
+                    data: {user_id: e.val} ,
+                    success: function(response){
+                        $('#permission_container').empty();
+                        var template = $('#permission-template').html();
+                        Mustache.parse(template); 
+                        var rendered = Mustache.render(template, response);
+                        $("#permission_container").append(rendered);
+                    }
+                });
+            }
+
+            $(document).ready(function(){
+                var template1 = $('#add_employee_template').html();
+                Mustache.parse(template1); 
+                var rendered1 = Mustache.render(template1, {i: 1});
+                $("#invite-section .input").append(rendered1);
+
+            if('<%= current_user.company%>'!=""){
+                $.ajax({
+                  url: '/api/v2.2/users/get_free_app_users_within_company',
+                  type: "GET",
+                  success: function(response1){
+
+                    // Role and permission
+                    $("#user_list").select2( {
+                        data: { results: response1.users, text: 'name' , id: 'id' }  , 
+                        placeholder: "users"
+          
+                    }) ;
+                    $("#user_list").on("change" , change_permissions) ;
+
+                    // end
+
+                    for(var i=0; i<response1.users.length; i++)
+                    {                       
+                        if(response1.users[i].id == current_user_id)
+                        {
+                             response1.users[i].noEdit=true;
+                        }
+                        response1.users[i].isAdmin = (response1.users[i].user_role == 'Free App Admin') ? true : false
+                    }
+                    var template = $('#admin-template').html();
+                    Mustache.parse(template); 
+                    var rendered = Mustache.render(template, response1);
+                    $("#admin-section").append(rendered);
+                    $('.actions .action').click(function(){
+                        
+                        var admin = false;
+                        if($(this).attr('class').indexOf('auth')>-1)
+                        {
+                            admin=true;
+                        }
+                        user_id=$(this).attr('dataId')
+                        $.ajax({
+                          url: '/api/v2.2/users/edit_roles',
+                          type: "POST",
+                          data: {id:user_id, isAdmin:admin},
+                          success: function(response1){
+                            ss_alert("success","User roles updated successfully.")
+                          }
+                      });
+                        $(this).parent().children('.action').removeClass('active')
+                            $(this).addClass('active')
+                        
+                    })
+                  }
+                })
+              }
+            }) ;
+        $('#invite_coworkers').click(function(){
+            var emails="";
+            for( var index=1 ; index<=j; index++)
+            {
+                emails= emails +';'+ $('#coworker_emails'+index).val()
+            }
+        $.ajax({
+            url: '/api/v2.2/users/send_invitation_email.json',
+            data: {user: {email : emails}, id: current_user_id, isCoworkerCheck : true},
+            type: 'GET',
+            success: function(response){
+              ss_alert("success" , "Invitation has been sent successfully.");
+              $('#invite-section .input input').val("")
+            },
+            error: function (errors,response){
+            ss_alert("error",errors.responseText);
+        }})
+       }) ;
+           
+
+        </script>
+
+<script type="x-tmpl-mustache" id="admin-template">
+{{#users}}
+{{^noEdit}}
+<div class='admin'>
+    <div class='actions'>
+        {{^isAdmin}}
+            <div class='action active destroy' dataId={{id}}><div class='typcn typcn-times'></div></div>
+            <div class='action auth' dataId={{id}} ><div class='typcn typcn-tick'></div></div>
+        {{/isAdmin}}
+        {{#isAdmin}}
+            <div class='action destroy' dataId={{id}}><div class='typcn typcn-times'></div></div>
+            <div class='action auth active' dataId={{id}} ><div class='typcn typcn-tick'></div></div>
+        {{/isAdmin}}
+        
+    </div>
+    <div class='avatar'>
+        {{#image}}
+            {{#image}}
+                {{#thumb}}
+                    {{#url}}
+                        <img src = {{url}} >
+                    {{/url}}
+
+                    {{^url}}
+                        <img src = <%= asset_path 'freeapp/avatar.jpg' %> >
+                    {{/url}}
+                {{/thumb}}
+            {{/image}}
+        {{/image}}
+    </div>
+    <div class='info'>
+        <div class='name'>{{name}}</div>
+        <div class='position'>{{title}} at <%=current_user.company.name if current_user.company  %></div>
+    </div>
+</div>
+{{/noEdit}}
+{{/users}}
+</script>
+
+<script type="x-tmpl-mustache" id="add_employee_template">
+<input type='text' placeholder='Enter email' id="coworker_emails{{i}}">
+
+</script>
+
+<script type="x-tmpl-mustache" id="permission-template">
+    {{#company_permissions}}
+        <div class="gray_block">
+            <input id="{{name}}" type="checkbox" name="permission_list" value="{{id}}" {{#assigned}} checked="checked" {{/assigned}}/>
+            <label for="{{name}}">{{label}}</label>
+        </div>
+    {{/company_permissions}}    
+</script>

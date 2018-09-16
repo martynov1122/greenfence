@@ -1,0 +1,12 @@
+array @users do |person|
+	id person.id
+	devicePin person.device_id
+	firstName person.first_name
+	lastName person.last_name
+	loginName person.username
+	primaryEmailAddress person.email
+	coPartialPersonCOFacilities person.farms do |farm|
+		id farm.id
+	end
+	coPartialPersonCODevices([]) {}
+end

@@ -1,0 +1,162 @@
+<div id="supplier_list_filter" style="display:none" title="<%= t('filter_by') %>">
+  <div class="dialog_content">
+    <div class="dialog_form mod_size_1">
+
+      <gf-text-input
+      id="'Name'"
+	    p-title="'Name'"
+      dl-class="" containers-class="" field-class="'default_mod'"
+      model="filter.name"></gf-text-input>
+
+      <dl class="form_sub_cell">
+        <dt class="form_sub_cell_hline"><%= t('location') %></dt>
+        <dd class="form_sub_cell_wrap">
+          <div class="form_block hor_mod location_mod">
+            <dl class="form_cell form_cell_v1_mod full_mod">
+              <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                <label for="Country_filter_map">Country</label>
+              </dt>
+              <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                <ui-select ng-model="filter.country" name="Country" theme="selectize">
+                  <ui-select-match placeholder="<%= t('country') %>">{{$select.selected.name}}</ui-select-match>
+                  <ui-select-choices repeat="country.name as country in countries |  filter: $select.search">
+                  <div ng-bind-html="country.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </dd>
+            </dl>
+            <gf-text-input
+            class="form_cell form_cell_v1_mod half_mod location_mod"
+            id="'State_filter_map'"
+			      p-title="'State'"
+            dl-class="''" containers-class="" field-class="'default_mod'"
+            model="filter.state"></gf-text-input>
+
+            <gf-text-input
+            class="form_cell form_cell_v1_mod half_mod location_mod"
+            id="'City_filter_map'"
+			      p-title="'City'"
+            dl-class="''" containers-class="" field-class="'default_mod'"
+            model="filter.city"></gf-text-input>
+          </div>
+        </dd>
+      </dl>
+      <dl class="form_sub_cell">
+        <dt class="form_sub_cell_hline"><%= t('filter_by_product_category_and_products') %></dt>
+        <dd class="form_sub_cell_wrap hor_mod third_mod">              
+          <dl class="form_cell form_cell_v1_mod select_add_product">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category"><%= t('select_products') %></label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod" id="filter_multiselect_container">
+              <select id="supplier_list_products_filter" ng-model="selected_products" data-placeholder="<%= t('select_products') %>" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+                ng-options="opt.name group by opt.product_category for opt in products | orderBy:'product_category' track by opt.id" >
+              </select>
+            </dd>
+          </dl>         
+        </dd>
+      </dl>
+      <dl class="options_block second_mod">
+        <dt class="options_b_hline second_mod"><%= t('filter_by_status') %></dt>
+        <dd class="options_b_value_item">
+          <ul class="options_b_value_list">
+            <li class="options_b_value_l_item">
+              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+                <input name="filter_status" type="radio" value="compliant" class="lbl_inp_rb_ch" ng-model="filter.compliant_status"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Compliant</span>
+              </label>
+            </li>
+            <li class="options_b_value_l_item">
+              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+                <input name="filter_status" type="radio" value="warning" class="lbl_inp_rb_ch" ng-model="filter.compliant_status"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Warning</span>
+              </label>
+            </li>
+            <li class="options_b_value_l_item">
+              <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+                <input name="filter_status" type="radio" value="non_compliant" class="lbl_inp_rb_ch" ng-model="filter.compliant_status"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">Non-Compliant</span>
+              </label>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+  </div>
+  <footer class="dialog_footer mod_size_1">
+    <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+    <div class="map_filter_reset_butt" ng-click="reset()"><%= t('reset') %></div>
+    <div class="map_filter_update_butt" ng-click="search()"><%= t('update') %></div>
+  </footer>
+</div>
+<div class="view_container tree_view">
+  <div class="goods_route_block">
+   
+    <header >
+      <div class="map_side_bar_head">
+        <div class="map_side_bar_headline">
+          <h1 class="goods_route_title">
+            <% if current_user.company %>
+              <%= current_user.company.name %>
+            <% end %>
+             <%= t('suppliers') %>
+          </h1>
+        </div>
+        <div id="operation_list_pagination_view_container">
+          <span id="pagination_view">
+            Select Company/Operation:
+          </span>
+          <span>
+            <select id="operation_select" ng-model="selected"
+              ng-options="opt.name for opt in company_operations track by opt.uuid" ng-change="getSuppliers(selected)">
+            </select>
+          </span>
+        </div>
+        <div id="supplier_list_filter_butt" class="filter_map_butt"><%= t('filter') %></div>
+      </div>
+    </header>
+    
+    <div>
+      <div class="add_info_block" >
+        <table class="greenfence-table">
+            <thead>
+              <tr>
+                <th ng-click="getSortedSuppliers(filter.order_by = 'name', filter.order = filter.order == 'asc' ? 'desc' : 'asc')" ><%= t('name') %> </th> 
+                <th ng-click="getSortedSuppliers(filter.order_by = 'city', filter.order = filter.order == 'asc' ? 'desc' : 'asc')" ><%= t('city') %></th>
+                <th ng-click="getSortedSuppliers(filter.order_by = 'state', filter.order = filter.order == 'asc' ? 'desc' : 'asc')" ><%= t('state') %></th>
+                <th ng-click="getSortedSuppliers(filter.order_by = 'country', filter.order = filter.order == 'asc' ? 'desc' : 'asc')" ><%= t('country') %></th>
+                <th>Mine</th>
+                <th>Upstream</th>
+                <th><%= t('requirement_detail') %></th>
+              </tr>
+            </thead>
+            <tr ng-repeat="supplier in suppliers">
+              <td>{{supplier.name}}</td>
+              <td>{{supplier.city}}</td>
+              <td>{{supplier.province}}</td>
+              <td>{{supplier.country}}</td>
+              <td style="padding-left: 30px;"><span ng-class="supplier.compliant_status" class="list_view_compliant_status">{{status(supplier.compliant_status)}}</span></td>
+              <td style="padding-left: 30px;"><span ng-class="supplier.downstream_compliance_status" class="list_view_compliant_status">{{status(supplier.downstream_compliance_status)}}</span></td>
+              <td><a id="requirement_detail_link" href="#/requirement_list_view?supplier_id={{supplier.entity_id}}&supplier_type={{supplier.type}}&buyer_id={{buyer.id}}&buyer_type={{buyer.type}}&requirement_type=supplier"><%= t('view') %></a></td>
+            </tr>
+            <tfoot>
+              <tr>
+                <td id="pagination_container" style="width: 300%;" colspan="5"></td>
+              </tr>
+            </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="list_pagination_view_container">
+    <span id="pagination_view"><%= t('showing') %> {{suppliers.length}} records out of {{items}}</span>
+    <span id="pagination_view">
+      View:
+    </span>
+    <span>
+      <select id="pagination_select" ng-model="filter.per_page" ng-change="search()">
+        <option value="6">6</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+      </select>
+    </span>
+  </div>
+</div>

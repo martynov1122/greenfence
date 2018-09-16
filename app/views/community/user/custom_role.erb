@@ -1,0 +1,109 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+		<h1 class="content_headline" ng-if="!store.id"> <%= I18n.t('create_a_role') %></h1>
+		<h1 class="content_headline" ng-if="store.id"> Role Summary</h1>
+		<a class="wizard_add_butt_v2" ng-click="createRole(custom_role)"><%= t('save') %></a>
+  </div>
+  <!-- block to role name -->
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('role_name') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.name">
+				<p>{{store.name}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'role_name'"
+				  p-title="'Role Name'"
+				  dl-class="" containers-class="'autocomplete_el_v1_mod'" field-class="'default_mod'"
+				  model="custom_role.name"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <!-- end -->
+  <!-- role on -->
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title">Role on</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.role_on">
+				<p>{{store.role_on}}</p>
+		  </div>
+		  <div class="add_info_form_block ">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Enter_name_of_category">Enter role on</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <ui-select ng-model="custom_role.role_on" theme="selectize" ng-change="setPermissions()" ng-disabled="custom_role.id">
+								<ui-select-match placeholder="Select a role type in the list or search his name...">{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="role_type.value as role_type in role_types |  filter: $select.search">
+								  <div ng-bind-html="role_type.name | highlight: $select.search"></div>
+								</ui-select-choices>
+						  </ui-select>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <!-- end -->
+  <!-- block for permissions -->
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= I18n.t('permissions') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.permissions[0].label">
+				<ul class="add_info_user_tag_list">
+				  <li class="add_info_user_tag_l_item" ng-repeat="permission in store.permissions">
+						<div class="add_info_user_tag_butt">{{permission.label}}</div>
+				  </li>
+				</ul>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Enter_name_of_category">Enter name of permission</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select gf-multiselect data='permission_list' gf-placeholder='Enter name of permission' gf-class='' ng-model="custom_role.permission_list" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+								ng-options="permission as permission.label for permission in permission_list track by permission.id">
+						  </select>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+		<table class="greenfence-table" ng-show="store.users.length > 0">
+		  <thead>
+				<tr>
+				  <th>User</th>
+				  <th>Email</th>
+				  <th>Role on</th>
+				  <th>Action</th>
+				</tr>
+		  </thead>
+		  <tbody>
+				<tr ng-repeat="data in store.users">
+				  <td>{{data.user_name}}</td>
+				  <td>{{data.user_email}}</td>
+				  <td>{{data.entity_name}}</td>
+				  <td>
+					<div style="cursor: pointer;color:#608f77;" ng-click="deleteUserFromRole(store.id,data.user_id,data.id)">Delete From Role</div>
+				  </td>
+				</tr>
+		  </tbody>
+		</table>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+<div id="conteiner_settings">
+    <div class="cont_settings">
+
+        <!-- Left part -->
+        <div class='menu_menu tabs'>
+            <div class='tab active'>Personal</div>
+            <% if current_user.company.present? %>
+                <% if current_user.permission_readable_by?(current_user) %>
+                    <div class='tab'>Company</div>
+                <% end %>
+            <% end %>
+        </div>
+
+        <!-- Right part -->
+        <div class='tab-content'>
+
+            <!--  ****block Personal***-->
+            <div id='s_personal' class='tab active'>
+                <div id='personal_form'>
+                    <div class='input '>
+                        <label>First Name</label>
+                        <input type='text' name='first_name' class='first_name' placeholder='First name' value='<%=current_user.first_name%>'>
+                    </div>
+                    <div class='input '>
+                        <label>Last Name</label>
+                        <input type='text' name='last_name' class='last_name' placeholder='Last name'  value='<%=current_user.last_name%>'>
+                    </div>
+                    <div class='input '>
+                        <label>Enter new password</label>
+                        <input type='password' name='password' class='password' placeholder='Password'  value='<%=current_user.password%>'>
+                    </div>
+                    <div class='input '>
+                        <label>Re-Enter new password</label>
+                        <input type='password' name='password_confirmation' class='password_confirmation'  placeholder='Password confirmation'  value='<%=current_user.password_confirmation%>'>
+                    </div>
+                    <button id="personal_submit" class="green s_b">Save</button>
+                </div>
+            </div>
+
+            <!-- ****block Company***-->
+            <div id='s_company' class='tab'>
+                <div class="ui-widget input mb_inp">
+                    <label for="user_list">Assign permissions to users </label>
+                    <input id="user_id" type="hidden">
+                    <input id="user_list" name="user_list" type='text' placeholder='Enter user name'>
+                    <!--<input type='text' placeholder='Enter users name' name="user_list" id="user_list" style="width: 100%">-->
+                </div>
+                <!--<div class="avatar_block mb_inp">
+                    <div class='avatar'><img src='img/avatar.jpg'></div>
+                    <div class="company_name fl_s">
+                        Michael Abehsera
+                    </div>
+                </div>
+                <div class="fl_s">Permissiom for Michael</div>
+                <div class="fr_s">
+                    <div class="one_check">
+                        <input id="user_s" type="radio" name="radio_companies" checked hidden />
+                        <label for="user_s">Role: User</label> 
+                    </div>
+                    <div class="one_check">
+                        <input id="admin" type="radio" name="radio_companies"  hidden />
+                        <label for="admin">Admin</label>
+                    </div>
+                </div>-->
+                <div id="permission_container">
+
+                </div>
+                <% if current_user.permission_changable_by?(current_user) %>
+                    <button class="green s_b" id = "assign_permission">Assign</button>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="permission_template">
+    {{#can_change}}
+        {{#company_permissions}}
+            <div class="gray_block">
+                <input id="{{name}}" type="checkbox" name="permission_list" value="{{id}}" {{#assigned}} checked="checked" {{/assigned}}/>
+                <label for="{{name}}">{{label}}</label>
+            </div>
+        {{/company_permissions}}
+    {{/can_change}}
+    {{^can_change}}
+        {{#company_permissions}}
+            <div class="gray_block">
+                <input id="{{name}}" type="checkbox" name="permission_list" value="{{id}}" {{#assigned}} checked="checked" {{/assigned}} disabled = "disabled"/>
+                <label for="{{name}}">{{label}}</label>
+            </div>
+        {{/company_permissions}}
+    {{/can_change}}    
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'settings.js' %>"></script>

@@ -1,0 +1,271 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+ <h1 class="content_headline"><%= I18n.t('add_a_business') %></h1>
+	<a class="wizard_delete_butt"><%= t('delete') %></a>
+	<a class="wizard_add_butt_v2" ng-click="companySubmit(company)"><%= t('save') %></a>
+  </div>
+
+  <div class="add_info_block">
+	<div class="add_info_header">
+	   <div class="add_info_title required_mod"> <%= I18n.t('enter_name_of_business') %> </div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.name">
+		<p>{{store.name}}</p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		  <gf-text-input
+		  id="'Enter_name_of_company'"
+		  p-title="'<%= I18n.t('enter_name_of_business') %>'"
+		  dl-class="" containers-class="" field-class="'default_mod'"
+		  model="company.name"></gf-text-input>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block">
+	<div class="add_info_header">
+	  <div class="add_info_title required_mod"><%= I18n.t('type_of_business') %> </div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.type_to_show">
+		<p>{{store.type_to_show}}</p>
+	  </div>
+	  <div class="add_info_form_block">
+			<div class="add_info_form_w">
+			  <dl class="form_cell form_cell_v1_mod">
+					<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+					  <label for="Select_type_of_company">Select type of company</label>
+					</dt>
+					<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+					  <ui-select ng-model="company.type" theme="selectize" ng-disabled="store != undefined && store.id">
+	            <ui-select-match placeholder="<%= t('select_type_of_company') %>">{{$select.selected.type}}</ui-select-match>
+	            <ui-select-choices repeat="company_type.value as company_type in company_types |  filter: $select.search">
+	              <div ng-bind-html="company_type.type | highlight: $select.search"></div>
+	            </ui-select-choices>
+	          </ui-select>
+					</dd>
+			  </dl>
+			  <dl class="form_cell form_cell_v1_mod" ng-show="company.type=='Other'">
+				  <!-- <dt class="form_c_hline form_v1_mod">
+						<label for="other">Enter type for other</label>
+				  </dt> -->
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+					<gf-text-input
+					class="form_cell form_cell_v1_mod half_mod location_mod"
+					id="'company_type_other'"
+					p-title="'Enter type for other'"
+					dl-class="''"
+					containers-class=""
+					field-class="'default_mod'"
+					model="company.other_company_type"></gf-text-input>
+				  </dd>
+				</dl>
+			</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('description') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.company_profile_attributes.summary" style="
+white-space: pre-line;">
+		<p> {{store.company_profile_attributes.summary}} </p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		  <dl class="form_cell form_cell_v1_mod">
+			<dt class="form_c_hline form_v1_mod hline_hide_mod">
+			  <label for="about">Description</label>
+			</dt>
+			<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			  <textarea id="about" placeholder="<%= t('company_description') %>" class="f_c_field default_mod textarea_mod_1 " ng-model="company.company_profile_attributes.summary"></textarea>
+			</dd>
+		  </dl>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block location_mod">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('address') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content"  ng-if="
+			   store.address_attributes.street1
+			   || store.address_attributes.street2
+			   || store.address_attributes.city
+			   || store.address_attributes.state
+			   || store.address_attributes.country
+			   || store.address_attributes.postal_code
+			   ">
+		<p>{{location(
+		  store.address_attributes.street1,
+		  store.address_attributes.street2,
+		  store.address_attributes.city,
+		  store.address_attributes.state,
+		  store.address_attributes.country,
+		  store.address_attributes.postal_code)}}</p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		  <div class="form_block hor_mod location_mod">
+			<gf-text-input
+			class="form_cell form_cell_v1_mod full_mod"
+			id="'Address'"
+			p-title="'Street1'"
+			dl-class="'full_mod'" containers-class="" field-class="'default_mod'"
+			model="company.address_attributes.street1"></gf-text-input>
+
+			<gf-text-input
+			class="form_cell form_cell_v1_mod half_mod location_mod"
+			id="'Street2'"
+			p-title="'<%= t('street2') %>'"
+			dl-class="''" containers-class="" field-class="'default_mod'"
+			model="company.address_attributes.street2"></gf-text-input>
+
+			<dl class="form_cell form_cell_v1_mod half_mod location_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="Country">Country</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<ui-select ng-model="company.address_attributes.country" name="Country" theme="selectize">
+				  <ui-select-match placeholder="<%= t('select_a_country') %>">{{$select.selected.name}}</ui-select-match>
+				  <ui-select-choices repeat="country.name as country in countries |  filter: $select.search">
+					<div ng-bind-html="country.name | highlight: $select.search"></div>
+				  </ui-select-choices>
+				</ui-select>
+			  </dd>
+			</dl>
+			<dl class="form_cell form_cell_v1_mod third_mod location_mod">
+			  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+				<label for="State/Province">State/Province</label>
+			  </dt>
+			  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+				<ui-select ng-model="company.address_attributes.state" ng-show="company.address_attributes.country=='United States'" name="State" theme="selectize" id="selectState">
+				  <ui-select-match placeholder="<%= t('usa_state_name') %>">{{$select.selected.name}}</ui-select-match>
+				  <ui-select-choices repeat="state.name as state in states |  filter: $select.search">
+					<div ng-bind-html="state.name | highlight: $select.search"></div>
+				  </ui-select-choices>
+				</ui-select>
+				<input type="text" id="State" placeholder="<%= t('state_or_province') %>" class="f_c_field default_mod " ng-model="company.address_attributes.state" ng-hide="company.address_attributes.country=='United States'"/>
+			  </dd>
+			</dl>
+
+			<gf-text-input
+			class="form_cell form_cell_v1_mod third_mod location_mod"
+			id="'City'"
+			p-title="'<%= t('city') %>'"
+			dl-class="''" containers-class="" field-class="'default_mod'"
+			model="company.address_attributes.city"></gf-text-input>
+
+			<gf-text-input
+			class="form_cell form_cell_v1_mod third_mod location_mod"
+			id="'Postalcode'"
+			p-title="'Postal code'"
+			dl-class="''" containers-class="" field-class="'default_mod'"
+			model="company.address_attributes.postal_code"></gf-text-input>
+
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block title_mod">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('website') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.company_profile_attributes.website">
+		<p> {{store.company_profile_attributes.website}} </p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+
+		  <gf-text-input
+		  id="'Enter_website_link'"
+		  p-title="'<%= t('enter_website_link') %>'"
+		  dl-class="" containers-class="" field-class="'default_mod'"
+		  model="company.company_profile_attributes.website"></gf-text-input>
+
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block title_mod">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('phone_number') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.company_profile_attributes.phone">
+		<p> {{store.company_profile_attributes.phone}} </p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+
+		  <gf-text-input
+		  id="'Enter_phone_number'"
+		  p-title="'<%= t('enter_phone_number') %>'"
+		  dl-class="" containers-class="" field-class="'default_mod'"
+		  model="company.company_profile_attributes.phone"></gf-text-input>
+
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block title_mod">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('primary_contacts') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.company_profile_attributes.email">
+		<p> {{store.company_profile_attributes.email}} </p>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		  <gf-text-input
+		  id="'Enter_email_address'"
+		  p-title="'<%= t('enter_email_address') %>'"
+		  dl-class="" containers-class="" field-class="'default_mod'"
+		  model="company.company_profile_attributes.email"></gf-text-input>
+
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="add_info_block">
+	<div class="add_info_header">
+	  <div class="add_info_title"><%= t('add_Links') %></div>
+	  <div class="add_info_colapse_butt"></div>
+	</div>
+	<div class="add_info_content_block">
+	  <div class="add_info_content" ng-if="store.connections_attributes[0]">
+		<ul class="add_info_user_link_list">
+		  <li class="add_info_user_link_l_item" ng-repeat="link in store.connections_attributes" ng-show="link.url">
+			<a href="http://{{link['url']}}" target="_blank" title="link" class="add_info_user_link url" ng-class="link_class[link['name']]">{{link['url']}}</a>
+		  </li>
+		</ul>
+	  </div>
+	  <div class="add_info_form_block">
+		<div class="add_info_form_w">
+		 <gf-text-input
+		  id="'Linkedin'"
+		  p-title="'Linkedin'"
+		  dl-class="" containers-class="" field-class="'default_mod'"
+		  model="company.connections_attributes[0].url"></gf-text-input>
+
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>

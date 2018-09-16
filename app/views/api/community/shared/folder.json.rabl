@@ -1,0 +1,1 @@
+attributes :id, :folder_name, :description, :access_level, :s3_url, :parent_url

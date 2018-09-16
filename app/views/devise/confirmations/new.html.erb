@@ -1,0 +1,19 @@
+<div class="wrapper layuot_login_mod">
+  <div class="base layuot_login_mod">
+    <div class="welcome_block">
+      <h1 class="content_headline third_mod welcome_mod">Hello <%= User.unconfirmed_user_first_name %> & Welcome to Greenfence. </h1>
+      <p class="welcome_text first_line"><%= I18n.t('please_login_to_your_email_to_verify_your_email_address_thank_you') %>  </p>
+      <p class="welcome_text second_line"><%= I18n.t('didnt_receive_an_email_yet') +"?" %></p>
+      <div>
+        <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+          <div class="field">
+            <%= f.hidden_field :email, :value => User.unconfirmed_user_email %>
+          </div>
+          <div class="resend_email_butt">
+            <%=  f.button(I18n.t('resend_Email'),:class=>"resend_email_butt") %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

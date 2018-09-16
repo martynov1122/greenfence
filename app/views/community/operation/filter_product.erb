@@ -1,0 +1,21 @@
+<article class="profile_card_block">
+  <span class="corner_ico product_mod"></span>
+  <div class="user_block profile_card_mod ">
+  <div class="user_avatar_w profile_card_mod ">
+     <span class="user_avatar_img section_menu_mod no_img_mod product_mod"></span>
+  </div>
+  <div class="user_name profile_card_mod">{{data.name}}</div>
+  <div class="user_text profile_card_mod" ng-if="data.description"><p>{{data.description}}</p></div>
+  </div>
+  <footer class="profile_card_b_footer">
+
+  <div ng-controller="CompanyPublicProfileFollowCtrl" ng-if="(data.admin_ids|filter:current_user_id:true).length < 1">
+    <div ng-if="!data.followed_by_current_user">
+    <div class="card_follow_butt" ng-click="follow_me(data)"><%= t('follow') %></div>
+    </div>
+    <div ng-if="data.followed_by_current_user">
+    <div class="card_follow_butt" ng-click="unfollow_me(data)"><%= t('unfollow') %></div>
+    </div>
+  </div>
+  </footer>
+</article>

@@ -1,0 +1,161 @@
+
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+    <div id="servermessage" style="display:none"> 
+        <div id="messagetext"><%= flash[:notice] %></div>
+    </div>
+    <div id='alert'></div>
+    <div id="header">
+            <div class="header_left">    
+                <img src="<%= asset_path 'freeapp/logo_main.png' %>" style="margin: 13px 0 0 14px;" width="141" height="40" alt="greenfence logo">
+            </div>    
+
+            <div class="header_right">
+                <ul style="margin: 22px 0 0 0;">
+                    <li name='about' onclick='getView("about")'><a href="/community/about">About</a></li>
+                    <li name='name' onclick='getView("team")'><a href="/community/about" >Team</a></li>
+                    <li><a href="mailto:contact@greenfence.com">Contact Us</a></li>
+                    <li><a href="/users/sign_in" class="green" style="margin-top: -9px;">Login</a></li>
+                </ul>  
+            </div> 
+        </div>
+
+    <div id='home-bg'>
+        <div class='overlay'></div>
+        <div class='content'>
+            <div class='right'>
+                <div class='account-creation'>
+                    <div class='head'>
+                        <div class='text'>Get started – it’s free.</div>
+                        <div class='sub text'>Registration takes less than 2 minutes.</div>
+                    </div>
+                    <div class='form'>
+                      <%= form_tag ({:controller => "freesignup", :action => "update_signup" , :method => "post"}) do %>
+                        <div class='row multiple'>
+                          <div class='input half'>
+                            <%= text_field_tag(:firstname, nil, :placeholder => "First Name", :class => 'firstname') %>
+                          </div>
+                          <div class='input half'>  
+                            <%= text_field_tag(:lastname , nil, placeholder: "Last Name", :class => 'lastname') %>
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='input'>
+                            <%= text_field_tag(:email , nil, placeholder: "Email Address", :class => 'email') %>
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='input'> 
+                            <%= password_field_tag(:password , nil,  placeholder: "Password", :class => 'password', title: 'Minimum six characters') %>
+                          </div>
+                        </div>
+                        <div class='row'>
+                          <div class='input'>
+                            <%= password_field_tag(:password_confirmation, nil, placeholder: "Re-enter Password", :class => 'password_confirmation') %>
+                          </div>
+                        </div>
+                        <div class='button' onclick='javascript:$(this).parent().submit()'>Signup</div>     
+
+                      <% end %>  
+                    </div>    
+
+                    
+                    </div>
+                </div>
+            
+            <div class='left'>
+                <h1>Where people that produce food connect with the people that buy food.</h1>
+                
+                <div class='quote'>
+                    <!--<div class='avatar'>
+                        <img src='img/avatar.jpg' width='100'>
+                    </div>
+                    <div class='text'>
+                        <div class='text-content'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.</div>
+                        <div class='author'>Michael Abehsera</div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id='home-content'>
+        <div class='title'>
+            <div class='border'></div>
+            <div class='text'>Learn more about Greenfence</div>
+        </div>
+        <div class='content-item content-right' style="height:150px">
+            <!--<div class='photo'></div>-->
+            <div > <!--class='text'-->
+                <div class='title'>Upload your certificates</div>
+                <div class='text-content'>and communicate you compliance status</div>
+            </div>
+        </div>
+        <div class='content-item content-left'style="height:150px">
+            <!--<div class='photo'></div>-->
+            <div > <!--class='text'-->
+                <div class='title'>Create you profile </div>
+                <div class='text-content'>and establish your presence in the food industry.</div>
+            </div>
+        </div>
+        <div class='content-item content-right'style="height:150px">
+            <!--<div class='photo'></div>-->
+            <div > <!--class='text'-->
+                <div class='title'>Communicate</div>
+                <div class='text-content'>with auditors , your coworkers and other facility owners</div>
+            </div>
+        </div>
+        
+         
+        <div class='more'>
+            <div class='text'>
+                <span>Have more questions?</span>
+                <a href='http://www.greenfence.com/contact.html' target="_blank"><div class='green'>Contact Us</div></a>
+            </div>
+        </div>
+    </div>
+
+    </div>
+        <script>
+            var alert = function(type, text){
+                $('#alert').text(text).fadeIn().addClass(type)
+                setTimeout(function(){
+                    $('#alert').fadeOut()
+                }, 4000)
+                setTimeout(function(){
+                    $('#alert').text('').removeClass(type)
+                }, 4600)
+            }
+
+            $('#password').tooltipsy({alignTo:'cursor'})
+
+            $('.account-creation form').submit(function(){
+                var first_name = $(this).find('input.firstname').val()
+                var last_name = $(this).find('input.lastname').val()
+                var email = $(this).find('input.email').val()
+                var password = $(this).find('input.password').val()
+                var password_confirmation = $(this).find('input.password_confirmation').val()
+                if (first_name.trim() == '') { alert('error', 'First name required.') }
+                else if (last_name.trim() == '') { alert('error', 'Last name required.') }
+                else if (email == '') { alert('error', 'Email required.') }
+                else if (password == '') { alert('error', 'Password required.') }
+                else if (password != password_confirmation) { alert('error', 'Password doesn\'t match the confirmation.') }
+                else { alert('success', 'Signing up!')  ; return true ;}
+                return false
+            })
+
+            $( document ).ready(function() {
+                if ($("#messagetext").text() == "Signed out successfully.") {
+                    alert("success" , $("#messagetext").text());
+                }
+                else if ($("#messagetext").text() != ""){
+                    alert("error" , $("#messagetext").text());
+                }
+            });
+        </script>
+    </body>
+

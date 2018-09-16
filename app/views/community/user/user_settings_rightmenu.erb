@@ -1,0 +1,50 @@
+<div class="secondary_row layuot_mod_1 fixed_mod wizards_pages_mod">
+  <div class="section_menu mod_1">
+    <h2 class="section_hline">Settings</h2>
+    <ul class="section_menu_list">
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod"><%= t('personal_settings') %></div>
+      </li>
+      <% if current_user.type == 'Auditor' %>     
+          <li class="section_menu_l_item">
+          <a href="#/setting/payment"  class="section_menu_link hovered_1_mod"><%= I18n.t('connect_with_stripe') %></a>
+          </li>
+          <% end %>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod"><%= t('group_settings') %></div>
+      </li>
+      <li class="section_menu_l_item">
+        <a href="#/supply_chain_visibility" class="section_menu_link hovered_1_mod">Supply Chain Visibility</a>
+      </li>
+    </ul>
+  </div>
+  <div class="section_menu mod_1">
+    <h2 class="section_hline"><%= t('group_settings') %></h2>
+    <ul class="section_menu_list">
+
+      <% if current_user.company && current_user.company.admin != [] && current_user.company.admin.map(&:id).include?(current_user.id) %>
+        <li class="section_menu_l_item">
+          <a href="#/roles" class="section_menu_link hovered_1_mod">Roles</a>
+        </li>
+        <li class="section_menu_l_item">
+          <a href="#/custom_roles" class="section_menu_link hovered_1_mod"><%= t('create_a_role') %></a>
+        </li>
+        <li class="section_menu_l_item">
+          <a href="#/assign_role" class="section_menu_link hovered_1_mod"><%= t('assign_role_to_user') %></a>
+        </li>
+      <% end %>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod"><%= t('import_contacts') %></div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod">Create a Group</div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod">Manage a Group</div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod">Delete a Group</div>
+      </li>
+    </ul>
+  </div>
+</div>

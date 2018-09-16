@@ -1,0 +1,21 @@
+<div class="add_info_block">
+  <div class="add_info_header">
+	<div class="add_info_title"   ng-class="{'required_mod': data.required == 'true'}" >{{data.name}}</div>
+	<div class="add_info_colapse_butt" ng-click="infoColapseButt($event)"></div>
+  </div>
+  <div class="add_info_content_block">
+	<div class="add_info_content"  ng-if="definitionValueExist()"><p>{{store.definition_value[data.id]}}</p></div>
+	<div class="add_info_form_block">
+	  <div class="add_info_form_w">
+		<ul class="options_b_value_list">
+		  <li class="options_b_value_l_item" ng-repeat="op in getOptions()">
+			<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+			  <input name="{{data.name}}" type="{{data.input_type}}" ng-required="{{data.required == 'true'}}" ng-model="operation.definition_value[data.id]" ng-value="op.name" class="lbl_inp_rb_ch"/>
+			  <span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">{{op.name}}</span>
+			</label>
+		  </li>
+		</ul>
+	  </div>
+	</div>
+  </div>
+</div>

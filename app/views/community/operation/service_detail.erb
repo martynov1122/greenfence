@@ -1,0 +1,39 @@
+<div class="compain_header">
+  <div class="user_block detail_mod ">
+	<div class="user_avatar_w detail_mod ">
+	  <img ng-src="{{service.operation.company.logo.logo.thumb.url}}" class="user_avatar_img detail_mod">
+	</div>
+	<div class="user_name detail_mod">{{service.operation.company.name}}</div>
+  </div>
+  <div class="compain_header_side_w">
+	<a href="#/company_public_profile/{{service.operation.company.id}}" title="" class="back_to_company_butt">Back to {{service.operation.company.name}}</a>
+  </div>
+</div>
+
+<div class="detail_block">
+  <div class="detail_header">
+	<div class="user_block detail_mod">
+	  <div class="user_avatar_w detail_mod ">
+		<img ng-if="false" ng-src="{{service.profile_picture.profile_picture.thumb.url}}" class="user_avatar_img detail_mod">
+		<span class="user_avatar_img detail_mod no_img_mod service_mod"></span>
+	  </div>
+	  <div class="user_name detail_mod">{{service.name}}</div>
+	</div>
+	<div class="detail_header_side_w">
+	  <a href="#/company_follow_configure" title="" class="detail_follow_configure_butt"><%= t('follow_and_configure') %></a>
+	</div>
+  </div>
+  <div class="detail_b_content">
+	<div class="detail_b_content_text">
+	  <h2>Uploaded Image(s)</h2>
+
+	  <p ng-repeat="files in service.uploaded_files">
+		<img ng-src="{{files.image.thumb.url}}"/>
+	  </p>
+	  <h2><%= t('description') %></h2>
+
+	  <p>{{service.description || "No description available"}}</p>
+	</div>
+  </div>
+</div>
+

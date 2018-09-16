@@ -1,0 +1,23 @@
+{
+  "Food Category": [
+    {
+      "display": "Fresh Eggs",
+      "value": 1
+    },
+    {
+      "display": "Liquid Organic Eggs",
+      "value": 1
+    },
+    {
+      "display": "Organic Liquid Eggs",
+      "value": 1
+    }
+  ],
+  "Company": [
+    {
+      "display": "CAL MAINE FOODS, INC.",
+      "value": 1
+    }
+  ]
+}
+

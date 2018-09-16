@@ -1,0 +1,132 @@
+<div id="requirement_list_filter" style="display:none" title="<%= t('filter_by') %>">
+  <div class="dialog_content">
+  	<div class="dialog_form mod_size_1">
+      <dl class="form_sub_cell">
+        <dt class="form_sub_cell_hline"><%= t('filter_by_products') %></dt>
+        <dd class="form_sub_cell_wrap">
+          <dl class="form_cell form_cell_v1_mod">
+            <dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <label for="Enter_name_of_category"><%= t('select_products') %></label>
+            </dt>
+            <dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+              <select gf-multiselect data='products' gf-placeholder='<%= t('select_products') %>' gf-class='gf_multiselect' ng-model="filter.product_ids" data-placeholder="<%= t('select_products') %>" multiple="multiple" class="f_c_field default_mod select_add_category normal_list_v2"
+                ng-options="opt as opt.name for opt in products track by opt.entity_id" >   
+              </select>
+            </dd>
+          </dl>         
+        </dd>
+      </dl> 
+    </div>
+		<div class="dialog_form mod_size_1">
+		  <dl class="form_sub_cell">
+				<dt class="form_sub_cell_hline"><%= t('compliance_description') %></dt>
+				<dd class="form_sub_cell_wrap">
+				  <div class="form_block hor_mod location_mod">
+						<dl class="form_cell form_cell_v1_mod full_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="Country_filter_map">Compliance Description</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<ui-select ng-model="filter.compliant_description" name="Description" theme="selectize">
+								  <ui-select-match placeholder="<%= t('compliance_description') %>">{{$select.selected.name}}</ui-select-match>
+								  <ui-select-choices repeat="description.value as description in descriptions |  filter: $select.search">
+										<div ng-bind-html="description.name | highlight: $select.search"></div>
+								  </ui-select-choices>
+								</ui-select>
+						  </dd>
+						</dl>
+				  </div>
+				</dd>
+		  </dl>
+		</div>
+  </div>
+  <footer class="dialog_footer mod_size_1">
+		<div class="dialog_cancel_butt"><%= t('cancel') %></div>
+		<div class="map_filter_reset_butt" ng-click="reset()"><%= t('reset') %></div>
+		<div class="map_filter_update_butt" ng-click="search()"><%= t('update') %></div>
+  </footer>
+</div>
+<div class="compain_header_side_w">
+	<a id="req_detail_back" href="javascript:history.back()" class="back_to_company_butt"><%= t('back') %></a>
+</div>
+<div class="content_block full_page">
+  <div class="tabs_v1">
+		<ul class="dialog_tab_list white_mod">
+		  <li class="dialog_tab_l_item white_mod requirements_mod">
+				<a href="#tab_1" title="" class="dialog_tab_1_butt white_mod "><%= t('requirement') %>(s)</a>
+		  </li>
+		</ul>
+		<div id="tab_1" class="tab_block">
+		  <header class="add_info_main_header mod_static_two">
+				<h1 class="content_headline requirements_mod">{{title}}</h1>
+				<dl class="form_cell form_cell_v1_mod requirements_mod" ng-if="operations_filter">
+				  <dt class="form_c_hline form_v1_mod hline_hide_mod requirements_mod">
+						<label for="select_company_operation">Select Company/Operation:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod appearance_mod requirements_mod">
+						<select id="select_company_operation" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="selected"
+								ng-options="opt.name for opt in company_operations track by opt.uuid" ng-change="getRequirements(selected)">						  
+						</select>
+				  </dd>
+				</dl>
+				<a id="requirement_list_filter_butt" class="wizard_add_butt_v2"><%= t('filter') %></a>
+		  </header>
+		  <div class="table_wrap requirements_mod">
+				<table class="table_style_one">
+				  <thead>
+						<tr>
+						  <th ng-click="setOrder('required_document_type')"><%= t('specification') %>:</th>
+						  <th ng-click="setOrder('supplied_document_type')"><%= t('specification') %> <br/> <%= t('supplied') %></th>
+						  <th ng-click="setOrder('supplier_document')"><%= t('document') %> <br/> <%= t('name') %></th>
+						  <th><%= t('supplier') %></th>
+						  <th ng-click="setOrder('filled_by')"><%= t('due_date') %></th>
+						  <th ng-click="setOrder('filled_on')"><%= t('posted_date') %></th>
+						  <th ng-click="setOrder('compliant_status')"> <%= t('compliance') %> <br/> <%= t('status') %></th>
+						  <th ng-click="setOrder('compliant_description')"><%= t('compliance') %> <br/> <%= t('description') %></th>
+						  <th ng-click="setOrder('authentication_party')"><%= t('authenticated') %> <br/> <%= t('by') %></th>
+						  <th><%= t('requirement') %> <br/> <%= t('detail') %></th>
+						</tr>
+				  </thead>
+				  <tr ng-repeat="requirement in requirements | orderBy: order : reverse">
+						<td>{{requirement.required_document_type}}</td>
+						<td>{{requirement.supplied_document_type}}</td>
+						<td>
+						  <a ng-if="requirement.supplier_document_id" href="#/user_document/{{requirement.supplier_document_id}}/sharing_record_detail">{{requirement.supplier_document}}</a>
+						</td>
+						<td>{{requirement.supplier_name}}</td>
+						<td>{{requirement.filled_by | date : dd-mm-yyyy}}</td>
+						<td>{{requirement.filled_on | date : dd-mm-yyyy}}</td>
+						<td style="padding-left: 15px;">
+						  <span ng-class="requirement.compliant_status" class="list_view_compliant_status">{{status(requirement.compliant_status)}}</span>
+						</td>
+						<td>
+						  <span ng-if="requirement.compliant_description.length">{{requirement.compliant_description}}</span>
+						</td>
+						<td>{{requirement.authentication_party}}</td>
+						<td>
+						  <span>
+								<a id="requirement_detail_link" href="#/requirement/{{requirement.id}}?requirement_type={{requirement_type}}"><%= t('view') %></a>
+						  </span>
+						</td>
+				  </tr>
+				</table>
+		  </div>
+		  <footer class="table_footer requirements_mod">
+				<div id="pagination_container"></div>
+				<dl class="form_cell form_cell_v1_mod hor_mod view_count_mod ">
+				  <dt class="form_c_hline form_v1_mod hl_hor_mod">
+						<label for="count"><%= t('view') %>:</label>
+				  </dt>
+				  <dd class="form_c_f_w form_v1_mod hline_hide_mod hor_mod appearance_mod view_count_mod">
+						<select id="count" class="f_c_field third_mod white_bg_mod appearance_mod" ng-model="filter.per_page" ng-change="search()">
+						  <option value="6">6</option>
+						  <option value="10">10</option>
+						  <option value="25">25</option>
+						  <option value="50">50</option>
+						</select>
+				  </dd>
+				</dl>
+		  </footer>
+		</div>
+  </div>
+</div>

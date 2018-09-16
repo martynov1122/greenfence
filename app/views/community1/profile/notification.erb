@@ -1,0 +1,57 @@
+ <div class="wrap_main">      
+  <div class="single_column">
+    <h1>Notifications</h1>
+    <div class="notifications_box" id="notifications_box">
+      <div class="notifications_top">
+        <h3 id="notification_count"></h3>
+        <a href="#" class="grey rb sz">Clear all notifications</a>
+      </div>    
+      <div class="clear"></div>
+    </div>    
+  </div>     
+</div>
+
+<!-- mustache section -->
+
+<script type="x-tmpl-mustache" id="notif_list">
+  {{#notifications}}
+    <div class="notif" style="height:auto">
+      <div class="avatar_left">
+        <img src="{{activator_image}}" width="50" height="" alt="">
+      </div>
+      <div class="fl">    
+        <a href="{{activator_route}}">{{activator_name}}</a>
+        <p>{{{formatted_message}}}</p>
+        <p>{{time_difference}} ago</p>
+      </div>
+      <a href="{{actionable_path}}" class="right_a">
+      <% if current_user.company && current_user.company.type == "CertificationBody" %>
+        {{^resolved}}
+          Take Action
+        {{/resolved}}
+      <% else %>
+        View
+      <%end%>
+      </a>
+      <div class="clear"></div>
+    </div>
+  {{/notifications}}
+  {{^notifications}}
+    <div class="fl"> 
+      <p>  No notifications present</p>
+    </div>
+  {{ /notifications}}
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'notification.js' %>"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var user_id = "<%= current_user.id%>",
+        email = "<%= current_user.email %>",
+        default_image_url = "<%= asset_path "freeapp/avatar.jpg"%>";
+
+    n.init(user_id, email, default_image_url)
+  })
+</script>

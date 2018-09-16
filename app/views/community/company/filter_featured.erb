@@ -1,0 +1,47 @@
+<article class="profile_card_block">
+  <span class="corner_ico"
+		ng-class="{
+		'operation_mod':data.filter_type == 'operations',
+		'product_mod':data.filter_type == 'products',
+		'certificate_mod':data.filter_type == 'documents',
+		'service_mod':data.filter_type == 'services',
+		}"></span>
+  <div class="user_block profile_card_mod">
+	<a class="user_avatar_w profile_card_mod" href="#operation/{{data.id}}">
+	  <img ng-src="{{data.profile_picture.profile_picture.thumb.url}}" alt="{{data.name}}" class="user_avatar_img profile_card_mod">
+	</a>
+	<a class="user_name profile_card_mod" href="#operation/{{data.id}}">{{data.name}}</a>
+	<div class="user_info profile_card_mod">{{data.company || data.documentable || 'Berry Good Food'}}</div>
+	<div class="user_text profile_card_mod"><p>{{data.description}}</p></div>
+  </div>
+  <footer class="profile_card_b_footer">
+	<div ng-controller="CompanyPublicProfileFollowCtrl">
+	  <div ng-if="data.followed_by_current_user == false">
+		<div class="card_follow_butt" ng-click="follow_me(data)"><%= t('follow') %></div>
+	  </div>
+	  <div ng-if="data.followed_by_current_user == true">
+		<div class="card_follow_butt" ng-click="unfollow_me(data)"><%= t('unfollow') %></div>
+	  </div>
+	</div>
+	<ul class="post_f_list">
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('products') %></dt>
+		  <dd class="tag_b_value">{{data.products_count}}</dd>
+		</dl>
+	  </li>
+	  <li class="post_f_list_item">
+		<dl class="tag_block">
+		  <dt class="tag_b_text"><%= t('services') %></dt>
+		  <dd class="tag_b_value">{{data.services_count}}</dd>
+		</dl>
+	  </li>
+	  <li class="post_f_list_item">
+	    <dl class="tag_block">
+	  	  <dt class="tag_b_text"><%= t('documents') %></dt>
+	  	  <dd class="tag_b_value">{{data.documents_count}}</dd>
+	  	</dl>
+	  </li>
+	</ul>
+  </footer>
+</article>

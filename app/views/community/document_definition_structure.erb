@@ -1,0 +1,172 @@
+<%= csrf_meta_tags %>
+<style>
+  .header-top {
+    min-height: 32px ;
+    display: block;
+    width: 100% ;
+    background-color: black;
+  }
+
+  .header-top a {
+    color: white;
+    font-weight: bold;
+    margin-left: 2% ;
+    font-size: medium;
+  }
+</style>
+<div class="header-top">
+  <a href="/admin/document_types">Back</a>
+</div>
+<div id="document_creation">
+  <div id="ds_container" class="boxed">
+    <div id="message-div">
+      <h2><p id="message" class="d_type" style="white-space: nowrap;"></p></h2>
+    </div>
+    <div align="center"><label><h2>Document Type</h2></label></div>
+    <div class="input">
+      <label>Document Type Name</label>
+      <input type="text" name="document_type" class="d_type" id= "document_type" placeholder="Enter document type name">
+    </div>
+    <div style="margin-top:20px">
+      <label for="Describe_document_type_for">Document Type For</label>
+      <select name="document_type_for" style="margin-left: 43px" id="document_type_for" onChange="showHideOption(this)">
+        <option value="User">Personal</option>
+        <option value="Company">Company</option>
+      </select>
+      <select name="document_category" id="document_category" style="display:none;">
+        <option value="">Document Category...</option>
+        <option value="Certificate">Certificate</option>
+        <option value="LabReport">Lab Report</option>
+      </select>
+    </div>
+    <div id="d_structures" class="d_structures">
+    </div>
+    <a href="#" onClick="addMoreStructure();" style="margin-left: 635px; white-space: nowrap;">+ Add more</a>
+    <div style="width: 50%;margin: 0 auto">
+      <button style="background-color: #696969" id="document-create-submit" class="document-create-submit">Submit</button>
+    </div>
+  </div>
+</div>
+<div id="d_structure" style="margin-left: 5px; margin-top: 10px; display: none;">
+  <div class="mb_inp boxshadow_border" style="background: transparent; width: 65%; height: 100px; float: left">
+    <input type="hidden" id="id" name="id">
+    <input type="hidden" id="sort_order" name="sort_order">
+    <input type="text" id="d_type_name" name="name" class="d_padding" style="width: 120px; vertical-align: top;" placeholder="Enter name">
+    <select name="input_type" class="d_padding" id="input_type" onChange="showHideOption(this)">
+      <option value="">Field type...</option>
+      <option value="text">Text Box</option>
+      <option value="checkbox">Check Box</option>
+      <option value="radio">Radio Button</option>
+      <option value="number">Number</option>
+      <option value="date">Date</option>
+      <option value="select">Select List</option>
+      <option value="standard">Standard List</option>
+      <option value="file">File</option>
+    </select>
+    <select name="required" class="d_padding" id="required">
+      <option value="">Required...</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+    <select name="searchable" class="d_padding" id="searchable">
+      <option value="">Searchable...</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+    <textarea rows="4" name="options" class="d_padding" id="options" placeholder="Option" style="display:none; float:right; width: 170px;"></textarea>
+    <select name="standard" class="d_padding" id="standard" onChange="showHideOption(this)" style="display:none;">
+      <option value="">Standards...</option>
+      <option value="business">Business Type</option>
+      <option value="scheme">Scheme Type</option>
+    </select>
+    <select name="category" class="d_padding" id="category" style="display:none;">
+      <option value="">All...</option>
+    </select>
+  </div>
+  <img title="Remove" src="" onClick="removeStructure(this);" style="margin: 10px; height:80px;">
+</div>
+
+<script>
+  var counter = 0;
+  $('#document-create-submit').click(function(){
+    var document_definition = {}
+    document_definition['document_type'] = $('#document_type').val()
+    document_definition['document_type_for'] = $('#document_type_for').val()
+    document_definition['document_type_for_id'] = ""
+    document_definition['document_category'] = $('#document_category').val()
+    var definition = [];
+    $('#d_structures').children().each(function(i, m) {
+      var def = {}
+      $('#' + m['id']).children().children().each(function(j, n) {
+        def[n['name']] = n['value']
+      })
+      definition.push(def)
+    })
+    var token = $('meta[name=csrf-token]').attr('content')
+    document_definition['definition'] = definition
+    $.ajax({
+      type: 'POST',
+      url: '/api/v1.0/community/document_definitions',
+      data: {'document_definition' : document_definition, authenticity_token: token},
+      success: function(data) {
+        $('#message').append('Document Type created successfully.').css('color', 'green')
+      },
+      error: function(errors, response) {
+        $('#message').append('Document Type not created.\n'+errors).css('color', 'red')
+      }
+    })    
+  })
+
+  $.ajax({
+    type: 'GET',
+    url: '/api/v1.0/community/user/get_scheme_categories.json',
+    success: function(data) {
+      for (var i = 0; i < data.categories.length; i++) {
+        $('#d_structure').find('#category').append('<option value=' + data.categories[i] + '>' + data.categories[i] + '</option>');
+      }
+      addMoreStructure();
+    }
+  })
+
+  showHideOption = function(obj) {
+    var field_type_value = obj.value
+    optionShow = ['radio','list','checkbox','select']
+    if(optionShow.indexOf(field_type_value) != -1) {
+      $(obj).siblings("[id=options]").show()
+    } else {
+      $(obj).siblings("[id=options]").hide()
+    }
+    if(field_type_value=='standard') {
+      $(obj).siblings("[id=standard]").show()
+    } else {
+      $(obj).siblings("[id=standard]").hide()
+    }
+    if(field_type_value=='scheme') {
+      $(obj).siblings("[id=category]").show()
+    } else {
+      $(obj).siblings("[id=category]").hide()
+    }
+    if(field_type_value=='Company') {
+      $(obj).siblings("[id=document_category]").show()
+    } else {
+      $(obj).siblings("[id=document_category]").hide()
+    }
+  }
+
+  addMoreStructure = function() {
+    var d_structures_container = $('#d_structures')
+    var d_str_obj = $('#d_structure')
+    var clone_of_d_str_obj = d_str_obj.clone()
+    var new_id = 'd_structure_'+counter
+    clone_of_d_str_obj.attr("id", new_id)
+    clone_of_d_str_obj.css("display","block")
+    clone_of_d_str_obj.find('#id').val(counter.toString())
+    clone_of_d_str_obj.find('#sort_order').val(counter.toString())
+    d_structures_container.append(clone_of_d_str_obj)
+    counter += 1
+  }
+
+  removeStructure = function(obj) {
+    $(obj).parent().remove()
+  }
+</script>

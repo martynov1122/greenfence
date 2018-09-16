@@ -1,0 +1,35 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+	<h1 class="content_headline">Roles</h1>
+
+	<a ng-if="false" class="wizard_add_butt_v2" ng-click="savePaymentSetting(payment,tokenDetail)"><%= t('save') %></a>
+  </div>
+  <div class="add_info_block">
+	<div class="table-container">
+	  <table class="greenfence-table">
+		<thead>
+		  <tr>
+			<th><%= t('role_name') %></th>
+			<th><%= t('users') %></th>
+			<th><%= t('created_date') %></th>
+			<th><%= t('updated_date') %></th>
+			<th><%= t('action') %></th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr ng-repeat="role in custom_roles">
+			<td>
+			  <a href="#/custom_role/show/{{role.id}}">{{role.name}}</a>
+			</td>
+			<td>{{role.users}}</td>
+			<td>{{role.created_at}}</td>
+			<td>{{role.updated_at}}</td>
+			<td>
+			  <div style="cursor: pointer;color:#608f77;" ng-click="deleteRole(role.id)"><%= t('delete') %></div>
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+	</div>
+  </div>
+</div>

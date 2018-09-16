@@ -1,0 +1,23 @@
+{
+  "facilities": [
+    {
+      "administrative_area": "AR",
+      "id": 1,
+      "gfsi_state_description": "Compliant",
+      "gfsi_status": "green",
+      "name": "CAL MAINE FOODS, INC. Farm",
+      "products_count": 3
+    }
+  ],
+  "producers": [
+    {
+      "administrative_area": "OH",
+      "id": 1,
+      "facilities_count": 1,
+      "gfsi_status": "green",
+      "name": "CAL MAINE FOODS, INC.",
+      "products_count": 3
+    }
+  ],
+  "name": "Eggs Fresh Eggs"
+}

@@ -1,0 +1,46 @@
+<div class="main_row layuot_mod_1" ng-cloak>
+  <div ng-if="results.length">
+      <h1 class="content_headline search_page_mod"><%= t('showing') %> {{results.length}} Results out of {{total}} for {{query}}</h1>
+      <gf-search-template ng-repeat="result in results" data="result" communication="communication"></gf-search-template>
+  </div>
+  <div class="results" id="pagination_container">
+  </div>
+  <div ng-if="results.length == 0">
+	<div class="search_no_result">
+	  <p>We couldn't find any results for "<b>{{query}}</b>", perhaps try the following: </p>
+
+	  <ul class="search_no_result_list">
+		<li>Make sure that all words are spelled correctly.</li>
+		<li>Try different words.</li>
+		<li>Try searching for something less specific.</li>
+		<li>Try fewer words.</li>
+	  </ul>
+	</div>
+  </div>
+</div>
+
+<div id="profile_send_message" style="display:none" title="Send message" >
+  <div class="dialog_content">
+  <div class="dialog_form">
+    <dl class="form_cell form_cell_v1_mod">
+    <dt class="form_c_hline form_v1_mod hline_hide_mod">
+      <label for="Compose_your_message">Compose your message</label>
+    </dt>
+    <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+      <textarea id="Compose_your_message" placeholder="Compose your message" class="f_c_field default_mod textarea_mod_1 " ng-model="communication.message"></textarea>
+    </dd>
+    </dl>
+  </div>
+  </div>
+  <footer class="dialog_footer">
+
+  <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+  <div class="butt_wrap msg_form_mod">
+    {{communication.attachment.filename}}
+    <div ng-if="communication.attachment.filename" ng-click="remove_compose_attachment()">Remove attachment</div>
+    <div id="Upload_image" placeholder="<%= t('upload_image') %>" class="attach_butt" ng-file-select ng-file-change="compose_attach_file($files, $event)">Add attachment</div>
+
+    <div ng-class="{ 'dialog_not_submit_butt': communication.message == undefined || communication.message.length == 0, 'dialog_submit_butt': communication.message.length > 0 }" ng-click="send_message()">Submit</div>
+  </div>
+  </footer>
+</div>

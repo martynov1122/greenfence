@@ -1,0 +1,55 @@
+<div class="secondary_row layuot_mod_1">
+  <div class="section_menu mod_1" ng-if="public_documents.length > 0">
+	<h2 class="section_hline"><%= t('certifications') %></h2>
+
+	<div class="carusel_items">
+	  <span class="carusel_num">1</span>
+	  of
+	  <span class="carusel_amount"></span>
+	</div>
+
+	<div class="carusel_v1">
+	  <div class="carusel_v1_list" gf-carusel slideit="public_documents" slide-template='document'>
+	  </div>
+	</div>
+  </div>
+
+  <div class="section_menu mod_1">
+	<h2 class="section_hline"><%= I18n.t('badges') %></h2>
+
+	<div ng-if="public_user.badges.length > 0 && false" class="section_menu_link badges_mod gfsi_auditor_mod" ng-repeat="badge in public_user.badges">
+	  <div class="no_badges">
+		<p class="no_content">{{badge}}</p>
+		<span class="section_m_link_count mod_2">?</span>
+	  </div>
+	</div>
+	<ul class="section_menu_list">
+	  <li ng-if="public_user.badges.length > 0">
+		<div class="section_menu_l_item section_menu_link badges_mod gfsi_auditor_mod" ng-repeat="badge in public_user.badges">
+		  <div class="no_badges">
+			<p class="no_content">{{badge}}</p>
+		  </div>
+		</div>
+	  </li>
+	  <li class="section_menu_l_item" ng-if="public_user.owns_a_company">
+		<div class="section_menu_link badges_mod owner_mod">
+		  <div class="no_badges">
+			<p class="no_content"><%= t('owns_a_company') %></p>
+		  </div>
+		</div>
+	  </li>
+	  <li class="section_menu_l_item" ng-if="public_user.verified">
+		<div class="section_menu_link badges_mod verified_mod">
+		  <div class="no_badges">
+			<p class="no_content">Verified User</p>
+		  </div>
+		</div>
+	  </li>
+	  <li class="section_menu_l_item" ng-if="!public_user.badges && !public_user.owns_a_company && !public_user.verified">
+		<div class="section_menu_link badges_mod">
+		  <p class="no_content">{{public_user.name}} <%= t('currently_has_no_badges') %></p>
+		</div>
+	  </li>
+	</ul>
+  </div>
+</div>`

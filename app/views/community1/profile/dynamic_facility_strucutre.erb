@@ -1,0 +1,204 @@
+<%= csrf_meta_tags %>
+
+<style>
+  #facility_creation  label {
+    font-weight: bold;
+    color: green ;
+    font-size: small ;
+  }
+
+  #facility_creation input {
+    padding: 8px; 
+    line-height: 2.0 ;
+  }
+
+  #facility_creation button {
+    /*border: 1px inset ;*/
+    line-height: 2.0 ;
+    font-weight: bold;
+    border: 1px solid gray ;
+    padding-left: 4px ;
+    padding-right: 4px ;
+    margin-left: 40% ;
+    cursor: pointer;
+  }
+  #facility_creation button:hover {
+    background-color: gray ;
+  }
+
+  #facility_creation select {
+    /*border: 1px inset ;*/
+    padding: 3px; 
+    background: #f8f8f8;
+    color:#888;
+    border:none;
+    outline:none;
+    margin: 4px; 
+    width: 15% ;
+    height: 40% ;
+  }
+
+  .boxshadow_border {
+    background: white;
+    width: 86%; 
+    height: 77px;
+    float: left
+    margin-top: 4px ;
+    margin-bottom: 32px ;
+  }
+
+  .delete_icon {
+    float:right;
+    margin: 24px;
+    height:18px ;
+    border: 1px solid gray ;
+    padding: 2px ;
+    cursor: pointer;
+    }
+
+    .delete_icon:hover {
+    float:right;
+    margin: 24px;
+    height:18px ;
+    border: 1px solid red ;
+    padding: 2px ;
+    cursor: pointer;
+    }
+
+    .add_more {
+      margin-left: 656px;
+      vertical-align: bottom;
+      font-weight: bold;
+      line-height: 8px ;
+      text-transform: uppercase;
+    }
+
+    .header-top {
+      min-height: 32px ;
+      display: block;
+      width: 100% ;
+      background-color: black;
+    }
+
+    .header-top a {
+      color: white;
+      font-weight: bold;
+      margin-left: 2% ;
+      font-size: medium;
+    }
+</style>
+
+<div class="header-top">
+  <a href="/admin">Back</a>
+</div>
+<hr/>
+<div id="facility_creation">
+  <div id="fs_container" class="boxed">
+    <div align="center"><label><h4>Operation Information</h4></label></div>
+    <div class="input">
+      <label style="margin-left:5px">Operation Type</label>
+      <input type="text" name="facility_type" class="f_type" id= "facility_type" placeholder="Enter facility type">
+    </div>
+    <div id="f_structures" class="f_structures">
+    </div>
+    <a href="#" onClick="addMoreStructure();"  class="add_more">  Add more</a>
+  </div>
+  <button  id="facility-create-submit" class="facility-create-submit" > Submit </button> 
+</div>
+
+<div style="display:none">
+  <div id="f_structure" style="display: none; margin-left: 5px; margin-top: 10px">
+    <div class="mb_inp boxshadow_border" >
+        <input type="hidden" id="id", name="id">
+        <input type="hidden" id="sort_order", name="sort_order">
+        <input type="text" id="f_type_name" name="name" class="f_padding" style="width: 108px; margin-top: 16px; margin-left: 5px" placeholder="Enter name">
+        <select name="input_type" id="input_type" class="f_padding" onChange="showHideOption(this)">
+            <option value="">Field type</option>
+            <option value="text">Text Box</option>
+            <option value="checkbox">Check Box</option>
+            <option value="radio">Radio Button</option>
+            <option value="number">Number</option>
+            <option value="select">Select List</option>
+            <option value="file">File</option>
+        </select>
+        <select name="required" class="f_padding" id="required">
+            <option value="">Required</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <select name="searchable" class="f_padding" id="searchable">
+            <option value="">Searchable</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <select name="filterable" class="f_padding" id="filterable">
+            <option value="">Filterable</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <textarea id="options" name="options" class="f_padding" id="option" placeholder="Option" style="display:none; width:108px; vertical-align: middle ;"></textarea>
+        <img class="delete_icon" title="Remove" src="<%= asset_path 'close_icon.png' %>" onClick="removeStructure(this);" >
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<script>
+  var counter = 0;
+
+  $('#facility-create-submit').click(function(){
+    var operation_definition = {};
+    $("#facility-create-submit").text("Submitting....") ;
+    operation_definition['operation_type'] = $('#facility_type').val()
+    var definition = [];
+    $('#f_structures').children().each(function(i, m) {
+      var def = {};
+      $('#' + m['id']).children().children().each(function(j, n) {
+        def[n['name']] = n['value']
+      })
+      definition.push(def)
+    })
+    var token = $('meta[name=csrf-token]').attr('content')
+    operation_definition['definition'] = definition;
+    console.log(JSON.stringify(operation_definition))
+    $.ajax({
+      type: 'POST',
+      url: '/api/v1.0/community/operation_definitions',
+      data: {'operation_definition' : operation_definition,authenticity_token: token},
+      success: function(data) {
+        $("#facility-create-submit").text("Submit") ;
+         Location.reload(true) ;
+      },
+      error: function(errors, response) {
+        $("#facility-create-submit").text("Submit") ;
+      }
+    })    
+  })
+
+  showHideOption = function(obj) {
+    var field_type_value = obj.value
+    optionShow = ['radio','list','checkbox','select']
+    if(optionShow.indexOf(field_type_value) != -1) {
+      $(obj).siblings("[id=standard]").show()
+    } else {
+      $(obj).siblings("[id=standard]").hide()
+    }
+  }
+
+  removeStructure = function(obj) {
+    $(obj).parent().remove();
+  }
+
+  addMoreStructure = function() {
+    var f_structures_container = $('#f_structures');
+    var f_str_obj = $('#f_structure');
+    var clone_of_f_str_obj = f_str_obj.clone();
+    var new_id = 'f_structure_'+counter;
+    clone_of_f_str_obj.attr("id",new_id);
+    clone_of_f_str_obj.css("display","block");
+    clone_of_f_str_obj.find('#id').val(counter)
+    clone_of_f_str_obj.find('#sort_order').val(counter)
+    f_structures_container.append(clone_of_f_str_obj);
+    counter += 1
+  }
+</script>

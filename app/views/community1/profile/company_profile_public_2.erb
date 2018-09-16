@@ -1,0 +1,414 @@
+<div id="employee_div" class='employee'  style="display: none;">
+    <div class='photo'><img src=""></div>
+    <div class='name'><a class='name' href='' id="name_anchor"></a></div>
+    <div class='role'></div>
+    <div class='desc'></div>
+    <div class='border_grey'>Message</div>
+</div>
+<div id='modal-overlay'></div>
+<div id='products-modal' class='modal'>
+  <div class='title-bar'>
+      <span>Facility</span> has 20 products
+  </div>
+  <div class='products'>
+      <div class='product'>
+          <div class='icon'></div>
+          <div class='name'>Product</div>
+          <div class='green button'><a href='product_detail'>View product</a></div>
+      </div>
+      <div class='product'>
+          <div class='icon'></div>
+          <div class='name'>Product</div>
+          <div class='green button'><a href='product_detail'>View product</a></div>
+      </div>
+      <div class='product'>
+          <div class='icon'></div>
+          <div class='name'>Product</div>
+          <div class='green button'><a href='product_detail'>View product</a></div>
+      </div>
+  </div>
+  <div class='footer'>
+      <div class='white button'>View facility</div>
+  </div>
+</div>
+<div id='message-modal' class='modal'>
+  <input type="hidden" id="message_type" value="global"/>
+  <div class='textarea'>
+      <textarea rows='5' placeholder='Enter your message here' style='width:100%'></textarea>
+  </div>
+  <div class='button-container' style='margin-top: 2px;'>
+      <div class='green close'>Submit</div>
+  </div>
+</div>
+<div id='upload-modal' class="upload_wrap modal">
+  <div class="upload_top">
+  <ul class="upload_list">
+    <li><a href="javascript:void(0)" class="active">Upload Certificates</a></li>
+    <li><a href="javascript:void(0)">Add Products</a></li>
+    <li><a href="javascript:void(0)">Add Facilities</a></li>
+  </ul>
+  </div>
+
+  <div class='upload-tab active'>
+    <div class="upload_certificate">
+      <div class="upload_inputs">
+        <input placeholder="Name of certificate">
+        <textarea placeholder="Certificate description"></textarea>
+        <input placeholder="Audit date">
+        <input placeholder="Date isued">
+        <input placeholder="Auditor name">
+        <input type='hidden' id='cert-body' placeholder="Certification body">
+      </div>
+      <center><a href="#" class="green" style="display: inline-block; margin-top: 20px; position: relative; top: -2px; padding: 11px 43px;">Upload</a></center>
+    </div>
+  </div>
+  <div class='upload-tab'></div>
+  <div class='upload-tab'></div>
+  <div class='upload-tab'></div>  
+</div>
+<!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<div class="clear"></div>
+<div class="content_main">
+    <div class="profile_top_admin">
+        <div class="avatar">
+            <img src="" width="134" height="134" alt="company image" id="company_image">
+        </div>    
+        <div class="user_name">
+            <h1 id="company_name"></h1>
+        </div>
+    </div>    
+    <div class="clear"></div>
+    <div class="company_info" style="display:none">
+        
+        <!-- <div id='pop_up_message' style="display:none;color:green">Message sent to admins of this company successfully...</div> -->
+        <div class="company_buttons">
+            
+            <a href="javascript:void(0)" id='message' class="green" style="padding: 9px 33px; position: relative; top: -18px; left: 15px; margin-left: -25px;">Message</a>
+        </div>    
+    </div>    
+<div class="clear"></div>
+  <div id="company_details" style="display:none">
+  <div id='employees-container' style="display:none">
+      <h2 id="employee_list"></h2>
+      <div class='arrows'>
+          <div class='arrow left'><div class='typcn typcn-chevron-left'></div></div>
+          <div class='arrow right active'><div class='typcn typcn-chevron-right'></div></div>
+      </div>
+      <div class='employees'>
+          <div class='carousel'>
+              
+          </div>
+      </div>
+      <div class='border_grey'> <a id="view_all_emp" style='color:#727070'>View all employees</a></div>
+      
+  </div>
+
+  
+   
+
+  </div>    
+</div>   
+
+
+<script>
+    var showModal = function(id){
+        $('#' + id).css('display', 'block').addClass('active')
+        $('#modal-overlay').css('display', 'block')
+        setTimeout(function(){
+            $('#' + id).css('top','50%').css('opacity', 1)
+            $('#' + id).css('margin-top', -($('#' + id).outerHeight()/2))
+            $('#modal-overlay').css('opacity', 0.4)
+        },50)
+    }
+
+    var company_id 
+    var company_name_field
+
+    $(document).ready(function(){
+      var company_id = gf.getQueryVariable("id")
+      if(company_id==null)
+      {   
+         company_id= '<%= current_user.try(:company).try(:id) %>'
+      }
+      $.ajax({
+        url: '/api/v2.2/community/company_profiles/'+company_id+'/get_free_app_user_company',
+        type: 'GET',
+        data: {id:company_id},
+        success: function(response){
+            
+            company=response.company.company_name
+        
+            company_name_field = ""
+            var company_name_text = $('#company_name')
+            if (company == null)
+              company_name_field = "No company is associated"
+            else {
+              var company_details = $('#company_details')
+              company_details.css('display', 'block')
+              company_name_field = company
+              var employee_list = $('#employee_list')
+              var company_logo
+               if(response.company.logo && response.company.logo.logo && response.company.logo.logo.thumb && response.company.logo.logo.thumb.url)
+               {
+                 company_logo=response.company.logo.logo.thumb.url
+               }
+               else
+               {
+                  var email = "<%= current_user.email %>" ;
+                  var email_hash = $.md5(email);
+                  company_logo = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+                }
+                $('#company_image').attr('src',company_logo) 
+              // employee_list.text(company_name + " has 10 employees")
+            }
+          company_name_text.text(company_name_field)
+
+          $("#view_all_emp").attr('href', "view_all_employees?id="+company_id)
+        }
+      })
+      
+
+      $.ajax({
+        url: '/api/v2.2/users/get_free_app_users_within_company',
+        data: {id: company_id},
+        type: 'GET',
+        success: function(response){
+            var employee_list = $('#employee_list')
+            employee_list_message = ""
+            if(response.users != null) {
+              if(response.users.length == 1) {
+                employee_list_message = response.users.length  + " employee"
+                $('#employees-container').css("display","block")
+              } else if(response.users.length > 1) {
+                employee_list_message = response.users.length  + " employees"
+                $('#employees-container').css("display","block")
+              }
+              console.log(company_name_field)
+              employee_list.text(company_name_field + " has " + employee_list_message)
+              response.users.forEach(function(row){
+                  var employee_template = $('#employee_div')
+                  var clone_of_employee_template = employee_template.clone()
+                  clone_of_employee_template.css("display","inline-block")
+                  clone_of_employee_template.attr("id",row.id)
+                  var anchor_with_id_name = clone_of_employee_template.find('#name_anchor')
+                  anchor_with_id_name.text(row.name)
+                  anchor_with_id_name.attr('href',"profile_public?id="+row.id)
+                  var img_tag = clone_of_employee_template.find('img')
+                  if(row.image && row.image.image && row.image.image.thumb && row.image.image.thumb.url)
+                  {
+                    img_tag.attr('src', row.image.image.thumb.url)
+                  }
+                  else
+                  {
+                    var email = row.email ;
+                    var email_hash = $.md5(email);
+                    user_image = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+                    img_tag.attr('src', user_image)
+                  }
+                  var div_with_role_class = clone_of_employee_template.find('.role')
+                  div_with_role_class.text(row.user_role)
+                  var div_with_border_grey_class = clone_of_employee_template.find('.border_grey')
+                  div_with_border_grey_class.click(show_model_for_user_message)
+                  if(row.id==<%=current_user.id%>)
+                  {
+                    div_with_border_grey_class.css("display","none")
+                  }
+                  $('#employees-container .carousel').append(clone_of_employee_template)
+              });
+            }
+          
+        }})
+
+      loadFacilityData(company_id);
+    })
+
+    var to_user_id
+    
+    var show_model_for_user_message = function() {
+      to_user_id = $(this).parent().attr("id")
+      showModal('message-modal')
+      $("#message_type").val("individual")
+    }
+    //showModal('message-modal')
+    var closeModal = function(){
+        $('#modal-overlay').css('opacity', 0)
+        var modal = $('.modal.active')
+        modal.css('top', 0).css('opacity', 0)
+        setTimeout(function(){
+            modal.css('margin-top', -modal.outerHeight())
+            $('#modal-overlay').css('display', 'none')
+            modal.removeClass('active')
+        }, 400)
+    }
+
+    $('.modal').each(function(){
+        $(this).css('margin-top', -($(this).outerHeight()))
+        $(this).css('margin-left', -($(this).outerWidth()/2))
+    })
+
+    $('#modal-overlay, .modal .close').click(function(){
+        closeModal()
+    })
+
+    $('#message-modal .green, .close').click(function() {
+      // message box on click event will go here.
+      submit_message(".modal .textarea textarea", $("#message_type").val())
+    })
+
+    var submit_message = function(message_selector, message_type){
+      var message = $(message_selector).val()
+  //     var name = $(name_selector).text()
+  //     var to_user_id = $(name_selector).select2('data').id
+      if(message_type == "global") {
+        $.ajax({
+          url: '/api/v2.2/send_message_to_freeapp_admins',
+          type: "POST",
+          data : {message: message},
+          success: function(response1){
+            // $( '#pop_up_message' ).show(function(){
+            //       $(this).fadeOut(3000);
+            // });
+            ss_alert("success" , GLOBAL_MESSAGE_SENT_TO_ADMINS_NOTIFICATION);
+            $(message_selector).val("")
+        //call back function
+        }})
+      } else {
+
+
+        $.ajax({
+          url: '/api/v2.2/community/communications',
+          type: "POST",
+          data : {to_user_id: to_user_id,message: message},
+          success: function(response1){
+            ss_alert("success" , GLOBAL_MESSAGE_SENT_NOTIFICATION);
+            // $( '#pop_up_message' ).show(function(){
+            //       $(this).fadeOut(3000);
+            // });
+        //call back function
+        }})
+      }
+    }
+
+    $('#upload').click(function(){
+        showModal('upload-modal')
+    })
+
+    $('.upload_list li').click(function(){
+        $('.upload-tab').removeClass('active')
+        $('.upload-tab:eq(' + $(this).index() + ')').addClass('active')
+        $('.upload_list li a').removeClass('active')
+        $('.upload_list li:eq(' + $(this).index() + ') a').addClass('active')
+    })
+
+    $('#follow').click(function(){
+        $(this).text('Followed').addClass('inactive')
+    })
+
+    $('.view-products').click(function(){
+        showModal('products-modal')
+    })
+
+    $('#message, .employee .border_grey').click(function(){
+        $("#message_type").val("global")
+        showModal('message-modal')
+    })
+
+    $('#products-modal .footer').click(function(){
+        window.location = 'facility_profile.html'
+    })
+
+    $('#cert-body').select2({
+        minimumResultsForSearch: 10,
+        dropdownCssClass: 'organization',
+        data: [{id:0,text:'Body 1'},{id:1,text:'Body 2'},{id:2,text:'Body 3'},{id:3,text:'Body 4'}]
+    })
+
+    // var ewidth = $('#employees-container .employee').length * 280
+    // $('#employees-container .carousel').css('width', ewidth)
+
+    var update_arrows = function(){
+        $('#employees-container .arrow').removeClass('active')
+        if ( $('#employees-container .carousel').css('margin-left') != '0px' )
+            $('#employees-container .arrow.left').addClass('active')
+
+        var num = $('#employees-container .employee').length
+        if ( $('#employees-container .carousel').css('margin-left') != (-((num-4) * 285)) + 'px' )
+            $('#employees-container .arrow.right').addClass('active')
+    }
+
+    $('#employees-container .arrow.right').click(function(){
+        if ( $(this).hasClass('active') ) {
+          if($('#employees-container .employee').length>3)
+          {
+            $('#employees-container .carousel').css('margin-left', '-=285')
+            setTimeout(update_arrows, 450)
+          }
+        }
+    })
+
+    $('#employees-container .arrow.left').click(function(){
+        if ( $(this).hasClass('active') ) {
+            $('#employees-container .carousel').css('margin-left', '+=285')
+            setTimeout(update_arrows, 450)
+        }
+    })
+
+function loadFacilityData(id)
+{
+  $.ajax({
+    url: '/api/v2.2/facilities',
+    type: "GET",
+    success: function(response){
+      var template = $('#facility_list').html();
+        Mustache.parse(template); 
+        if (response.facilities) {
+          $.each(response.facilities , function(index, item) {
+            if (item.products){
+              item.product_length = item.products.length ;
+              item.products = item.products.splice(0 , 4) ;
+
+            }
+
+
+          } );
+        }
+        var rendered = Mustache.render(template, response);
+        $(".content_main").append(rendered) ;
+    }
+  });
+}   
+</script>
+
+<script type="x-tmpl-mustache" id="facility_list">
+  <div class="facilities">
+    <h2>{{facilities.length}}  Facilities</h2>
+    <div class="clear"></div>
+    {{#facilities}}
+    <div class="facility-info">
+      <h3 class="facility_name"><a href="facility_profile?id={{id}}">{{name}}</a></h3>
+      <ul class="global_menu">
+        <li>{{certificates.length}} Certificates:</li>
+        {{ #certificates }}
+          <li><a href="certificate_detail?id={{id}}"> {{certificate_name}}</a></li>
+        {{ /certificates }}
+      </ul>
+      <div class="products">
+        <div class="suppliers_products_p">
+          <p>{{product_length}} Products produced in this facility</p>
+          <ul class="products_img">
+           
+           {{ #products}}  
+              <li><img src="<%= asset_path "freeapp/product_1.png"%>"   width="42" height="42" alt="{{name}}"></li>   
+           {{ /products}}  
+           <li><a href="view_all_products?id={{id}}" class="border_grey view-products" style="margin:0px;white-space: nowrap;">View All Products</a></li>
+          </ul> 
+        </div> 
+    </div> 
+  </div> 
+  {{/facilities}}
+</div>  
+</script>

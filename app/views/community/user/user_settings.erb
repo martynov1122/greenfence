@@ -1,0 +1,305 @@
+<div class="add_info_main_header">
+  <h1 class="content_headline"><%= t('edit_personal_profile') %></h1>
+  <a class="wizard_add_butt" ng-click="userSubmit(user)"><%= t('save') %></a>
+</div>
+<div class="content_block">
+  <div class="add_info_block title_mod">
+		<div class="add_info_content_block">
+		  <div class="add_info_header">
+				<div class="add_info_title"><%= t('email') %></div>
+				<div class="add_info_colapse_butt"></div>
+		  </div>
+		  <div class="add_info_content_block">
+				<div class="add_info_content" ng-if="user.email">
+				  <p>{{store.email}}</p>
+				</div>
+				<div class="add_info_form_block">
+				  <div class="add_info_form_w">
+						<gf-text-input
+						id="'Enter_email'"
+						p-title="'<%= t('enter_email') %>'"
+						dl-class="" containers-class="" field-class="'default_mod'"
+						model="user.email"></gf-text-input>
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('first_name') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="user.first_name">
+				<p> {{store.first_name}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'Enter_your_first_name'"
+				  p-title="'Enter your First name'"
+				  dl-class="" containers-class="" field-class="'default_mod'"
+				  model="user.first_name"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('last_name') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="user.last_name">
+				<p> {{store.last_name}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'Enter_your_first_name'"
+				  p-title="'Enter your Last name'"
+				  dl-class="" containers-class="" field-class="'default_mod'"
+				  model="user.last_name"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block password_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('password') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="Enter_password">Enter password</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						  <input type="password" ng-model="user.password" id="Enter_password" placeholder="<%= t('enter_your_password') %>" class="f_c_field default_mod "/>
+						</dd>
+				  </dl>
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="Enter_password_conformation">Enter password conformation</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						  <input type="password" ng-model="user.password_confirmation" id="Enter_password_conformation" placeholder="Confirm  your  password " class="f_c_field default_mod "/>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block category_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('language') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Enter_Language">Enter Language</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select gf-multiselect data='languages' gf-max='1' gf-placeholder='<%= t('enter_language') %>' gf-class='' ng-model="user.language_preference" multiple="multiple" class="f_c_field default_mod select_add_category normal_list"
+								ng-options="language.name for language in languages track by language.code">
+						  </select>
+						</dd>
+				  </dl>
+				  <div class="category_block"></div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block">
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('location') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content"
+			   ng-if="
+				   user.address_attributes.street1
+				   || user.address_attributes.street2
+				   || user.address_attributes.city
+				   || user.address_attributes.state
+				   || user.address_attributes.country
+				   || user.address_attributes.postal_code
+				   ">
+				<p>
+			  {{location(
+			  user.address_attributes.street1,
+			  user.address_attributes.street2,
+			  user.address_attributes.city,
+			  user.address_attributes.state,
+			  user.address_attributes.country,
+			  user.address_attributes.postal_code
+			  )}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <div class="form_block hor_mod location_mod">
+
+						<gf-text-input
+						class="form_cell form_cell_v1_mod full_mod"
+						id="'Street1'"
+						p-title="'<%= t('street1') %>'"
+						dl-class="''" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.street1"></gf-text-input>
+
+						<gf-text-input
+						class="form_cell form_cell_v1_mod half_mod location_mod"
+						id="'Street2'"
+						p-title="'<%= t('street2') %>'"
+						dl-class="''" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.street2"></gf-text-input>
+
+						<dl class="form_cell form_cell_v1_mod half_mod location_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="Country">Country</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<ui-select ng-model="user.address_attributes.country" name="Country" theme="selectize">
+								  <ui-select-match placeholder="<%= t('select_a_country') %>">{{$select.selected.name}}</ui-select-match>
+								  <ui-select-choices repeat="country.name as country in countries |  filter: $select.search">
+									<div ng-bind-html="country.name | highlight: $select.search"></div>
+								  </ui-select-choices>
+								</ui-select>
+						  </dd>
+						</dl>
+						<dl class="form_cell form_cell_v1_mod third_mod location_mod">
+						  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+								<label for="State/Province">State/Province</label>
+						  </dt>
+						  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+								<ui-select ng-model="user.address_attributes.state" ng-show="user.address_attributes.country=='United States'" name="State" theme="selectize" id="selectState">
+								  <ui-select-match placeholder="US state name">{{$select.selected.name}}</ui-select-match>
+								  <ui-select-choices repeat="state.name as state in states |  filter: $select.search">
+									<div ng-bind-html="state.name | highlight: $select.search"></div>
+								  </ui-select-choices>
+								</ui-select>
+							<input type="text" id="State" placeholder="State/Province" class="f_c_field default_mod " ng-model="user.address_attributes.state" ng-hide="user.address_attributes.country=='United States'"/>
+						  </dd>
+						</dl>
+
+						<gf-text-input
+						class="form_cell form_cell_v1_mod third_mod location_mod"
+						id="'City'"
+						p-title="'<%= t('city') %>'"
+						dl-class="''" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.city"></gf-text-input>
+						<gf-text-input
+						class="form_cell form_cell_v1_mod third_mod location_mod"
+						id="'Postalcode'"
+						p-title="'<%= t('postalcode') %>'"
+						dl-class="''" containers-class="" field-class="'default_mod'"
+						model="user.address_attributes.postal_code"></gf-text-input>
+
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title">Time Zone</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+
+				  <gf-text-input
+				  id="'Enter_your_time_zone'"
+				  p-title="'Enter your time zone'"
+				  dl-class="" containers-class="" field-class="'default_mod'"
+				  model=""></gf-text-input>
+
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title">Telephone</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="user.mobile_number">
+				<p> {{store.mobile_number}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'Enter_your_telephone_number'"
+				  p-title="'Enter your telephone number'"
+				  dl-class="'third_mod location_mod'" containers-class="" field-class="'default_mod'"
+				  model="user.mobile_number"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title">Voice Number</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="user.voice_number">
+				<p> {{store.voice_number}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <gf-text-input
+				  id="'Enter_your_voice_number'"
+				  p-title="'Enter your voice number'"
+				  dl-class="'third_mod location_mod'" containers-class="" field-class="'default_mod'"
+				  model="user.voice_number"></gf-text-input>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block radio_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title">Privacy Setting</div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block" style="display: none;">
+				<div class="add_info_form_w">
+				  <ul class="options_b_value_list checkbox_big_list">
+						<li class="options_b_value_l_item checkbox_big_list">
+						  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+								<input name="privacy" type="radio" class="lbl_inp_rb_ch">
+								<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">allow my profile to be seen by everyone</span>
+						  </label>
+						</li>
+						<li class="options_b_value_l_item checkbox_big_list">
+						  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+								<input name="privacy" type="radio" class="lbl_inp_rb_ch">
+								<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">allow my profile to be seen by invitation</span>
+						  </label>
+						</li>
+						<li class="options_b_value_l_item checkbox_big_list">
+						  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+							<input name="privacy" type="radio" class="lbl_inp_rb_ch">
+								<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">allow my profile to be seen only by my business/operation</span>
+						  </label>
+						</li>
+						<li class="options_b_value_l_item checkbox_big_list">
+						  <label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+								<input name="privacy" type="radio" class="lbl_inp_rb_ch">
+								<span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_white_mod">allow my profile to be invisible to all</span>
+						  </label>
+						</li>
+				  </ul>
+				</div>
+		  </div>
+		</div>
+  </div>
+</div>

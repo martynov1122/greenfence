@@ -1,0 +1,69 @@
+<div class="clear"></div>
+<div class="content_main" id="content_main">
+    <div class="supplier_top">
+        <h1 class="title_s" id="facility_count"> </h1>
+    </div>
+</div>
+
+<script type="x-tmpl-mustache" id="facility_list">
+    {{#facilities}}
+        <div class="supplier_wrap">
+            <div class="supplier_info">
+                <h3><a href="facility_profile?id={{id}}" class="link_cn">{{name}}</a></h3>
+                <p>{{description}}</p>
+            </div>
+    
+            <!--<div class="supplier_settings_button"><a href="#"><img src="<%= asset_path "freeapp/settings_circle.png"%>"  width="40" height="40" alt=""></a></div>
+            <div class="clear"></div>-->
+
+            <div class="suppliers_products">
+
+                <p>{{ product_length}} Product(s) are produced in this facility</p>
+
+                <ul class="products_img">
+                    {{ #products}}  
+                        <li><img src="<%= asset_path "freeapp/product_1.png"%>"   title="{{name}}"   width="42" height="42"></li>   
+                    {{ /products}} 
+           
+                    <li> <a style="margin:0px; white-space: nowrap;" class="border_grey" href="view_all_products?id={{id}}">View All Products</a> </li>
+          
+                </ul>  
+            </div>
+            <div class="clear"></div>
+    
+            <div class="product_view_certificates">
+      
+                <ul>
+                    <li>{{ certificates.length}} Certificate(s) </li>
+                    {{ #certificates }}
+                        <li><a href="certificate_detail?id={{id}}"> {{certificate_name}}</a></li>
+                    {{ /certificates }}
+                </ul>
+            </div>
+        </div>   
+    {{ /facilities}}
+    <div class="clear"></div>
+</script>
+
+<!-- javascript section -->
+
+<script type="text/javascript" src="<%= asset_path 'my_facilities.js' %>"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var company_id = gf.getQueryVariable('id');
+        if (company_id == null) {
+            company_id= '<%= current_user.try(:company).try(:id) %>'
+        }
+        mf.init(company_id)
+    });
+</script>
+
+
+
+
+
+
+
+
+ 

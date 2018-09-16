@@ -1,0 +1,98 @@
+<div class="compain_header" style="width: 96rem;">
+  <div class="user_block detail_mod ">
+    <div class="user_avatar_w detail_mod">
+      <img ng-src="{{document.owner.image_url}}" alt="{{document.owner.name}}" class="user_avatar_img detail_mod">
+    </div>
+    <div class="user_name detail_mod">{{document.owner.name}}</div>
+  </div>
+  <div class="compain_header_side_w">
+    <a href="javascript:history.back()" class="back_to_company_butt">Back</a>
+  </div>
+</div>
+<!--TODO Andrey font shit -->
+<div class="main_row layuot_mod_2">
+  <div class="detail_block">
+    <div ng-class="{authenticated: document.status_detail == 'authenticated'}" class="detail_header">
+      <div class="user_block detail_mod">
+        <div ng-class="{authenticated: document.status_detail == 'authenticated'}" class="user_avatar_w detail_mod">
+          <img ng-src="{{document.profile_picture.profile_picture.url}}" alt="" class="user_avatar_img detail_mod"/>
+          <ul data-block-hline="Auditor" class="user_sub_menu add_mod authenticated">
+      			<li class="user_sub_menu_item add_mod">
+      			  <a href="#/user_public_profile/{{document.auditor.id}}" title="" class="user_sub_menu_link add_mod authenticated">
+      				<img ng-src="{{document.auditor.image_url}}" class="auditor_avatar_img"/>
+      				<font id="color_black">{{document.auditor.name}}</font></a>
+      			</li>
+      			<li class="user_sub_menu_item add_mod">
+      			  <a href="#/company_public_profile/{{document.auditor.company_id}}" title="" class="user_sub_menu_link add_mod authenticated">
+      				<span class="authentication_date"><font id="color_black">{{document.auditor.company_name}}</font></span>
+      				<font id="color_black"><h1>Auditor Company:</h1></font></a>
+      			</li>
+      			<li class="user_sub_menu_item add_mod">
+      			  <a href="" title="" class="user_sub_menu_link add_mod authenticated">
+      				<span class="authentication_date"><font id="color_black">{{document.authentication_date}}</font></span>
+      				<font id="color_black"><h1>Date of Auth:</h1></font></a>
+      			</li>
+      			<li class="user_sub_menu_item add_mod" ng-if="request.authentication_expiration_date">
+      			  <a href="" title="" class="user_sub_menu_link add_mod authenticated">
+      				<span class="authentication_date">
+      				  <font id="color_black">{{request.authentication_expiration_date}}</font></span>
+      				<font id="color_black">
+      				  <h1>Auth expiration date:</h1></font>
+      			  </a>
+      			</li>
+      		</ul>
+        </div>
+        <div class="user_name detail_mod">{{document.document_name}}</div>
+        <div class="user_info detail_mod">Issued for {{document.document_definition.document_type}}</div>
+      </div>
+      <!-- <div class="detail_header_side_w"><a href="" title="" class="detail_follow_configure_butt"><%= t('follow_and_configure') %></a></div> -->
+    </div>
+    <div class="detail_b_content">
+      <div class="detail_b_content_text">
+        <h2><%= t('description') %></h2>
+        <p style="white-space: pre-line;">{{document.description}}</p>
+        <h2>Uploaded Files</h2>
+        <p><a ng-repeat="document_file in document.document_files" href="" ng-click="showFile(document_file)" title="Click here to see file" class="file_link ng-scope">View File</a></p>
+        <div ng-if="document.expiration_date">
+          <h2>Expiration Date</h2>
+          <p>{{document.expiration_date}}</p>
+        </div>
+        <div ng-if="document.test_result">
+          <h2>Test Result</h2>
+          <p>{{document.test_result}}</p>
+        </div>
+        <div ng-repeat="definition in definitions">
+          <div ng-switch on="definition.input_type">
+            <h2>{{definition.name}}</h2>
+            <p ng-if="document.definition_value[definition.id]">{{operation.definition_value[definition.id]}}</p>
+            <p ng-if="!document.definition_value[definition.id]">[ data not provided ]</p>
+            <p ng-switch-when="checkbox">
+              {{checkedValues(document.definition_value[definition.id])}}
+            </p>
+            <p ng-switch-when="standard">
+              {{document.merged_definition_value[definition.name]}}
+            </p>
+            <p ng-switch-when="file">
+              <img ng-src="{{document.definition_value[definition.id]}}">
+            </p>
+            <p ng-switch-default>
+              {{document.definition_value[definition.id]}}
+            </p>
+          </div>
+        </div>
+        <h2><%= t('additional_information') %></h2>
+        <p style="white-space: pre-line;">{{document.additional_information}}</p>        
+      </div>       
+    </div>
+  </div>
+</div>
+<div id="requirement_document_file_preview_butt" style="display:none">Preview File(s)</div>
+<div id="requirement_document_file_preview" style="display:none" title="File preview">
+  <div class="dialog_content">
+    <iframe ng-src="{{preview_url}}" frameborder="0"></iframe>
+  </div>
+  <footer class="dialog_footer">
+  <div id="preview_dialogue_close_btn" class="dialog_cancel_butt">Close</div>
+  <div id="preview_image_download"><a href="{{preview_url}}" title="Click here to see file" class="file_link" download>Download File</a></div>
+  </footer>
+</div>

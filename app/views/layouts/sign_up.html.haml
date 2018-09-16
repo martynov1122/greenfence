@@ -1,0 +1,23 @@
+!!!5
+%html
+  %head
+    = render partial: 'layouts/head'
+
+  %body
+    = section 'header', locals: { type: :sign_up }
+    .bodywrap
+      %aside
+        / = section 'shared/new_button', locals: { text: t('invite_company'), url:  '#modal:invite_company' }
+      %main
+        - if flash[:error]
+          .flash.error= flash[:error]
+        - if flash[:message]
+          .flash.message= flash[:message]
+        - if flash[:notice]
+          .flash.notice= flash[:notice]
+        = yield
+
+    = yield :modal
+    %footer Copyright 2014 IBMS. All Rights Reserved.
+
+    = render partial: 'layouts/javascript'

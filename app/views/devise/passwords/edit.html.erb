@@ -1,0 +1,52 @@
+<div class="wrapper layuot_login_mod">
+  <div class="base layuot_login_mod">
+    <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+      <div id="servermessage" style="display:none"> 
+          <%= devise_error_messages! %>
+      </div>
+      <div class="ui-dialog dialog_color_schema_1_mod dialog_g_size_1 local_mod">
+        <div class="content_box sign_mod">
+          <div class="ui-dialog-titlebar">
+            <div class="ui-dialog-title">   <%=  t('change_your_password') %></div>
+          </div>
+          <div class="dialog_content">
+            <div class="dialog_form">
+              <dl class="form_cell form_cell_v1_mod">
+                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                </dt>
+                <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                  <%= f.hidden_field :reset_password_token %>
+                </dd>
+              </dl>
+              <dl class="form_cell form_cell_v1_mod">
+                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                  <label for="Enter_email">t('enter_your_password')</label>
+                </dt>
+                <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                  <%= f.password_field :password, class: "f_c_field default_mod", placeholder: t('enter_your_password'),:autocomplete => "off" %>
+                </dd>
+              </dl>
+              <dl class="form_cell form_cell_v1_mod">
+                <dt class="form_c_hline form_v1_mod hline_hide_mod">
+                  <label for="Re-enter_password">Re-enter password</label>
+                </dt>
+                <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+                  <%= f.password_field :password_confirmation, id: 'Re-enter_password', class: "f_c_field default_mod", placeholder: t('Re-enter_password'),:autocomplete => "off" %>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          <footer class="dialog_footer local_mod">
+            <button class="sign_up_butt" type="submit">Submit</button>
+          </footer>
+        </div>
+        <div class="dialog_second_footer">
+          <dl class="question_b">
+            <dt class="question_b_title"> <%= t('already_have_an_account') %> </dt>
+            <dd class="question_b_value"><a href="/users/sign_in" title=""><%= t('sign_in') %></a></dd>
+          </dl>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

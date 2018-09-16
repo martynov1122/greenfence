@@ -1,0 +1,293 @@
+<div class="clear"></div>
+<div class="content_certificate">
+  <script type="x-tmpl-mustache" id='certificate_detail'>
+    <div class="supplier_top">
+      <ul class="breadcrumbs" style="margin: 0 0 -31px -38px;">
+        <li><a href="my_facilities">Facilities</a></li>
+        <li>></li>
+        {{#facility}}
+        <li><a href="facility_profile?id={{id}}">{{name}}</a></li>
+        <input type="hidden" value="{{id}}" id="facility_id">
+        {{/facility}}
+        <li>></li>
+        <li><a href="#" class="active_link">{{certificate_name}}</a></li>
+      </ul>
+    </div>  
+    <div class="clear"></div>
+    <div class="certificate_wrap" style="width: 481px;">
+      <div class="certificate_info">
+        <h3><a href="#" class="link_cn">{{certificate_name}}</a></h3>
+        <p>{{description}}</p>
+        <div style='width:520px;height:400px;text-align:center;position:relative;' class="certificate_img">
+          <a href={{original_source}} target="_blank"><img src={{cert_image}}  alt=""></a>
+        </div>
+        <div class="clear"></div>
+
+        <ul id="cert_detail_id">
+          {{#status_approved}}
+          <li><img src="<%= asset_path 'freeapp/green_checkmark.png'%>" style="margin-right: 7px;" width="25" height="25" alt="Green checkmark">Certificate Approved</li>
+          {{/status_approved}}
+          <li id= "cert_expire">Certificate expiring on: {{expiration_date}}</li>
+          <li>Audit date: {{audit_date}}</li>
+          <li>Date issued: {{issued_date}}</li>
+          <li>Auditor name: {{auditor_name}}</li>
+          <li>Score: {{score}}</li>
+          <li>Scope: {{scope}}</li>
+          <li>Certificate type: {{type_of_certificate_category}}</li>
+          <li>Certificate scheme: {{type_of_certificate_scheme}}</li>
+          {{#cert_body}}
+          <li>Certification body: {{name}}</li>
+          {{/cert_body}}
+        </ul>
+          <% if(current_user.can_see_certificate_comments(params["id"])) %>
+            <div class='comment-count'><span id="comment_count"></span> comments</div>
+            <div style="overflow-y: scroll; overflow-x: hidden; height: auto;width: 482px">
+              {{> comment_threads}}
+            </div>
+          <% end %>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </script>
+  <script type="x-tmpl-mustache" id="comment_thread">
+  {{#certificate_comments}}
+    <div class="comment_thread" id="comment_thread_{{id}}">
+    <input type="hidden" id="activity_comment_id" value="{{id}}" />
+      {{#activity_comments}}
+        <div class="comment_item">    
+          <div class="user_top">  
+            <div class="avatar_left">
+              <img src="{{commentor_image}}" width="50" height="" alt="">
+            </div>
+            <div class="fl">
+              <a href="{{commentor_path}}">{{commentor_name}}</a>
+              
+                <p>{{comment_time_difference}} ago</p>
+              
+            </div>    
+          </div>
+          <div class="comment_body">
+            <p>{{text}}</p>
+          </div>   
+        </div>
+      {{/activity_comments}}
+      <div class="clear"></div>
+
+      <div class="comment_box">
+        <img src="{{current_user_image}}" width="45" height="45" alt="">
+        <input id="activity_comment_text_id" placeholder="Write a comment..." onkeyup="create_comment(event, {{id}})">
+      </div>    
+    </div>
+  {{/certificate_comments}}
+  </script>
+  <% if current_user.company.type == "CertificationBody" && Certificate.find_by_id(params[:id]).status == "Waiting for approval" && Certificate.find_by_id(params[:id]).certification_body_id%>
+    <% if Certificate.find_by_id(params[:id]).need_verification_from_cb %>
+      <div class='green' id='authenticate' style="margin-left:110px">Authenticate</div>
+      <div class='green' id='reject' style="display:inline-block">Reject</div>
+    <% end %>
+  <% elsif current_user.company.type != "CertificationBody" && current_user.can_see_certificate_comments(params["id"]) %>
+    
+    <% if Certificate.find_by_id(params[:id]).status == "Rejected" %>
+      <div class='green' id='delete_certificate' style="display:inline-block;margin-left: 42px;">Delete</div>
+      <div class='green' id='send_for_reapproval' style="display:inline-block">Send for re approval</div>
+      <div class='green' id='edit_certificate' style="display:inline-block">Edit</div>
+    <% else %>
+      <div class='green' id='delete_certificate' style="margin-left: 210px;">Delete</div>
+    <%end%>
+  <%end%>
+</div>
+<script type="text/javascript">
+  var certificate_id
+  var performable_id
+  var facility_id
+  $(document).ready(function(){
+    certificate_id = gf.getQueryVariable('id');
+    performable_id = gf.getQueryVariable('performable_id');
+    loadCertificate(certificate_id, 1)
+  }) ;
+  
+  function loadCertificate(certificate_id){
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+".json",
+      type: 'GET',
+      success: function(response){
+
+        if(response.status == "Approved")
+          response.status_approved = true
+
+        var template = $('#certificate_detail').html();
+        var partials = $('#comment_thread').html();
+        facility_id = $("#facility_id").val()
+        Mustache.parse(template);
+        var rendered = Mustache.render(template, response, {comment_threads: partials});
+        $(".content_certificate").prepend(rendered) ;
+        $('#comment_count').text(response.certificate_comment_count)
+      },
+      error:function(errors,response){
+        ss_alert("error",errors.responseText)
+      }
+    }) ;
+  }
+
+  $('#send_for_reapproval').click(function(){
+    showModal('reapproval-comment-modal')
+  })
+
+  $('#submit_reapproval_comment').click(function(){
+    var comment_text = $('#reapproval_comment').val()
+    if(comment_text == "") {
+      ss_alert("error", "Please enter valid comment.")
+
+    } else {
+      closeModal();
+      showModal('loading_modal')
+      var comment_activity_id = $('#activity_comment_id').val()
+      make_activity_comment(comment_text, comment_activity_id)
+      // $.ajax({
+      //   url: '/api/v2.2/community/certificates/'+certificate_id+'/reapproval_comment',
+      //   data: {comment_text: comment_text},
+      //   type: 'POST',
+      //   success: function(response) {  
+      //     ss_alert("success" , "Comment created successfully.") ;
+      $.ajax({
+        url: '/api/v2.2/community/certificates/'+certificate_id+'/send_for_reapproval.json',
+        data: {id: certificate_id, performable_id: performable_id,facility_id:facility_id},
+        type: 'GET',
+        success: function(response) {
+          closeLoadingModal();
+          $('#delete_certificate').css("display","none")
+          $('#send_for_reapproval').css("display","none")
+          $('#edit_certificate').css("display","none")
+          ss_alert("success" , "Certificate is sent for reapproval.") ;
+          // location.reload(true);
+        } ,
+        error: function (errors, response){
+           ss_alert("error",errors.responseText);
+           closeLoadingModal();
+        }
+      }) ;
+    }
+    //   } ,
+    //   error: function (errors, response){
+    //      ss_alert("error", "Error occured in comment creation.");
+    //   }
+    // }) ;
+    
+  })
+
+  $('#delete_certificate').click(function(){
+    showModal('loading_modal')
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+".json",
+      type: 'DELETE',
+      success: function(response) {  
+        ss_alert("success" , "Certificate deleted successfully.") ;
+        window.location.replace("/community/profile/"+response.redirect_to_page);
+        closeLoadingModal();
+      } ,
+      error: function (errors, response){
+         ss_alert("error", errors.responseText);
+         closeLoadingModal();
+      }
+    }) ;
+  })
+
+  $('#authenticate').click(function(){
+    showModal('loading_modal')
+    $.ajax({
+      url: '/api/v2.2/community/certificates/'+certificate_id+'/authenticate_reject_certificate.json',
+      data: {req_type: "Authenticate",performable_id: performable_id},
+      type: 'GET',
+      success: function(response) {  
+        $('#authenticate').css("display","none")
+        $('#reject').css("display","none")
+        var li_obj = $('#first_li')
+        li_obj.css("display", "block")
+        $('#cert_expire').before(li_obj);
+        ss_alert("success" , "Certificate authenticated successfully.") ;
+        closeLoadingModal();
+        $('#modal-overlay').css("display", "none")
+      } ,
+      error: function (errors, response){
+         ss_alert("error", errors.responseText);
+         closeLoadingModal();
+      }
+    }) ;
+  })
+  $('#reject').click(function(){
+    showModal('comment-modal')
+  })
+
+  $('#submit_comment').click(function(){
+    var comment_text = $('#comment_text').val()
+    if(comment_text == "") {
+      ss_alert("error", "Please enter valid comment.")
+    } else {
+      closeModal();
+      showModal('loading_modal')
+      var comment_activity_id = $('#activity_comment_id').val()
+      make_activity_comment(comment_text, comment_activity_id)
+      // $.ajax({
+      //   url: '/api/v2.2/community/certificates/'+certificate_id+'/rejection_comment',
+      //   data: {comment_text: comment_text},
+      //   type: 'POST',
+      //   success: function(response) {  
+      //     ss_alert("success" , "Comment created successfully.") ;
+      $.ajax({
+        url: '/api/v2.2/community/certificates/'+certificate_id+'/authenticate_reject_certificate.json',
+        data: {id: certificate_id, req_type: "Reject",performable_id: performable_id},
+        type: 'GET',
+        success: function(response) {  
+          $('#authenticate').css("display","none")
+          $('#reject').css("display","none")
+          closeLoadingModal();
+          ss_alert("success" , "Certificate rejected successfully.") ;
+        } ,
+        error: function (errors, response){
+           ss_alert("error",errors.responseText);
+           closeLoadingModal();
+        }
+      }) ;
+    }
+    //   } ,
+    //   error: function (errors, response){
+    //      ss_alert("error", "Error occured in comment creation.");
+    //   }
+    // }) ;
+    
+  })
+
+var create_comment = function(e, id){
+    if(e.keyCode == 13) {
+      var comment_text = $('#activity_comment_text_id').val()
+      make_activity_comment(comment_text, id)
+    }
+  }
+
+  var make_activity_comment = function(comment_text, activity_id){
+    if(comment_text == "") {
+      ss_alert("error", "Please enter valid comment.")
+      return;
+    }
+    // showModal('loading_modal')
+    $.ajax({
+      url: '/api/v2.2/community/certificates/make_activity_comment',
+      data: {comment_text: comment_text, activity_id: activity_id},
+      type: 'POST',
+      success: function(response) {
+        var comment_thread_block = $('#comment_thread_'+activity_id)
+        var parent_of_tb = comment_thread_block.parent()
+        parent_of_tb.empty();
+        var template = $('#comment_thread').html();
+        Mustache.parse(template); 
+        var rendered = Mustache.render(template, response);
+        parent_of_tb.append(rendered);
+      } ,
+      error: function (errors, response){
+         ss_alert("error", "Error occured in comment creation.");
+         closeLoadingModal();
+      }
+    }) ;
+    
+  }
+</script>

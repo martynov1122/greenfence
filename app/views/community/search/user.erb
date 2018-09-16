@@ -1,0 +1,20 @@
+<div class="user_block contact_mod " ng-class="{ primary_mod: data.featured }">
+  <span class="corner_ico user_mod"></span>
+  <a class="user_avatar_w contact_mod " href="#/user_public_profile/{{data.id}}" ng-class="{ primary_mod: data.featured }">
+	<img ng-src="{{data.profile.thumb_url}}" alt="{{data.name}}" class="user_avatar_img contact_mod" ng-class="{ primary_mod: data.featured }">
+  </a>
+  <a class="user_name contact_mod" href="#user_public_profile/{{data.id}}" ng-class="{ primary_mod: data.featured }">{{data.name}}</a>
+
+  <div ng-if="current_user_id != data.admin_id">
+    <div class="user_info contact_mod" ng-class="{ primary_mod: data.featured }">{{data.profile.title}}</div>
+    <div class="user_text contact_mod" ng-class="{ primary_mod: data.featured }" style="white-space: pre-line;">{{data.profile.summary}}</div>
+    <div class="user_b_footer contact_mod " ng-class="{ primary_mod: data.featured }">
+      <div class="user_follow_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-if="data.followed_by_current_user == false" ng-click="follow_me(data)"><%= t('follow') %></div>
+      <div class="user_follow_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-if="data.followed_by_current_user == true" ng-click="unfollow_me(data)"><%= t('unfollow') %></div>
+      <div class="user_follow_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-if="data.connected_status_with_current_user == 'unconnected'" ng-click="request_connect(data)">Connect</div>
+      <div class="user_follow_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-if="data.connected_status_with_current_user == 'pending' || data.connected_status_with_current_user == 'requested'" ng-click="cancel_request_connect(data)">Cancel Request</div>
+      <div class="user_msg_2_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-click="show_message_modal(data)" ng-if="data.connected_status_with_current_user == 'accepted'"><%= t('message') %></div>
+      <div class="user_follow_butt contact_mod " ng-class="{ primary_mod: data.featured }" ng-if="data.connected_status_with_current_user == 'accepted'" ng-click="disconnect(data)">Disconnect</div>
+    </div>
+  </div>
+</div>

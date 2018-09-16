@@ -1,0 +1,1917 @@
+<div class="view_container">
+  <div class="add_info_main_header">
+		<h1 class="content_headline" ng-if="!store.id"><%= t('add_a_service') %></h1>
+		<h1 class="content_headline" ng-if="store.id"><%= t('view_or_edit_a_service') %></h1>
+		<a class="wizard_delete_butt" ><%= t('delete') %></a>
+		<a class="wizard_add_butt_v2" ng-click="createService(service)"><%= t('save') %></a>
+  </div>
+  <div id='service_img_crop' style="display: none">
+		<div class="cropArea">
+		  <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+		</div>
+		<div>
+		  <div class="butt_save" ng-click="upload_service_image()" style="margin: 0">Crop</div>
+		</div>
+  </div>
+  <div class="add_info_block title_mod">
+		<div class="add_info_header">
+		  <div class="add_info_title required_mod"><%= t('select_operation') %></div>
+		  <div class="add_info_colapse_butt operation_box"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div ng-if="store.operation_name" class="add_info_content"><p>{{store.operation_name}}</p></div>
+		  <div class="add_info_form_block operation_box">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Enter_name_of_category">Enter name of category</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <ui-select ng-model="service.operation_id" theme="selectize">
+								<ui-select-match placeholder="<%= t('select_an_operation_in_the_list_or_search_his_name') %>">{{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="operation.id as operation in operations |  filter: $select.search">
+								  <div ng-bind-html="operation.name | highlight: $select.search"></div>
+								</ui-select-choices>
+						  </ui-select>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block textbox_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title required_mod"><%= t('enter_name_of_service') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.name">
+				<p>{{store.name}}</p>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+
+				  <gf-text-input
+				  id="'Enter_service_name'"
+				  p-title="'<%= t('enter_name_of_service') %>'"
+				  dl-class="" containers-class="" field-class="'default_mod'"
+				  model="service.name">
+				  </gf-text-input>
+
+				  <div class="category_wrap">
+						<ul class="category_list">
+						  <li class="category_list_item">
+								<label class="lbl_rb_ch_block lbl_rb_ch_default_mod">
+								  <input name="Featured" type="checkbox" class="lbl_inp_rb_ch" ng-model="service.featured"><span class="lbl_rb_ch_text lbl_rb_ch_t_default_mod lbl_rb_ch_t_default_green_grey_mod ng-binding"><%= t('featured') %></span>
+								</label>
+						  </li>
+						</ul>
+				  </div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block upload_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('upload_profile_picture') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.profile_picture.profile_picture.url && store.profile_picture.profile_picture.url != '/assets/avatar.jpg'">
+				<a href="{{store.profile_picture.profile_picture.url}}" title="Click here to see file" class="file_link" download><%= t('download_file') %></a>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="Upload_image">Upload Image</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						  <input type="button" id="Upload_image" placeholder="<%= t('upload_image') %>" class="f_c_field default_mod file_mod" accept="image/*" ng-file-select ng-file-change="upload_image($files, $event)"/><span class="f_c_field_file_field"><span class="f_c_field_file_text">{{service.profile_picture.filename || "Upload image"}}</span><span class="f_c_field_file_butt">Choose File</span></span>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block textarea_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('describe_your_service') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.description"><p>{{store.description}}</p></div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="Enter_service_description">Description</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						  <textarea id="Enter_service_description" placeholder="<%= t('description') %>" class="f_c_field default_mod textarea_mod_1 " ng-model="service.description"></textarea>
+						</dd>
+				  </dl>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block upload_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('upload_image') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_content" ng-if="store.uploaded_files">
+				<a ng-if="store.uploaded_files" ng-repeat="file in store.uploaded_files" href="{{file.image.url}}" title="Click here to see file" class="file_link ng-scope" download><%= t('download_file') %></a>
+		  </div>
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod">
+						  <label for="Upload_image">Upload Image</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+						  <input type="file" id="Upload_image" ng-model="service.uploaded_files_attributes[0].image" base-sixty-four-input placeholder="<%= t('upload_image') %>" class="f_c_field default_mod file_mod "/><span class="f_c_field_file_field"><span class="f_c_field_file_text">{{service.uploaded_files_attributes[0].image.filename || "Upload image"}}</span><span class="f_c_field_file_butt"><%= t('choose_file') %></span></span>
+						</dd>
+				  </dl>
+				</div>
+				<div class="butt_wrap add_info_form_mod">
+				  <div class="attach_butt image_mod" ng-click="attach_multiple_images($event)"><%= t('attach_another_image') %></div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block category_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('service_category') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Enter_name_of_category">Enter name of category</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select gf-multiselect gf-placeholder='<%= t('enter_name_of_category') %>' gf-class='' ng-model="category_ids" multiple="multiple" class="f_c_field default_mod select_add_category normal_list">
+							<optgroup label="Section A : Agriculture, hunting and forestry">
+							  <option value="0">01 : Agriculture, hunting and related service activities</option>
+							  <option value="1">01.1 : Growing of crops; market gardening; horticulture</option>
+							  <option value="2">01.11 : Growing of cereals and other crops n.e.c.</option>
+							  <option value="3">01.12 : Growing of vegetables, horticultural specialities and nursery products</option>
+							  <option value="4">01.13 : Growing of fruit, nuts, beverage and spice crops</option>
+							  <option value="5">01.2 : Farming of animals</option>
+							  <option value="6">01.21 : Farming of cattle, dairy farming</option>
+							  <option value="7">01.22 : Farming of sheep, goats, horses, asses, mules and hinnies</option>
+							  <option value="8">01.23 : Farming of swine</option>
+							  <option value="9">01.24 : Farming of poultry</option>
+							  <option value="10">01.25 : Other farming of animals</option>
+							  <option value="11">01.3 : Growing of crops combined with farming of animals (mixed farming)</option>
+							  <option value="12">01.30 : Growing of crops combined with farming of animals (mixed farming)</option>
+							  <option value="13">01.4 : Agricultural and animal husbandry service activities, except veterinary activities</option>
+							  <option value="14">01.41 : Agricultural service activities</option>
+							  <option value="15">01.42 : Animal husbandry service activities, except veterinary activities</option>
+							  <option value="16">01.5 : Hunting, trapping and game propagation, including related service activities</option>
+							  <option value="17">01.50 : Hunting, trapping and game propagation, including related service activities</option>
+							  <option value="18">02 : Forestry, logging and related service activities</option>
+							  <option value="19">02.0 : Forestry, logging and related service activities</option>
+							  <option value="20">02.01 : Forestry and logging</option>
+							  <option value="21">02.02 : Forestry and logging related service activities</option>
+							</optgroup>
+							<optgroup label="Section B : Fishing">
+							  <option value="22">05 : Fishing, operation of fish hatcheries and fish farms; service activities incidental to fishing</option>
+							  <option value="23">05.0 : Fishing, operation of fish hatcheries and fish farms; service activities incidental to fishing</option>
+							  <option value="24">05.01 : Fishing</option>
+							  <option value="25">05.02 : Operation of fish hatcheries and fish farms</option>
+							</optgroup>
+							<optgroup label="Section C : Mining and quarrying SubSection CA : Mining and quarrying of energy producing materials">
+							  <option value="26">10 : Mining of coal and lignite; extraction of peat</option>
+							  <option value="27">10.1 : Mining and agglomeration of hard coal</option>
+							  <option value="28">10.10 : Mining and agglomeration of hard coal</option>
+							  <option value="29">10.2 : Mining and agglomeration of lignite</option>
+							  <option value="30">10.20 : Mining and agglomeration of lignite</option>
+							  <option value="31">10.3 : Extraction and agglomeration of peat</option>
+							  <option value="32">10.30 : Extraction and agglomeration of peat</option>
+							  <option value="33">11 : Extraction of crude petroleum and natural gas; service activities incidental to oil and gas extraction, excluding surveying</option>
+							  <option value="34">11.1 : Extraction of crude petroleum and natural gas</option>
+							  <option value="35">11.10 : Extraction of crude petroleum and natural gas</option>
+							  <option value="36">11.2 : Service activities incidental to oil and gas extraction, excluding surveying</option>
+							  <option value="37">11.20 : Service activities incidental to oil and gas extraction, excluding surveying</option>
+							  <option value="38">12 : Mining of uranium and thorium ores</option>
+							  <option value="39">12.0 : Mining of uranium and thorium ores</option>
+							  <option value="40">12.00 : Mining of uranium and thorium ores</option>
+							</optgroup>
+							<optgroup label="SubSection CB : Mining and quarrying, except of energy producing materials">
+							  <option value="41">13 : Mining of metal ores</option>
+							  <option value="42">13.1 : Mining of iron ores</option>
+							  <option value="43">13.10 : Mining of iron ores</option>
+							  <option value="44">13.2 : Mining of non-ferrous metal ores, except uranium and thorium ores</option>
+							  <option value="45">13.20 : Mining of non-ferrous metal ores, except uranium and thorium ores</option>
+							  <option value="46">14 : Other mining and quarrying</option>
+							  <option value="47">14.1 : Quarrying of stone</option>
+							  <option value="48">14.11 : Quarrying of stone for construction</option>
+							  <option value="49">14.12 : Quarrying of limestone, gypsum and chalk</option>
+							  <option value="50">14.13 : Quarrying of slate</option>
+							  <option value="51">14.2 : Quarrying of sand and clay</option>
+							  <option value="52">14.21 : Operation of gravel and sand pits</option>
+							  <option value="53">14.22 : Mining of clays and kaolin</option>
+							  <option value="54">14.3 : Mining of chemical and fertilizer minerals</option>
+							  <option value="55">14.30 : Mining of chemical and fertilizer minerals</option>
+							  <option value="56">14.4 : Production of salt</option>
+							  <option value="57">14.40 : Production of salt</option>
+							  <option value="58">14.5 : Other mining and quarrying n.e.c.</option>
+							  <option value="59">14.50 : Other mining and quarrying n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section D : Manufacturing SubSection DA : Manufacture of food products, beverages and tobacco">
+							  <option value="60">15 : Manufacture of food products and beverages</option>
+							  <option value="61">15.1 : Production, processing and preserving of meat and meat products</option>
+							  <option value="62">15.11 : Production and preserving of meat</option>
+							  <option value="63">15.12 : Production and preserving of poultrymeat</option>
+							  <option value="64">15.13 : Production of meat and poultrymeat products</option>
+							  <option value="65">15.2 : Processing and preserving of fish and fish products</option>
+							  <option value="66">15.20 : Processing and preserving of fish and fish products</option>
+							  <option value="67">15.3 : Processing and preserving of fruit and vegetables</option>
+							  <option value="68">15.31 : Processing and preserving of potatoes</option>
+							  <option value="69">15.32 : Manufacture of fruit and vegetable juice</option>
+							  <option value="70">15.33 : Processing and preserving of fruit and vegetables n.e.c.</option>
+							  <option value="71">15.4 : Manufacture of vegetable and animal oils and fats</option>
+							  <option value="72">15.41 : Manufacture of crude oils and fats</option>
+							  <option value="73">15.42 : Manufacture of refined oils and fats</option>
+							  <option value="74">15.43 : Manufacture of margarine and similar edible fats</option>
+							  <option value="75">15.5 : Manufacture of dairy products</option>
+							  <option value="76">15.51 : Operation of dairies and cheese making</option>
+							  <option value="77">15.52 : Manufacture of ice cream</option>
+							  <option value="78">15.6 : Manufacture of grain mill products, starches and starch products</option>
+							  <option value="79">15.61 : Manufacture of grain mill products</option>
+							  <option value="80">15.62 : Manufacture of starches and starch products</option>
+							  <option value="81">15.7 : Manufacture of prepared animal feeds</option>
+							  <option value="82">15.71 : Manufacture of prepared feeds for farm animals</option>
+							  <option value="83">15.72 : Manufacture of prepared pet foods</option>
+							  <option value="84">15.8 : Manufacture of other food products</option>
+							  <option value="85">15.81 : Manufacture of bread; manufacture of fresh pastry goods and cakes</option>
+							  <option value="86">15.82 : Manufacture of rusks and biscuits; manufacture of preserved pastry goods and cakes</option>
+							  <option value="87">15.83 : Manufacture of sugar</option>
+							  <option value="88">15.84 : Manufacture of cocoa; chocolate and sugar confectionery</option>
+							  <option value="89">15.85 : Manufacture of macaroni, noodles, couscous and similar farinaceous products</option>
+							  <option value="90">15.86 : Processing of tea and coffee</option>
+							  <option value="91">15.87 : Manufacture of condiments and seasonings</option>
+							  <option value="92">15.88 : Manufacture of homogenized food preparations and dietetic food</option>
+							  <option value="93">15.89 : Manufacture of other food products n.e.c.</option>
+							  <option value="94">15.9 : Manufacture of beverages</option>
+							  <option value="95">15.91 : Manufacture of distilled potable alcoholic beverages</option>
+							  <option value="96">15.92 : Production of ethyl alcohol from fermented materials</option>
+							  <option value="97">15.93 : Manufacture of wines</option>
+							  <option value="98">15.94 : Manufacture of cider and other fruit wines</option>
+							  <option value="99">15.95 : Manufacture of other non-distilled fermented beverages</option>
+							  <option value="100">15.96 : Manufacture of beer</option>
+							  <option value="101">15.97 : Manufacture of malt</option>
+							  <option value="102">15.98 : Production of mineral waters and soft drinks</option>
+							  <option value="103">16 : Manufacture of tobacco products</option>
+							  <option value="104">16.0 : Manufacture of tobacco products</option>
+							  <option value="105">16.00 : Manufacture of tobacco products</option>
+							</optgroup>
+							<optgroup label="SubSection DB : Manufacture of textiles and textile products">
+							  <option value="106">17 : Manufacture of textiles</option>
+							  <option value="107">17.1 : Preparation and spinning of textile fibres</option>
+							  <option value="108">17.11 : Preparation and spinning of cotton-type fibres</option>
+							  <option value="109">17.12 : Preparation and spinning of woollen-type fibres</option>
+							  <option value="110">17.13 : Preparation and spinning of worsted-type fibres</option>
+							  <option value="111">17.14 : Preparation and spinning of flax-type fibres</option>
+							  <option value="112">17.15 : Throwing and preparation of silk, including from noils, and throwing and texturing of synthetic or artificial filament yarns</option>
+							  <option value="113">17.16 : Manufacture of sewing threads</option>
+							  <option value="114">17.17 : Preparation and spinning of other textile fibres</option>
+							  <option value="115">17.2 : Textile weaving</option>
+							  <option value="116">17.21 : Cotton-type weaving</option>
+							  <option value="117">17.22 : Woollen-type weaving</option>
+							  <option value="118">17.23 : Worsted-type weaving</option>
+							  <option value="119">17.24 : Silk-type weaving</option>
+							  <option value="120">17.25 : Other textile weaving</option>
+							  <option value="121">17.3 : Finishing of textiles</option>
+							  <option value="122">17.30 : Finishing of textiles</option>
+							  <option value="123">17.4 : Manufacture of made-up textile articles, except apparel</option>
+							  <option value="124">17.40 : Manufacture of made-up textile articles, except apparel</option>
+							  <option value="125">17.5 : Manufacture of other textiles</option>
+							  <option value="126">17.51 : Manufacture of carpets and rugs</option>
+							  <option value="127">17.52 : Manufacture of cordage, rope, twine and netting</option>
+							  <option value="128">17.53 : Manufacture of non-wovens and articles made from non-wovens, except apparel</option>
+							  <option value="129">17.54 : Manufacture of other textiles n.e.c.</option>
+							  <option value="130">17.6 : Manufacture of knitted and crocheted fabrics</option>
+							  <option value="131">17.60 : Manufacture of knitted and crocheted fabrics</option>
+							  <option value="132">17.7 : Manufacture of knitted and crocheted articles</option>
+							  <option value="133">17.71 : Manufacture of knitted and crocheted hosiery</option>
+							  <option value="134">17.72 : Manufacture of knitted and crocheted pullovers, cardigans and similar articles</option>
+							  <option value="135">18 : Manufacture of wearing apparel; dressing and dyeing of fur</option>
+							  <option value="136">18.1 : Manufacture of leather clothes</option>
+							  <option value="137">18.10 : Manufacture of leather clothes</option>
+							  <option value="138">18.2 : Manufacture of other wearing apparel and accessories</option>
+							  <option value="139">18.21 : Manufacture of workwear</option>
+							  <option value="140">18.22 : Manufacture of other outerwear</option>
+							  <option value="141">18.23 : Manufacture of underwear</option>
+							  <option value="142">18.24 : Manufacture of other wearing apparel and accessories n.e.c.</option>
+							  <option value="143">18.3 : Dressing and dyeing of fur; manufacture of articles of fur</option>
+							  <option value="144">18.30 : Dressing and dyeing of fur; manufacture of articles of fur</option>
+							</optgroup>
+							<optgroup label="SubSection DC : Manufacture of leather and leather products">
+							  <option value="145">19 : Tanning and dressing of leather; manufacture of luggage, handbags, saddlery, harness and footwear</option>
+							  <option value="146">19.1 : Tanning and dressing of leather</option>
+							  <option value="147">19.10 : Tanning and dressing of leather</option>
+							  <option value="148">19.2 : Manufacture of luggage, handbags and the like, saddlery and harness</option>
+							  <option value="149">19.20 : Manufacture of luggage, handbags and the like, saddlery and harness</option>
+							  <option value="150">19.3 : Manufacture of footwear</option>
+							  <option value="151">19.30 : Manufacture of footwear</option>
+							</optgroup>
+							<optgroup label="SubSection DD : Manufacture of wood and wood products">
+							  <option value="152">20 : Manufacture of wood and of products of wood and cork, except furniture; manufacture of articles of straw and plaiting materials</option>
+							  <option value="153">20.1 : Sawmilling and planing of wood; impregnation of wood</option>
+							  <option value="154">20.10 : Sawmilling and planing of wood; impregnation of wood</option>
+							  <option value="155">20.2 : Manufacture of veneer sheets; manufacture of plywood, laminboard, particle board, fibre board and other panels and boards</option>
+							  <option value="156">20.20 : Manufacture of veneer sheets; manufacture of plywood, laminboard, particle board, fibre board and other panels and boards</option>
+							  <option value="157">20.3 : Manufacture of builders carpentry and joinery</option>
+							  <option value="158">20.30 : Manufacture of builders carpentry and joinery</option>
+							  <option value="159">20.4 : Manufacture of wooden containers</option>
+							  <option value="160">20.40 : Manufacture of wooden containers</option>
+							  <option value="161">20.5 : Manufacture of other products of wood; manufacture of articles of cork, straw and plaiting materials</option>
+							  <option value="162">20.51 : Manufacture of other products of wood</option>
+							  <option value="163">20.52 : Manufacture of articles of cork, straw and plaiting materials</option>
+							</optgroup>
+							<optgroup label="SubSection DE : Manufacture of pulp, paper and paper products; publishing and printing">
+							  <option value="164">21 : Manufacture of pulp, paper and paper products</option>
+							  <option value="165">21.1 : Manufacture of pulp, paper and paperboard</option>
+							  <option value="166">21.11 : Manufacture of pulp</option>
+							  <option value="167">21.12 : Manufacture of paper and paperboard</option>
+							  <option value="168">21.2 : Manufacture of articles of paper and paperboard</option>
+							  <option value="169">21.21 : Manufacture of corrugated paper and paperboard and of containers of paper and paperboard</option>
+							  <option value="170">21.22 : Manufacture of household and sanitary goods and of toilet requisites</option>
+							  <option value="171">21.23 : Manufacture of paper stationery</option>
+							  <option value="172">21.24 : Manufacture of wallpaper</option>
+							  <option value="173">21.25 : Manufacture of other articles of paper and paperboard n.e.c.</option>
+							  <option value="174">22 : Publishing, printing and reproduction of recorded media</option>
+							  <option value="175">22.1 : Publishing</option>
+							  <option value="176">22.11 : Publishing of books</option>
+							  <option value="177">22.12 : Publishing of newspapers</option>
+							  <option value="178">22.13 : Publishing of journals and periodicals</option>
+							  <option value="179">22.14 : Publishing of sound recordings</option>
+							  <option value="180">22.15 : Other publishing</option>
+							  <option value="181">22.2 : Printing and service activities related to printing</option>
+							  <option value="182">22.21 : Printing of newspapers</option>
+							  <option value="183">22.22 : Printing n.e.c.</option>
+							  <option value="184">22.23 : Bookbinding and finishing</option>
+							  <option value="185">22.24 : Composition and plate-making</option>
+							  <option value="186">22.25 : Other activities related to printing</option>
+							  <option value="187">22.3 : Reproduction of recorded media</option>
+							  <option value="188">22.31 : Reproduction of sound recording</option>
+							  <option value="189">22.32 : Reproduction of video recording</option>
+							  <option value="190">22.33 : Reproduction of computer media</option>
+							</optgroup>
+							<optgroup label="SubSection DF : Manufacture of coke, refined petroleum products and nuclear fuel">
+							  <option value="191">23 : Manufacture of coke, refined petroleum products and nuclear fuel</option>
+							  <option value="192">23.1 : Manufacture of coke oven products</option>
+							  <option value="193">23.10 : Manufacture of coke oven products</option>
+							  <option value="194">23.2 : Manufacture of refined petroleum products</option>
+							  <option value="195">23.20 : Manufacture of refined petroleum products</option>
+							  <option value="196">23.3 : Processing of nuclear fuel</option>
+							  <option value="197">23.30 : Processing of nuclear fuel</option>
+							</optgroup>
+							<optgroup label="SubSection DG : Manufacture of chemicals, chemical products and man-made fibres">
+							  <option value="198">24 : Manufacture of chemicals and chemical products</option>
+							  <option value="199">24.1 : Manufacture of basic chemicals</option>
+							  <option value="200">24.11 : Manufacture of industrial gases</option>
+							  <option value="201">24.12 : Manufacture of dyes and pigments</option>
+							  <option value="202">24.13 : Manufacture of other inorganic basic chemicals</option>
+							  <option value="203">24.14 : Manufacture of other organic basic chemicals</option>
+							  <option value="204">24.15 : Manufacture of fertilizers and nitrogen compounds</option>
+							  <option value="205">24.16 : Manufacture of plastics in primary forms</option>
+							  <option value="206">24.17 : Manufacture of synthetic rubber in primary forms</option>
+							  <option value="207">24.2 : Manufacture of pesticides and other agro-chemical products</option>
+							  <option value="208">24.20 : Manufacture of pesticides and other agro-chemical products</option>
+							  <option value="209">24.3 : Manufacture of paints, varnishes and similar coatings, printing ink and mastics</option>
+							  <option value="210">24.30 : Manufacture of paints, varnishes and similar coatings, printing ink and mastics</option>
+							  <option value="211">24.4 : Manufacture of pharmaceuticals, medicinal chemicals and botanical products</option>
+							  <option value="212">24.41 : Manufacture of basic pharmaceutical products</option>
+							  <option value="213">24.42 : Manufacture of pharmaceutical preparations</option>
+							  <option value="214">24.5 : Manufacture of soap and detergents, cleaning and polishing preparations, perfumes and toilet preparations</option>
+							  <option value="215">24.51 : Manufacture of soap and detergents, cleaning and polishing preparations</option>
+							  <option value="216">24.52 : Manufacture of perfumes and toilet preparations</option>
+							  <option value="217">24.6 : Manufacture of other chemical products</option>
+							  <option value="218">24.61 : Manufacture of explosives</option>
+							  <option value="219">24.62 : Manufacture of glues and gelatines</option>
+							  <option value="220">24.63 : Manufacture of essential oils</option>
+							  <option value="221">24.64 : Manufacture of photographic chemical material</option>
+							  <option value="222">24.65 : Manufacture of prepared unrecorded media</option>
+							  <option value="223">24.66 : Manufacture of other chemical products n.e.c.</option>
+							  <option value="224">24.7 : Manufacture of man-made fibres</option>
+							  <option value="225">24.70 : Manufacture of man-made fibres</option>
+							</optgroup>
+							<optgroup label="SubSection DH : Manufacture of rubber and plastic products">
+							  <option value="226">25 : Manufacture of rubber and plastic products</option>
+							  <option value="227">25.1 : Manufacture of rubber products</option>
+							  <option value="228">25.11 : Manufacture of rubber tyres and tubes</option>
+							  <option value="229">25.12 : Retreading and rebuilding of rubber tyres</option>
+							  <option value="230">25.13 : Manufacture of other rubber products</option>
+							  <option value="231">25.2 : Manufacture of plastic products</option>
+							  <option value="232">25.21 : Manufacture of plastic plates, sheets, tubes and profiles</option>
+							  <option value="233">25.22 : Manufacture of plastic packing goods</option>
+							  <option value="234">25.23 : Manufacture of builders ware of plastic</option>
+							  <option value="235">25.24 : Manufacture of other plastic products</option>
+							</optgroup>
+							<optgroup label="SubSection DI : Manufacture of other non-metallic mineral products">
+							  <option value="236">26 : Manufacture of other non-metallic mineral products</option>
+							  <option value="237">26.1 : Manufacture of glass and glass products</option>
+							  <option value="238">26.11 : Manufacture of flat glass</option>
+							  <option value="239">26.12 : Shaping and processing of flat glass</option>
+							  <option value="240">26.13 : Manufacture of hollow glass</option>
+							  <option value="241">26.14 : Manufacture of glass fibres</option>
+							  <option value="242">26.15 : Manufacture and processing of other glass, including technical glassware</option>
+							  <option value="243">26.2 : Manufacture of non-refractory ceramic goods other than for construction purposes; manufacture of refractory ceramic products</option>
+							  <option value="244">26.21 : Manufacture of ceramic household and ornamental articles</option>
+							  <option value="245">26.22 : Manufacture of ceramic sanitary fixtures</option>
+							  <option value="246">26.23 : Manufacture of ceramic insulators and insulating fittings</option>
+							  <option value="247">26.24 : Manufacture of other technical ceramic products</option>
+							  <option value="248">26.25 : Manufacture of other ceramic products</option>
+							  <option value="249">26.26 : Manufacture of refractory ceramic products</option>
+							  <option value="250">26.3 : Manufacture of ceramic tiles and flags</option>
+							  <option value="251">26.30 : Manufacture of ceramic tiles and flags</option>
+							  <option value="252">26.4 : Manufacture of bricks, tiles and construction products, in baked clay</option>
+							  <option value="253">26.40 : Manufacture of bricks, tiles and construction products, in baked clay</option>
+							  <option value="254">26.5 : Manufacture of cement, lime and plaster</option>
+							  <option value="255">26.51 : Manufacture of cement</option>
+							  <option value="256">26.52 : Manufacture of lime</option>
+							  <option value="257">26.53 : Manufacture of plaster</option>
+							  <option value="258">26.6 : Manufacture of articles of concrete, plaster and cement</option>
+							  <option value="259">26.61 : Manufacture of concrete products for construction purposes</option>
+							  <option value="260">26.62 : Manufacture of plaster products for construction purposes</option>
+							  <option value="261">26.63 : Manufacture of ready-mixed concrete</option>
+							  <option value="262">26.64 : Manufacture of mortars</option>
+							  <option value="263">26.65 : Manufacture of fibre cement</option>
+							  <option value="264">26.66 : Manufacture of other articles of concrete, plaster and cement</option>
+							  <option value="265">26.7 : Cutting, shaping and finishing of stone</option>
+							  <option value="266">26.70 : Cutting, shaping and finishing of stone</option>
+							  <option value="267">26.8 : Manufacture of other non-metallic mineral products</option>
+							  <option value="268">26.81 : Production of abrasive products</option>
+							  <option value="269">26.82 : Manufacture of other non-metallic mineral products n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSection DJ : Manufacture of basic metals and fabricated metal products">
+							  <option value="270">27 : Manufacture of basic metals</option>
+							  <option value="271">27.1 : Manufacture of basic iron and steel and of ferro-alloys (ECSC)</option>
+							  <option value="272">27.10 : Manufacture of basic iron and steel and of ferro-alloys (ECSC)20)</option>
+							  <option value="273">27.2 : Manufacture of tubes</option>
+							  <option value="274">27.21 : Manufacture of cast iron tubes</option>
+							  <option value="275">27.22 : Manufacture of steel tubes</option>
+							  <option value="276">27.3 : Other first processing of iron and steel and production of non-ECSC20) ferro-alloys</option>
+							  <option value="277">27.31 : Cold drawing</option>
+							  <option value="278">27.32 : Cold rolling of narrow strip</option>
+							  <option value="279">27.33 : Cold forming or folding</option>
+							  <option value="280">27.34 : Wire drawing</option>
+							  <option value="281">27.35 : Other first processing of iron and steel n.e.c.; production of non-ECSC20) ferro-alloys</option>
+							  <option value="282">27.4 : Manufacture of basic precious and non-ferrous metals</option>
+							  <option value="283">27.41 : Precious metals production</option>
+							  <option value="284">27.42 : Aluminium production</option>
+							  <option value="285">27.43 : Lead, zinc and tin production</option>
+							  <option value="286">27.44 : Copper production</option>
+							  <option value="287">27.45 : Other non-ferrous metal production</option>
+							  <option value="288">27.5 : Casting of metals</option>
+							  <option value="289">27.51 : Casting of iron</option>
+							  <option value="290">27.52 : Casting of steel</option>
+							  <option value="291">27.53 : Casting of light metals</option>
+							  <option value="292">27.54 : Casting of other non-ferrous metals</option>
+							  <option value="293">28 : Manufacture of fabricated metal products, except machinery and equipment</option>
+							  <option value="294">28.1 : Manufacture of structural metal products</option>
+							  <option value="295">28.11 : Manufacture of metal structures and parts of structures</option>
+							  <option value="296">28.12 : Manufacture of builders carpentry and joinery of metal</option>
+							  <option value="297">28.2 : Manufacture of tanks, reservoirs and containers of metal; manufacture of central heating radiators and boilers</option>
+							  <option value="298">28.21 : Manufacture of tanks, reservoirs and containers of metal</option>
+							  <option value="299">28.22 : Manufacture of central heating radiators and boilers</option>
+							  <option value="300">28.3 : Manufacture of steam generators, except central heating hot water boilers</option>
+							  <option value="301">28.30 : Manufacture of steam generators, except central heating hot water boilers</option>
+							  <option value="302">28.4 : Forging, pressing, stamping and roll forming of metal; powder metallurgy</option>
+							  <option value="303">28.40 : Forging, pressing, stamping and roll forming of metal; powder metallurgy</option>
+							  <option value="304">28.5 : Treatment and coating of metals; general mechanical engineering</option>
+							  <option value="305">28.51 : Treatment and coating of metals</option>
+							  <option value="306">28.52 : General mechanical engineering</option>
+							  <option value="307">28.6 : Manufacture of cutlery, tools and general hardware</option>
+							  <option value="308">28.61 : Manufacture of cutlery</option>
+							  <option value="309">28.62 : Manufacture of tools</option>
+							  <option value="310">28.63 : Manufacture of locks and hinges</option>
+							  <option value="311">28.7 : Manufacture of other fabricated metal products</option>
+							  <option value="312">28.71 : Manufacture of steel drums and similar containers</option>
+							  <option value="313">28.72 : Manufacture of light metal packaging</option>
+							  <option value="314">28.73 : Manufacture of wire products</option>
+							  <option value="315">28.74 : Manufacture of fasteners, screw machine products, chain and springs</option>
+							  <option value="316">28.75 : Manufacture of other fabricated metal products n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSection DK : Manufacture of machinery and equipment n.e.c.">
+							  <option value="317">29 : Manufacture of machinery and equipment n.e.c.</option>
+							  <option value="318">29.1 : Manufacture of machinery for the production and use of mechanical power, except aircraft, vehicle and cycle engines</option>
+							  <option value="319">29.11 : Manufacture of engines and turbines, except aircraft, vehicle and cycle engines</option>
+							  <option value="320">29.12 : Manufacture of pumps and compressors</option>
+							  <option value="321">29.13 : Manufacture of taps and valves</option>
+							  <option value="322">29.14 : Manufacture of bearings, gears, gearing and driving elements</option>
+							  <option value="323">29.2 : Manufacture of other general purpose machinery</option>
+							  <option value="324">29.21 : Manufacture of furnaces and furnace burners</option>
+							  <option value="325">29.22 : Manufacture of lifting and handling equipment</option>
+							  <option value="326">29.23 : Manufacture of non-domestic cooling and ventilation equipment</option>
+							  <option value="327">29.24 : Manufacture of other general purpose machinery n.e.c.</option>
+							  <option value="328">29.3 : Manufacture of agricultural and forestry machinery</option>
+							  <option value="329">29.31 : Manufacture of agricultural tractors</option>
+							  <option value="330">29.32 : Manufacture of other agricultural and forestry machinery</option>
+							  <option value="331">29.4 : Manufacture of machine-tools</option>
+							  <option value="332">29.40 : Manufacture of machine-tools</option>
+							  <option value="333">29.5 : Manufacture of other special purpose machinery</option>
+							  <option value="334">29.51 : Manufacture of machinery for metallurgy</option>
+							  <option value="335">29.52 : Manufacture of machinery for mining, quarrying and construction</option>
+							  <option value="336">29.53 : Manufacture of machinery for food, beverage and tobacco processing</option>
+							  <option value="337">29.54 : Manufacture of machinery for textile, apparel and leather production</option>
+							  <option value="338">29.55 : Manufacture of machinery for paper and paperboard production</option>
+							  <option value="339">29.56 : Manufacture of other special purpose machinery n.e.c.</option>
+							  <option value="340">29.6 : Manufacture of weapons and ammunition</option>
+							  <option value="341">29.60 : Manufacture of weapons and ammunition</option>
+							  <option value="342">29.7 : Manufacture of domestic appliances n.e.c.</option>
+							  <option value="343">29.71 : Manufacture of electric domestic appliances</option>
+							  <option value="344">29.72 : Manufacture of non-electric domestic appliances</option>
+							</optgroup>
+							<optgroup label="SubSection DL : Manufacture of electrical and optical equipment">
+							  <option value="345">30 : Manufacture of office machinery and computers</option>
+							  <option value="346">30.0 : Manufacture of office machinery and computers</option>
+							  <option value="347">30.01 : Manufacture of office machinery</option>
+							  <option value="348">30.02 : Manufacture of computers and other information processing equipment</option>
+							  <option value="349">31 : Manufacture of electrical machinery and apparatus n.e.c.</option>
+							  <option value="350">31.1 : Manufacture of electric motors, generators and transformers</option>
+							  <option value="351">31.10 : Manufacture of electric motors, generators and transformers</option>
+							  <option value="352">31.2 : Manufacture of electricity distribution and control apparatus</option>
+							  <option value="353">31.20 : Manufacture of electricity distribution and control apparatus</option>
+							  <option value="354">31.3 : Manufacture of insulated wire and cable</option>
+							  <option value="355">31.30 : Manufacture of insulated wire and cable</option>
+							  <option value="356">31.4 : Manufacture of accumulators, primary cells and primary batteries</option>
+							  <option value="357">31.40 : Manufacture of accumulators, primary cells and primary batteries</option>
+							  <option value="358">31.5 : Manufacture of lighting equipment and electric lamps</option>
+							  <option value="359">31.50 : Manufacture of lighting equipment and electric lamps</option>
+							  <option value="360">31.6 : Manufacture of electrical equipment n.e.c.</option>
+							  <option value="361">31.61 : Manufacture of electrical equipment for engines and vehicles n.e.c.</option>
+							  <option value="362">31.62 : Manufacture of other electrical equipment n.e.c.</option>
+							  <option value="363">32 : Manufacture of radio, television and communication equipment and apparatus</option>
+							  <option value="364">32.1 : Manufacture of electronic valves and tubes and other electronic components</option>
+							  <option value="365">32.10 : Manufacture of electronic valves and tubes and other electronic components</option>
+							  <option value="366">32.2 : Manufacture of television and radio transmitters and apparatus for line telephony and line telegraphy</option>
+							  <option value="367">32.20 : Manufacture of television and radio transmitters and apparatus for line telephony and line telegraphy</option>
+							  <option value="368">32.3 : Manufacture of television and radio receivers, sound or video recording or reproducing apparatus and associated goods</option>
+							  <option value="369">32.30 : Manufacture of television and radio receivers, sound or video recording or reproducing apparatus and associated goods</option>
+							  <option value="370">33 : Manufacture of medical, precision and optical instruments, watches and clocks</option>
+							  <option value="371">33.1 : Manufacture of medical and surgical equipment and orthopaedic appliances</option>
+							  <option value="372">33.10 : Manufacture of medical and surgical equipment and orthopaedic appliances</option>
+							  <option value="373">33.2 : Manufacture of instruments and appliances for measuring, checking, testing, navigating and other purposes, except industrial process control equipment</option>
+							  <option value="374">33.20 : Manufacture of instruments and appliances for measuring, checking, testing, navigating and other purposes, except industrial process control equipment</option>
+							  <option value="375">33.3 : Manufacture of industrial process control equipment</option>
+							  <option value="376">33.30 : Manufacture of industrial process control equipment</option>
+							  <option value="377">33.4 : Manufacture of optical instruments and photographic equipment</option>
+							  <option value="378">33.40 : Manufacture of optical instruments and photographic equipment</option>
+							  <option value="379">33.5 : Manufacture of watches and clocks</option>
+							  <option value="380">33.50 : Manufacture of watches and clocks</option>
+							</optgroup>
+							<optgroup label="SubSection DM : Manufacture of transport equipment">
+							  <option value="381">34 : Manufacture of motor vehicles, trailers and semi-trailers</option>
+							  <option value="382">34.1 : Manufacture of motor vehicles</option>
+							  <option value="383">34.10 : Manufacture of motor vehicles</option>
+							  <option value="384">34.2 : Manufacture of bodies (coachwork) for motor vehicles; manufacture of trailers and semitrailers</option>
+							  <option value="385">34.20 : Manufacture of bodies (coachwork) for motor vehicles; manufacture of trailers and semitrailers</option>
+							  <option value="386">34.3 : Manufacture of parts and accessories for motor vehicles and their engines</option>
+							  <option value="387">34.30 : Manufacture of parts and accessories for motor vehicles and their engines</option>
+							  <option value="388">35 : Manufacture of other transport equipment</option>
+							  <option value="389">35.1 : Building and repairing of ships and boats</option>
+							  <option value="390">35.11 : Building and repairing of ships</option>
+							  <option value="391">35.12 : Building and repairing of pleasure and sporting boats</option>
+							  <option value="392">35.2 : Manufacture of railway and tramway locomotives and rolling stock</option>
+							  <option value="393">35.20 : Manufacture of railway and tramway locomotives and rolling stock</option>
+							  <option value="394">35.3 : Manufacture of aircraft and spacecraft</option>
+							  <option value="395">35.30 : Manufacture of aircraft and spacecraft</option>
+							  <option value="396">35.4 : Manufacture of motorcycles and bicycles</option>
+							  <option value="397">35.41 : Manufacture of motorcycles</option>
+							  <option value="398">35.42 : Manufacture of bicycles</option>
+							  <option value="399">35.43 : Manufacture of invalid carriages</option>
+							  <option value="400">35.5 : Manufacture of other transport equipment n.e.c.</option>
+							  <option value="401">35.50 : Manufacture of other transport equipment n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSection DN : Manufacturing n.e.c.">
+							  <option value="402">36 : Manufacture of furniture; manufacturing n.e.c.</option>
+							  <option value="403">36.1 : Manufacture of furniture</option>
+							  <option value="404">36.11 : Manufacture of chairs and seats</option>
+							  <option value="405">36.12 : Manufacture of other office and shop furniture</option>
+							  <option value="406">36.13 : Manufacture of other kitchen furniture</option>
+							  <option value="407">36.14 : Manufacture of other furniture</option>
+							  <option value="408">36.15 : Manufacture of mattresses</option>
+							  <option value="409">36.2 : Manufacture of jewellery and related articles</option>
+							  <option value="410">36.21 : Striking of coins and medals</option>
+							  <option value="411">36.22 : Manufacture of jewellery and related articles n.e.c.</option>
+							  <option value="412">36.3 : Manufacture of musical instruments</option>
+							  <option value="413">36.30 : Manufacture of musical instruments</option>
+							  <option value="414">36.4 : Manufacture of sports goods</option>
+							  <option value="415">36.40 : Manufacture of sports goods</option>
+							  <option value="416">36.5 : Manufacture of games and toys</option>
+							  <option value="417">36.50 : Manufacture of games and toys</option>
+							  <option value="418">36.6 : Miscellaneous manufacturing n.e.c.</option>
+							  <option value="419">36.61 : Manufacture of imitation jewellery</option>
+							  <option value="420">36.62 : Manufacture of brooms and brushes</option>
+							  <option value="421">36.63 : Other manufacturing n.e.c.</option>
+							  <option value="422">37 : Recycling</option>
+							  <option value="423">37.1 : Recycling of metal waste and scrap</option>
+							  <option value="424">37.10 : Recycling of metal waste and scrap</option>
+							  <option value="425">37.2 : Recycling of non-metal waste and scrap</option>
+							  <option value="426">37.20 : Recycling of non-metal waste and scrap</option>
+							</optgroup>
+							<optgroup label="Section E : Electricity, gas and water supply">
+							  <option value="427">40 : Electricity, gas, steam and hot water supply</option>
+							  <option value="428">40.1 : Production and distribution of electricity</option>
+							  <option value="429">40.10 : Production and distribution of electricity</option>
+							  <option value="430">40.2 : Manufacture of gas; distribution of gaseous fuels through mains</option>
+							  <option value="431">40.20 : Manufacture of gas; distribution of gaseous fuels through mains</option>
+							  <option value="432">40.3 : Steam and hot water supply</option>
+							  <option value="433">40.30 : Steam and hot water supply</option>
+							  <option value="434">41 : Collection, purification and distribution of water</option>
+							  <option value="435">41.0 : Collection, purification and distribution of water</option>
+							  <option value="436">41.00 : Collection, purification and distribution of water</option>
+							</optgroup>
+							<optgroup label="Section F : Construction">
+							  <option value="437">45 : Construction</option>
+							  <option value="438">45.1 : Site preparation</option>
+							  <option value="439">45.11 : Demolition and wrecking of buildings; earth moving</option>
+							  <option value="440">45.12 : Test drilling and boring</option>
+							  <option value="441">45.2 : Building of complete constructions or parts thereof; civil engineering</option>
+							  <option value="442">45.21 : General construction of buildings and civil engineering works</option>
+							  <option value="443">45.22 : Erection of roof covering and frames</option>
+							  <option value="444">45.23 : Construction of highways, roads, airfields and sport facilities</option>
+							  <option value="445">45.24 : Construction of water projects</option>
+							  <option value="446">45.25 : Other construction work involving special trades</option>
+							  <option value="447">45.3 : Building installation</option>
+							  <option value="448">45.31 : Installation of electrical wiring and fittings</option>
+							  <option value="449">45.32 : Insulation work activities</option>
+							  <option value="450">45.33 : Plumbing</option>
+							  <option value="451">45.34 : Other building installation</option>
+							  <option value="452">45.4 : Building completion</option>
+							  <option value="453">45.41 : Plastering</option>
+							  <option value="454">45.42 : Joinery installation</option>
+							  <option value="455">45.43 : Floor and wall covering</option>
+							  <option value="456">45.44 : Painting and glazing</option>
+							  <option value="457">45.45 : Other building completion</option>
+							  <option value="458">45.5 : Renting of construction or demolition equipment with operator</option>
+							  <option value="459">45.50 : Renting of construction or demolition equipment with operator</option>
+							</optgroup>
+							<optgroup label="Section G : Wholesale and retail trade; repair of motor vehicles, motorcycles and personal and household goods">
+							  <option value="460">50 : Sale, maintenance and repair of motor vehicles and motorcycles; retail sale of automotive fuel</option>
+							  <option value="461">50.1 : Sale of motor vehicles</option>
+							  <option value="462">50.10 : Sale of motor vehicles</option>
+							  <option value="463">50.2 : Maintenance and repair of motor vehicles</option>
+							  <option value="464">50.20 : Maintenance and repair of motor vehicles</option>
+							  <option value="465">50.3 : Sale of motor vehicle parts and accessories</option>
+							  <option value="466">50.30 : Sale of motor vehicle parts and accessories</option>
+							  <option value="467">50.4 : Sale, maintenance and repair of motorcycles and related parts and accessories</option>
+							  <option value="468">50.40 : Sale, maintenance and repair of motorcycles and related parts and accessories</option>
+							  <option value="469">50.5 : Retail sale of automotive fuel</option>
+							  <option value="470">50.50 : Retail sale of automotive fuel</option>
+							  <option value="471">51 : Wholesale trade and commission trade, except of motor vehicles and motorcycles</option>
+							  <option value="472">51.1 : Wholesale on a fee or contract basis</option>
+							  <option value="473">51.11 : Agents involved in the sale of agricultural raw materials, live animals, textile raw materials and semi-finished goods</option>
+							  <option value="474">51.12 : Agents involved in the sale of fuels, ores, metals and industrial chemicals</option>
+							  <option value="475">51.13 : Agents involved in the sale of timber and building materials</option>
+							  <option value="476">51.14 : Agents involved in the sale of machinery, industrial equipment, ships and aircraft</option>
+							  <option value="477">51.15 : Agents involved in the sale of furniture, household goods, hardware and ironmongery</option>
+							  <option value="478">51.16 : Agents involved in the sale of textiles, clothing, footwear and leather goods</option>
+							  <option value="479">51.17 : Agents involved in the sale of food, beverages and tobacco</option>
+							  <option value="480">51.18 : Agents specializing in the sale of particular products or ranges of products n.e.c.</option>
+							  <option value="481">51.19 : Agents involved in the sale of a variety of goods</option>
+							  <option value="482">51.2 : Wholesale of agricultural raw materials and live animals (These groups include only wholesale on own account)</option>
+							  <option value="483">51.21 : Wholesale of grain, seeds and animal feeds</option>
+							  <option value="484">51.22 : Wholesale of flowers and plants</option>
+							  <option value="485">51.23 : Wholesale of live animals</option>
+							  <option value="486">51.24 : Wholesale of hides, skins and leather</option>
+							  <option value="487">51.25 : Wholesale of unmanufactured tobacco</option>
+							  <option value="488">51.3 : Wholesale of food, beverages and tobacco</option>
+							  <option value="489">51.31 : Wholesale of fruit and vegetables</option>
+							  <option value="490">51.32 : Wholesale of meat and meat products</option>
+							  <option value="491">51.33 : Wholesale of dairy produce, eggs and edible oils and fats</option>
+							  <option value="492">51.34 : Wholesale of alcoholic and other beverages</option>
+							  <option value="493">51.35 : Wholesale of tobacco products</option>
+							  <option value="494">51.36 : Wholesale of sugar and chocolate and sugar confectionery</option>
+							  <option value="495">51.37 : Wholesale of coffee, tea, cocoa and spices</option>
+							  <option value="496">51.38 : Wholesale of other food, including fish, crustaceans and molluscs</option>
+							  <option value="497">51.39 : Non-specialized wholesale of food, beverages and tobacco</option>
+							  <option value="498">51.4 : Wholesale of household goods</option>
+							  <option value="499">51.41 : Wholesale of textiles</option>
+							  <option value="500">51.42 : Wholesale of clothing and footwear</option>
+							  <option value="501">51.43 : Wholesale of electrical household appliances and radio and television goods</option>
+							  <option value="502">51.44 : Wholesale of china and glassware, wallpaper and cleaning materials</option>
+							  <option value="503">51.45 : Wholesale of perfume and cosmetics</option>
+							  <option value="504">51.46 : Wholesale of pharmaceutical goods</option>
+							  <option value="505">51.47 : Wholesale of other household goods</option>
+							  <option value="506">51.5 : Wholesale of non-agricultural intermediate products, waste and scrap</option>
+							  <option value="507">51.51 : Wholesale of solid, liquid and gaseous fuels and related products</option>
+							  <option value="508">51.52 : Wholesale of metals and metal ores</option>
+							  <option value="509">51.53 : Wholesale of wood, construction materials and sanitary equipment</option>
+							  <option value="510">51.54 : Wholesale of hardware, plumbing and heating equipment and supplies</option>
+							  <option value="511">51.55 : Wholesale of chemical products</option>
+							  <option value="512">51.56 : Wholesale of other intermediate products</option>
+							  <option value="513">51.57 : Wholesale of waste and scrap</option>
+							  <option value="514">51.6 : Wholesale of machinery, equipment and supplies</option>
+							  <option value="515">51.61 : Wholesale of machine-tools</option>
+							  <option value="516">51.62 : Wholesale of construction machinery</option>
+							  <option value="517">51.63 : Wholesale of machinery for the textile industry and of sewing and knitting machines</option>
+							  <option value="518">51.64 : Wholesale of office machinery and equipment</option>
+							  <option value="519">51.65 : Wholesale of other machinery for use in industry, trade and navigation</option>
+							  <option value="520">51.66 : Wholesale of agricultural machinery and accessories and implements, including tractors</option>
+							  <option value="521">51.7 : Other wholesale</option>
+							  <option value="522">51.70 : Other wholesale</option>
+							  <option value="523">52 : Retail trade, except of motor vehicles and motorcycles; repair of personal and household goods</option>
+							  <option value="524">52.1 : Retail sale in non-specialized stores</option>
+							  <option value="525">52.11 : Retail sale in non-specialized stores with food, beverages or tobacco predominating</option>
+							  <option value="526">52.12 : Other retail sale in non-specialized stores</option>
+							  <option value="527">52.2 : Retail sale of food, beverages and tobacco in specialized stores</option>
+							  <option value="528">52.21 : Retail sale of fruit and vegetables</option>
+							  <option value="529">52.22 : Retail sale of meat and meat products</option>
+							  <option value="530">52.23 : Retail sale of fish, crustaceans and molluscs</option>
+							  <option value="531">52.24 : Retail sale of bread, cakes, flour confectionery and sugar confectionery</option>
+							  <option value="532">52.25 : Retail sale of alcoholic and other beverages</option>
+							  <option value="533">52.26 : Retail sale of tobacco products</option>
+							  <option value="534">52.27 : Other retail sale of food, beverages and tobacco in specialized stores</option>
+							  <option value="535">52.3 : Retail sale of pharmaceutical and medical goods, cosmetic and toilet articles</option>
+							  <option value="536">52.31 : Dispensing chemists</option>
+							  <option value="537">52.32 : Retail sale of medical and orthopaedic goods</option>
+							  <option value="538">52.33 : Retail sale of cosmetic and toilet articles</option>
+							  <option value="539">52.4 : Other retail sale of new goods in specialized stores</option>
+							  <option value="540">52.41 : Retail sale of textiles</option>
+							  <option value="541">52.42 : Retail sale of clothing</option>
+							  <option value="542">52.43 : Retail sale of footwear and leather goods</option>
+							  <option value="543">52.44 : Retail sale of furniture, lighting equipment and household articles n.e.c.</option>
+							  <option value="544">52.45 : Retail sale of electrical household appliances and radio and television goods</option>
+							  <option value="545">52.46 : Retail sale of hardware, paints and glass</option>
+							  <option value="546">52.47 : Retail sale of books, newspapers and stationery</option>
+							  <option value="547">52.48 : Other retail sale in specialized stores</option>
+							  <option value="548">52.5 : Retail sale of second-hand goods in stores</option>
+							  <option value="549">52.50 : Retail sale of second-hand goods in stores</option>
+							  <option value="550">52.6 : Retail sale not in stores</option>
+							  <option value="551">52.61 : Retail sale via mail order houses</option>
+							  <option value="552">52.62 : Retail sale via stalls and markets</option>
+							  <option value="553">52.63 : Other non-store retail sale</option>
+							  <option value="554">52.7 : Repair of personal and household goods</option>
+							  <option value="555">52.71 : Repair of boots, shoes and other articles of leather</option>
+							  <option value="556">52.72 : Repair of electrical household goods</option>
+							  <option value="557">52.73 : Repair of watches, clocks and jewellery</option>
+							  <option value="558">52.74 : Repair n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section H : Hotels and restaurants">
+							  <option value="559">55 : Hotels and restaurants</option>
+							  <option value="560">55.1 : Hotels</option>
+							  <option value="561">55.11 : Hotels and motels, with restaurant</option>
+							  <option value="562">55.12 : Hotels and motels, without restaurant</option>
+							  <option value="563">55.2 : Camping sites and other provision of short-stay accommodation</option>
+							  <option value="564">55.21 : Youth hostels and mountain refuges</option>
+							  <option value="565">55.22 : Camping sites, including caravan sites</option>
+							  <option value="566">55.23 : Other provision of lodgings n.e.c.</option>
+							  <option value="567">55.3 : Restaurants</option>
+							  <option value="568">55.30 : Restaurants</option>
+							  <option value="569">55.4 : Bars</option>
+							  <option value="570">55.40 : Bars</option>
+							  <option value="571">55.5 : Canteens and catering</option>
+							  <option value="572">55.51 : Canteens</option>
+							  <option value="573">55.52 : Catering</option>
+							</optgroup>
+							<optgroup label="Section I : Transport, storage and communication">
+							  <option value="574">60 : Land transport; transport via pipelines</option>
+							  <option value="575">60.1 : Transport via railways</option>
+							  <option value="576">60.10 : Transport via railways</option>
+							  <option value="577">60.2 : Other land transport</option>
+							  <option value="578">60.21 : Other scheduled passenger land transport</option>
+							  <option value="579">60.22 : Taxi operation</option>
+							  <option value="580">60.23 : Other land passenger transport</option>
+							  <option value="581">60.24 : Freight transport by road</option>
+							  <option value="582">60.3 : Transport via pipelines</option>
+							  <option value="583">60.30 : Transport via pipelines</option>
+							  <option value="584">61 : Water transport</option>
+							  <option value="585">61.1 : Sea and coastal water transport</option>
+							  <option value="586">61.10 : Sea and coastal water transport</option>
+							  <option value="587">61.2 : Inland water transport</option>
+							  <option value="588">61.20 : Inland water transport</option>
+							  <option value="589">62 : Air transport</option>
+							  <option value="590">62.1 : Scheduled air transport</option>
+							  <option value="591">62.10 : Scheduled air transport</option>
+							  <option value="592">62.2 : Non-scheduled air transport</option>
+							  <option value="593">62.20 : Non-scheduled air transport</option>
+							  <option value="594">62.3 : Space transport</option>
+							  <option value="595">62.30 : Space transport</option>
+							  <option value="596">63 : Supporting and auxiliary transport activities; activities of travel agencies</option>
+							  <option value="597">63.1 : Cargo handling and storage</option>
+							  <option value="598">63.11 : Cargo handling</option>
+							  <option value="599">63.12 : Storage and warehousing</option>
+							  <option value="600">63.2 : Other supporting transport activities</option>
+							  <option value="601">63.21 : Other supporting land transport activities</option>
+							  <option value="602">63.22 : Other supporting water transport activities</option>
+							  <option value="603">63.23 : Other supporting air transport activities</option>
+							  <option value="604">63.3 : Activities of travel agencies and tour operators; tourist assistance activities n.e.c.</option>
+							  <option value="605">63.30 : Activities of travel agencies and tour operators; tourist assistance activities n.e.c.</option>
+							  <option value="606">63.4 : Activities of other transport agencies</option>
+							  <option value="607">63.40 : Activities of other transport agencies</option>
+							  <option value="608">64 : Post and telecommunications</option>
+							  <option value="609">64.1 : Post and courier activities</option>
+							  <option value="610">64.11 : National post activities</option>
+							  <option value="611">64.12 : Courier activities other than national post activities</option>
+							  <option value="612">64.2 : Telecommunications</option>
+							  <option value="613">64.20 : Telecommunications</option>
+							</optgroup>
+							<optgroup label="Section J : Financial intermediation">
+							  <option value="614">65 : Financial intermediation, except insurance and pension funding</option>
+							  <option value="615">65.1 : Monetary intermediation</option>
+							  <option value="616">65.11 : Central banking</option>
+							  <option value="617">65.12 : Other monetary intermediation</option>
+							  <option value="618">65.2 : Other financial intermediation</option>
+							  <option value="619">65.21 : Financial leasing</option>
+							  <option value="620">65.22 : Other credit granting</option>
+							  <option value="621">65.23 : Other financial intermediation n.e.c.</option>
+							  <option value="622">66 : Insurance and pension funding, except compulsory social security</option>
+							  <option value="623">66.0 : Insurance and pension funding, except compulsory social security</option>
+							  <option value="624">66.01 : Life insurance</option>
+							  <option value="625">66.02 : Pension funding</option>
+							  <option value="626">66.03 : Non-life insurance</option>
+							  <option value="627">67 : Activities auxiliary to financial intermediation</option>
+							  <option value="628">67.1 : Activities auxiliary to financial intermediation, except insurance and pension funding</option>
+							  <option value="629">67.11 : Administration of financial markets</option>
+							  <option value="630">67.12 : Security broking and fund management</option>
+							  <option value="631">67.13 : Activities auxiliary to financial intermediation n.e.c.</option>
+							  <option value="632">67.2 : Activities auxiliary to insurance and pension funding</option>
+							  <option value="633">67.20 : Activities auxiliary to insurance and pension funding</option>
+							</optgroup>
+							<optgroup label="Section K : Real estate, renting and business activities">
+							  <option value="634">70 : Real estate activities</option>
+							  <option value="635">70.1 : Real estate activities with own property</option>
+							  <option value="636">70.11 : Development and selling of real estate</option>
+							  <option value="637">70.12 : Buying and selling of own real estate</option>
+							  <option value="638">70.2 : Letting of own property</option>
+							  <option value="639">70.20 : Letting of own property</option>
+							  <option value="640">70.3 : Real estate activities on a fee or contract basis</option>
+							  <option value="641">70.31 : Real estate agencies</option>
+							  <option value="642">70.32 : Management of real estate on a fee or contract basis</option>
+							  <option value="643">71 : Renting of machinery and equipment without operator and of personal and household goods</option>
+							  <option value="644">71.1 : Renting of automobiles</option>
+							  <option value="645">71.10 : Renting of automobiles</option>
+							  <option value="646">71.2 : Renting of other transport equipment</option>
+							  <option value="647">71.21 : Renting of other land transport equipment</option>
+							  <option value="648">71.22 : Renting of water transport equipment</option>
+							  <option value="649">71.23 : Renting of air transport equipment</option>
+							  <option value="650">71.3 : Renting of other machinery and equipment</option>
+							  <option value="651">71.31 : Renting of agricultural machinery and equipment</option>
+							  <option value="652">71.32 : Renting of construction and civil engineering machinery and equipment</option>
+							  <option value="653">71.33 : Renting of office machinery and equipment, including computers</option>
+							  <option value="654">71.34 : Renting of other machinery and equipment n.e.c.</option>
+							  <option value="655">71.4 : Renting of personal and household goods n.e.c.</option>
+							  <option value="656">71.40 : Renting of personal and household goods n.e.c.</option>
+							  <option value="657">72 : Computer and related activities</option>
+							  <option value="658">72.1 : Hardware consultancy</option>
+							  <option value="659">72.10 : Hardware consultancy</option>
+							  <option value="660">72.2 : Software consultancy and supply</option>
+							  <option value="661">72.20 : Software consultancy and supply</option>
+							  <option value="662">72.3 : Data processing</option>
+							  <option value="663">72.30 : Data processing</option>
+							  <option value="664">72.4 : Database activities</option>
+							  <option value="665">72.40 : Database activities</option>
+							  <option value="666">72.5 : Maintenance and repair of office, accounting and computing machinery</option>
+							  <option value="667">72.50 : Maintenance and repair of office, accounting and computing machinery</option>
+							  <option value="668">72.6 : Other computer related activities</option>
+							  <option value="669">72.60 : Other computer related activities</option>
+							  <option value="670">73 : Research and development</option>
+							  <option value="671">73.1 : Research and experimental development on natural sciences and engineering</option>
+							  <option value="672">73.10 : Research and experimental development on natural sciences and engineering</option>
+							  <option value="673">73.2 : Research and experimental development on social sciences and humanities</option>
+							  <option value="674">73.20 : Research and experimental development on social sciences and humanities</option>
+							  <option value="675">74 : Other business activities</option>
+							  <option value="676">74.1 : Legal, accounting, book-keeping and auditing activities; tax consultancy; market research and public opinion polling; business and management consultancy; holdings</option>
+							  <option value="677">74.11 : Legal activities</option>
+							  <option value="678">74.12 : Accounting, book-keeping and auditing activities; tax consultancy</option>
+							  <option value="679">74.13 : Market research and public opinion polling</option>
+							  <option value="680">74.14 : Business and management consultancy activities</option>
+							  <option value="681">74.15 : Management activities of holding companies</option>
+							  <option value="682">74.2 : Architectural and engineering activities and related technical consultancy</option>
+							  <option value="683">74.20 : Architectural and engineering activities and related technical consultancy</option>
+							  <option value="684">74.3 : Technical testing and analysis</option>
+							  <option value="685">74.30 : Technical testing and analysis</option>
+							  <option value="686">74.4 : Advertising</option>
+							  <option value="687">74.40 : Advertising</option>
+							  <option value="688">74.5 : Labour recruitment and provision of personnel</option>
+							  <option value="689">74.50 : Labour recruitment and provision of personnel</option>
+							  <option value="690">74.6 : Investigation and security activities</option>
+							  <option value="691">74.60 : Investigation and security activities</option>
+							  <option value="692">74.7 : Industrial cleaning</option>
+							  <option value="693">74.70 : Industrial cleaning</option>
+							  <option value="694">74.8 : Miscellaneous business activities n.e.c.</option>
+							  <option value="695">74.81 : Photographic activities</option>
+							  <option value="696">74.82 : Packaging activities</option>
+							  <option value="697">74.83 : Secretarial and translation activities</option>
+							  <option value="698">74.84 : Other business activities n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section L : Public administration and defence; compulsory social security">
+							  <option value="699">75 : Public administration and defence; compulsory social security</option>
+							  <option value="700">75.1 : Administration of the State and the economic and social policy of the community</option>
+							  <option value="701">75.11 : General (overall) public service activities</option>
+							  <option value="702">75.12 : Regulation of the activities of agencies that provide health care, education, cultural services and other social services, excluding social security</option>
+							  <option value="703">75.13 : Regulation of and contribution to more efficient operation of business</option>
+							  <option value="704">75.14 : Supporting service activities for the government as a whole</option>
+							  <option value="705">75.2 : Provision of services to the community as a whole</option>
+							  <option value="706">75.21 : Foreign affairs</option>
+							  <option value="707">75.22 : Defence activities</option>
+							  <option value="708">75.23 : Justice and judicial activities</option>
+							  <option value="709">75.24 : Public security, law and order activities</option>
+							  <option value="710">75.25 : Fire service activities</option>
+							  <option value="711">75.3 : Compulsory social security activities</option>
+							  <option value="712">75.30 : Compulsory social security activities</option>
+							</optgroup>
+							<optgroup label="Section M : Education">
+							  <option value="713">80 : Education</option>
+							  <option value="714">80.1 : Primary education</option>
+							  <option value="715">80.10 : Primary education</option>
+							  <option value="716">80.2 : Secondary education</option>
+							  <option value="717">80.21 : General secondary education</option>
+							  <option value="718">80.22 : Technical and vocational secondary education</option>
+							  <option value="719">80.3 : Higher education</option>
+							  <option value="720">80.30 : Higher education</option>
+							  <option value="721">80.4 : Adult and other education</option>
+							  <option value="722">80.41 : Driving school activities</option>
+							  <option value="723">80.42 : Adult and other education n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section N : Health and social work">
+							  <option value="724">85 : Health and social work</option>
+							  <option value="725">85.1 : Human health activities</option>
+							  <option value="726">85.11 : Hospital activities</option>
+							  <option value="727">85.12 : Medical practice activities</option>
+							  <option value="728">85.13 : Dental practice activities</option>
+							  <option value="729">85.14 : Other human health activities</option>
+							  <option value="730">85.2 : Veterinary activities</option>
+							  <option value="731">85.20 : Veterinary activities</option>
+							  <option value="732">85.3 : Social work activities</option>
+							  <option value="733">85.31 : Social work activities with accommodation</option>
+							  <option value="734">85.32 : Social work activities without accommodation</option>
+							</optgroup>
+							<optgroup label="Section O : Other community, social and personal service activities">
+							  <option value="735">90 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="736">90.0 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="737">90.00 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="738">91 : Activities of membership organizations n.e.c.</option>
+							  <option value="739">91.1 : Activities of business, employers and professional organizations</option>
+							  <option value="740">91.11 : Activities of business and employers organizations</option>
+							  <option value="741">91.12 : Activities of professional organizations</option>
+							  <option value="742">91.2 : Activities of trade unions</option>
+							  <option value="743">91.20 : Activities of trade unions</option>
+							  <option value="744">91.3 : Activities of other membership organizations</option>
+							  <option value="745">91.31 : Activities of religious organizations</option>
+							  <option value="746">91.32 : Activities of political organizations</option>
+							  <option value="747">91.33 : Activities of other membership organizations n.e.c.</option>
+							  <option value="748">92 : Recreational, cultural and sporting activities</option>
+							  <option value="749">92.1 : Motion picture and video activities</option>
+							  <option value="750">92.11 : Motion picture and video production</option>
+							  <option value="751">92.12 : Motion picture and video distribution</option>
+							  <option value="752">92.13 : Motion picture projection</option>
+							  <option value="753">92.2 : Radio and television activities</option>
+							  <option value="754">92.20 : Radio and television activities</option>
+							  <option value="755">92.3 : Other entertainment activities</option>
+							  <option value="756">92.31 : Artistic and literary creation and interpretation</option>
+							  <option value="757">92.32 : Operation of arts facilities</option>
+							  <option value="758">92.33 : Fair and amusement park activities</option>
+							  <option value="759">92.34 : Other entertainment activities n.e.c.</option>
+							  <option value="760">92.4 : News agency activities</option>
+							  <option value="761">92.40 : News agency activities</option>
+							  <option value="762">92.5 : Library, archives, museums and other cultural activities</option>
+							  <option value="763">92.51 : Library and archives activities</option>
+							  <option value="764">92.52 : Museums activities and preservation of historical sites and buildings</option>
+							  <option value="765">92.53 : Botanical and zoological gardens and nature reserves activities</option>
+							  <option value="766">92.6 : Sporting activities</option>
+							  <option value="767">92.61 : Operation of sports arenas and stadiums</option>
+							  <option value="768">92.62 : Other sporting activities</option>
+							  <option value="769">92.7 : Other recreational activities</option>
+							  <option value="770">92.71 : Gambling and betting activities</option>
+							  <option value="771">92.72 : Other recreational activities n.e.c.</option>
+							  <option value="772">93 : Other service activities</option>
+							  <option value="773">93.0 : Other service activities</option>
+							  <option value="774">93.01 : Washing and dry-cleaning of textile and fur products</option>
+							  <option value="775">93.02 : Hairdressing and other beauty treatment</option>
+							  <option value="776">93.03 : Funeral and related activities</option>
+							  <option value="777">93.04 : Physical well-being activities</option>
+							  <option value="778">93.05 : Other service activities n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section P : Private households with employed persons">
+							  <option value="779">95 : Private households with employed persons</option>
+							</optgroup>
+							<optgroup label="Section Q : Extra-territorial organizations and bodies">
+							  <option value="780">99 : Extra-territorial organizations and bodies</option>
+							</optgroup>
+						  </select>
+						</dd>
+				  </dl>
+				  <div class="category_block"></div>
+				</div>
+		  </div>
+		</div>
+  </div>
+  <div class="add_info_block category_mod" ng-show='service.operation_id || store.id'>
+		<div class="add_info_header">
+		  <div class="add_info_title"><%= t('check_one_or_more_boxes_that_describe_your_business') %></div>
+		  <div class="add_info_colapse_butt"></div>
+		</div>
+		<div class="add_info_content_block">
+		  <div class="add_info_form_block">
+				<div class="add_info_form_w">
+				  <dl class="form_cell form_cell_v1_mod">
+						<dt class="form_c_hline form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <label for="Describe_your_business">Describe your business</label>
+						</dt>
+						<dd class="form_c_f_w form_v1_mod hline_hide_mod autocomplete_el_v1_mod">
+						  <select gf-multiselect gf-placeholder='<%= t('select_that_describe_your_business')%>' gf-class='' ng-model="business_ids" multiple="multiple" class="f_c_field default_mod select_add_category normal_list">
+							<optgroup label="Section A : Agriculture, hunting and forestry">
+							  <option value="0">01 : Agriculture, hunting and related service activities</option>
+							  <option value="1">01.1 : Growing of crops; market gardening; horticulture</option>
+							  <option value="2">01.11 : Growing of cereals and other crops n.e.c.</option>
+							  <option value="3">01.12 : Growing of vegetables, horticultural specialties and nursery products</option>
+							  <option value="4">01.13 : Growing of fruit, nuts, beverage and spice crops</option>
+							  <option value="5">01.2 : Farming of animals</option>
+							  <option value="6">01.21 : Farming of cattle, dairy farming</option>
+							  <option value="7">01.22 : Farming of sheep, goats, horses, asses, mules and hinnies</option>
+							  <option value="8">01.23 : Farming of swine</option>
+							  <option value="9">01.24 : Farming of poultry</option>
+							  <option value="10">01.25 : Other farming of animals</option>
+							  <option value="11">01.3 : Growing of crops combined with farming of animals (mixed farming)</option>
+							  <option value="12">01.30 : Growing of crops combined with farming of animals (mixed farming)</option>
+							  <option value="13">01.4 : Agricultural and animal husbandry service activities, except veterinary activities</option>
+							  <option value="14">01.41 : Agricultural service activities</option>
+							  <option value="15">01.42 : Animal husbandry service activities, except veterinary activities</option>
+							  <option value="16">01.5 : Hunting, trapping and game propagation, including related service activities</option>
+							  <option value="17">01.50 : Hunting, trapping and game propagation, including related service activities</option>
+							  <option value="18">02 : Forestry, logging and related service activities</option>
+							  <option value="19">02.0 : Forestry, logging and related service activities</option>
+							  <option value="20">02.01 : Forestry and logging</option>
+							  <option value="21">02.02 : Forestry and logging related service activities</option>
+							</optgroup>
+							<optgroup label="Section B : Fishing">
+							  <option value="22">05 : Fishing, operation of fish hatcheries and fish farms; service activities incidental to fishing</option>
+							  <option value="23">05.0 : Fishing, operation of fish hatcheries and fish farms; service activities incidental to fishing</option>
+							  <option value="24">05.01 : Fishing</option>
+							  <option value="25">05.02 : Operation of fish hatcheries and fish farms</option>
+							</optgroup>
+							<optgroup label="Section C : Mining and quarrying SubSection CA : Mining and quarrying of energy producing materials">
+							  <option value="26">10 : Mining of coal and lignite; extraction of peat</option>
+							  <option value="27">10.1 : Mining and agglomeration of hard coal</option>
+							  <option value="28">10.10 : Mining and agglomeration of hard coal</option>
+							  <option value="29">10.2 : Mining and agglomeration of lignite</option>
+							  <option value="30">10.20 : Mining and agglomeration of lignite</option>
+							  <option value="31">10.3 : Extraction and agglomeration of peat</option>
+							  <option value="32">10.30 : Extraction and agglomeration of peat</option>
+							  <option value="33">11 : Extraction of crude petroleum and natural gas; service activities incidental to oil and gas extraction,</option>
+							</optgroup>
+							<optgroup label="Sxcluding surveying">
+							  <option value="34">11.1 : Extraction of crude petroleum and natural gas</option>
+							  <option value="35">11.10 : Extraction of crude petroleum and natural gas</option>
+							  <option value="36">11.2 : Service activities incidental to oil and gas extraction, excluding surveying</option>
+							  <option value="37">11.20 : Service activities incidental to oil and gas extraction, excluding surveying</option>
+							  <option value="38">12 : Mining of uranium and thorium ores</option>
+							  <option value="39">12.0 : Mining of uranium and thorium ores</option>
+							  <option value="40">12.00 : Mining of uranium and thorium ores</option>
+							</optgroup>
+							<optgroup label="SubSectionCB : Mining and quarrying, except of energy producing materials">
+							  <option value="41">13 : Mining of metal ores</option>
+							  <option value="42">13.1 : Mining of iron ores</option>
+							  <option value="43">13.10 : Mining of iron ores</option>
+							  <option value="44">13.2 : Mining of non-ferrous metal ores, except uranium and thorium ores</option>
+							  <option value="45">13.20 : Mining of non-ferrous metal ores, except uranium and thorium ores</option>
+							  <option value="46">14 : Other mining and quarrying</option>
+							  <option value="47">14.1 : Quarrying of stone</option>
+							  <option value="48">14.11 : Quarrying of stone for construction</option>
+							  <option value="49">14.12 : Quarrying of limestone, gypsum and chalk</option>
+							  <option value="50">14.13 : Quarrying of slate</option>
+							  <option value="51">14.2 : Quarrying of sand and clay</option>
+							  <option value="52">14.21 : Operation of gravel and sand pits</option>
+							  <option value="53">14.22 : Mining of clays and kaolin</option>
+							  <option value="54">14.3 : Mining of chemical and fertilizer minerals</option>
+							  <option value="55">14.30 : Mining of chemical and fertilizer minerals</option>
+							  <option value="56">14.4 : Production of salt</option>
+							  <option value="57">14.40 : Production of salt</option>
+							  <option value="58">14.5 : Other mining and quarrying n.e.c.</option>
+							  <option value="59">14.50 : Other mining and quarrying n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section D : Manufacturing SubSection DA : Manufacture of food products, beverages and tobacco">
+							  <option value="60">15 : Manufacture of food products and beverages</option>
+							  <option value="61">15.1 : Production, processing and preserving of meat and meat products</option>
+							  <option value="62">15.11 : Production and preserving of meat</option>
+							  <option value="63">15.12 : Production and preserving of poultrymeat</option>
+							  <option value="64">15.13 : Production of meat and poultrymeat products</option>
+							  <option value="65">15.2 : Processing and preserving of fish and fish products</option>
+							  <option value="66">15.20 : Processing and preserving of fish and fish products</option>
+							  <option value="67">15.3 : Processing and preserving of fruit and vegetables</option>
+							  <option value="68">15.31 : Processing and preserving of potatoes</option>
+							  <option value="69">15.32 : Manufacture of fruit and vegetable juice</option>
+							  <option value="70">15.33 : Processing and preserving of fruit and vegetables n.e.c.</option>
+							  <option value="71">15.4 : Manufacture of vegetable and animal oils and fats</option>
+							  <option value="72">15.41 : Manufacture of crude oils and fats</option>
+							  <option value="73">15.42 : Manufacture of refined oils and fats</option>
+							  <option value="74">15.43 : Manufacture of margarine and similar edible fats</option>
+							  <option value="75">15.5 : Manufacture of dairy products</option>
+							  <option value="76">15.51 : Operation of dairies and cheese making</option>
+							  <option value="77">15.52 : Manufacture of ice cream</option>
+							  <option value="78">15.6 : Manufacture of grain mill products, starches and starch products</option>
+							  <option value="79">15.61 : Manufacture of grain mill products</option>
+							  <option value="80">15.62 : Manufacture of starches and starch products</option>
+							  <option value="81">15.7 : Manufacture of prepared animal feeds</option>
+							  <option value="82">15.71 : Manufacture of prepared feeds for farm animals</option>
+							  <option value="83">15.72 : Manufacture of prepared pet foods</option>
+							  <option value="84">15.8 : Manufacture of other food products</option>
+							  <option value="85">15.81 : Manufacture of bread; manufacture of fresh pastry goods and cakes</option>
+							  <option value="86">15.82 : Manufacture of rusks and biscuits; manufacture of preserved pastry goods and cakes</option>
+							  <option value="87">15.83 : Manufacture of sugar</option>
+							  <option value="88">15.84 : Manufacture of cocoa; chocolate and sugar confectionery</option>
+							  <option value="89">15.85 : Manufacture of macaroni, noodles, couscous and similar farinaceous products</option>
+							  <option value="90">15.86 : Processing of tea and coffee</option>
+							  <option value="91">15.87 : Manufacture of condiments and seasonings</option>
+							  <option value="92">15.88 : Manufacture of homogenized food preparations and dietetic food</option>
+							  <option value="93">15.89 : Manufacture of other food products n.e.c.</option>
+							  <option value="94">15.9 : Manufacture of beverages</option>
+							  <option value="95">15.91 : Manufacture of distilled potable alcoholic beverages</option>
+							  <option value="96">15.92 : Production of ethyl alcohol from fermented materials</option>
+							  <option value="97">15.93 : Manufacture of wines</option>
+							  <option value="98">15.94 : Manufacture of cider and other fruit wines</option>
+							  <option value="99">15.95 : Manufacture of other non-distilled fermented beverages</option>
+							  <option value="100">15.96 : Manufacture of beer</option>
+							  <option value="101">15.97 : Manufacture of malt</option>
+							  <option value="102">15.98 : Production of mineral waters and soft drinks</option>
+							  <option value="103">16 : Manufacture of tobacco products</option>
+							  <option value="104">16.0 : Manufacture of tobacco products</option>
+							  <option value="105">16.00 : Manufacture of tobacco products</option>
+							</optgroup>
+							<optgroup label="SubSectionDB : Manufacture of textiles and textile products">
+							  <option value="106">17 : Manufacture of textiles</option>
+							  <option value="107">17.1 : Preparation and spinning of textile fibres</option>
+							  <option value="108">17.11 : Preparation and spinning of cotton-type fibres</option>
+							  <option value="109">17.12 : Preparation and spinning of woollen-type fibres</option>
+							  <option value="110">17.13 : Preparation and spinning of worsted-type fibres</option>
+							  <option value="111">17.14 : Preparation and spinning of flax-type fibres</option>
+							  <option value="112">17.15 : Throwing and preparation of silk, including from noils, and throwing and texturing of</option>
+							</optgroup>
+							<optgroup label="Synthetic or artificial filament yarns">
+							  <option value="113">17.16 : Manufacture of sewing threads</option>
+							  <option value="114">17.17 : Preparation and spinning of other textile fibres</option>
+							  <option value="115">17.2 : Textile weaving</option>
+							  <option value="116">17.21 : Cotton-type weaving</option>
+							  <option value="117">17.22 :Woollen-type weaving</option>
+							  <option value="118">17.23 : Worsted-type weaving</option>
+							  <option value="119">17.24 : Silk-type weaving</option>
+							  <option value="120">17.25 : Other textile weaving</option>
+							  <option value="121">17.3 : Finishing of textiles</option>
+							  <option value="122">17.30 : Finishing of textiles</option>
+							  <option value="123">17.4 : Manufacture of made-up textile articles, except apparel</option>
+							  <option value="124">17.40 : Manufacture of made-up textile articles, except apparel</option>
+							  <option value="125">17.5 : Manufacture of other textiles</option>
+							  <option value="126">17.51 : Manufacture of carpets and rugs</option>
+							  <option value="127">17.52 : Manufacture of cordage, rope, twine and netting</option>
+							  <option value="128">17.53 : Manufacture of non-wovens and articles made from non-wovens, except apparel</option>
+							  <option value="129">17.54 : Manufacture of other textiles n.e.c.</option>
+							  <option value="130">17.6 : Manufacture of knitted and crocheted fabrics</option>
+							  <option value="131">17.60 : Manufacture of knitted and crocheted fabrics</option>
+							  <option value="132">17.7 : Manufacture of knitted and crocheted articles</option>
+							  <option value="133">17.71 : Manufacture of knitted and crocheted hosiery</option>
+							  <option value="134">17.72 : Manufacture of knitted and crocheted pullovers, cardigans and similar articles</option>
+							  <option value="135">18 : Manufacture of wearing apparel; dressing and dyeing of fur</option>
+							  <option value="136">18.1 : Manufacture of leather clothes</option>
+							  <option value="137">18.10 : Manufacture of leather clothes</option>
+							  <option value="138">18.2 : Manufacture of other wearing apparel and accessories</option>
+							  <option value="139">18.21 : Manufacture of workwear</option>
+							  <option value="140">18.22 : Manufacture of other outerwear</option>
+							  <option value="141">18.23 : Manufacture of underwear</option>
+							  <option value="142">18.24 : Manufacture of other wearing apparel and accessories n.e.c.</option>
+							  <option value="143">18.3 : Dressing and dyeing of fur; manufacture of articles of fur</option>
+							  <option value="144">18.30 : Dressing and dyeing of fur; manufacture of articles of fur</option>
+							</optgroup>
+							<optgroup label="SubSectionDC : Manufacture of leather and leather products">
+							  <option value="145">19 : Tanning and dressing of leather; manufacture of luggage, handbags, saddlery, harness and footwear</option>
+							  <option value="146">19.1 : Tanning and dressing of leather</option>
+							  <option value="147">19.10 : Tanning and dressing of leather</option>
+							  <option value="148">19.2 : Manufacture of luggage, handbags and the like, saddlery and harness</option>
+							  <option value="149">19.20 : Manufacture of luggage, handbags and the like, saddlery and harness</option>
+							  <option value="150">19.3 : Manufacture of footwear</option>
+							  <option value="151">19.30 : Manufacture of footwear</option>
+							</optgroup>
+							<optgroup label="SubSectionDD : Manufacture of wood and wood products">
+							  <option value="152">20 : Manufacture of wood and of products of wood and cork, except furniture; manufacture of articles of</option>
+							</optgroup>
+							<optgroup label="Straw and plaiting materials">
+							  <option value="153">20.1 : Sawmilling and planing of wood; impregnation of wood</option>
+							  <option value="154">20.10 : Sawmilling and planing of wood; impregnation of wood</option>
+							  <option value="155">20.2 : Manufacture of veneer sheets; manufacture of plywood, laminboard, particle board, fibre</option>
+							</optgroup>
+							<optgroup label="Soard and other panels and boards">
+							  <option value="156">20.20 : Manufacture of veneer sheets; manufacture of plywood, laminboard, particle board, fibre</option>
+							</optgroup>
+							<optgroup label="Soard and other panels and boards">
+							  <option value="157">20.3 : Manufacture of builders carpentry and joinery</option>
+							  <option value="158">20.30 : Manufacture of builders carpentry and joinery</option>
+							  <option value="159">20.4 : Manufacture of wooden containers</option>
+							  <option value="160">20.40 : Manufacture of wooden containers</option>
+							  <option value="161">20.5 : Manufacture of other products of wood; manufacture of articles of cork, straw and plaiting</option>
+							</optgroup>
+							<optgroup label="Saterials">
+							  <option value="162">20.51 : Manufacture of other products of wood</option>
+							  <option value="163">20.52 : Manufacture of articles of cork, straw and plaiting materials</option>
+							</optgroup>
+							<optgroup label="SubSectionDE : Manufacture of pulp, paper and paper products; publishing and printing">
+							  <option value="164">21 : Manufacture of pulp, paper and paper products</option>
+							  <option value="165">21.1 : Manufacture of pulp, paper and paperboard</option>
+							  <option value="166">21.11 : Manufacture of pulp</option>
+							  <option value="167">21.12 : Manufacture of paper and paperboard</option>
+							  <option value="168">21.2 : Manufacture of articles of paper and paperboard</option>
+							  <option value="169">21.21 : Manufacture of corrugated paper and paperboard and of containers of paper and</option>
+							</optgroup>
+							<optgroup label="Saperboard">
+							  <option value="170">21.22 : Manufacture of household and sanitary goods and of toilet requisites</option>
+							  <option value="171">21.23 : Manufacture of paper stationery</option>
+							  <option value="172">21.24 : Manufacture of wallpaper</option>
+							  <option value="173">21.25 : Manufacture of other articles of paper and paperboard n.e.c.</option>
+							  <option value="174">22 : Publishing, printing and reproduction of recorded media</option>
+							  <option value="175">22.1 : Publishing</option>
+							  <option value="176">22.11 : Publishing of books</option>
+							  <option value="177">22.12 : Publishing of newspapers</option>
+							  <option value="178">22.13 : Publishing of journals and periodicals</option>
+							  <option value="179">22.14 : Publishing of sound recordings</option>
+							  <option value="180">22.15 : Other publishing</option>
+							  <option value="181">22.2 : Printing and service activities related to printing</option>
+							  <option value="182">22.21 : Printing of newspapers</option>
+							  <option value="183">22.22 : Printing n.e.c.</option>
+							  <option value="184">22.23 : Bookbinding and finishing</option>
+							  <option value="185">22.24 : Composition and plate-making</option>
+							  <option value="186">22.25 : Other activities related to printing</option>
+							  <option value="187">22.3 : Reproduction of recorded media</option>
+							  <option value="188">22.31 : Reproduction of sound recording</option>
+							  <option value="189">22.32 : Reproduction of video recording</option>
+							  <option value="190">22.33 : Reproduction of computer media</option>
+							</optgroup>
+							<optgroup label="SubSectionDF : Manufacture of coke, refined petroleum products and nuclear fuel">
+							  <option value="191">23 : Manufacture of coke, refined petroleum products and nuclear fuel</option>
+							  <option value="192">23.1 : Manufacture of coke oven products</option>
+							  <option value="193">23.10 : Manufacture of coke oven products</option>
+							  <option value="194">23.2 : Manufacture of refined petroleum products</option>
+							  <option value="195">23.20 : Manufacture of refined petroleum products</option>
+							  <option value="196">23.3 : Processing of nuclear fuel</option>
+							  <option value="197">23.30 : Processing of nuclear fuel</option>
+							</optgroup>
+							<optgroup label="SubSectionDG : Manufacture of chemicals, chemical products and man-made fibres">
+							  <option value="198">24 : Manufacture of chemicals and chemical products</option>
+							  <option value="199">24.1 : Manufacture of basic chemicals</option>
+							  <option value="200">24.11 : Manufacture of industrial gases</option>
+							  <option value="201">24.12 : Manufacture of dyes and pigments</option>
+							  <option value="202">24.13 : Manufacture of other inorganic basic chemicals</option>
+							  <option value="203">24.14 : Manufacture of other organic basic chemicals</option>
+							  <option value="204">24.15 : Manufacture of fertilizers and nitrogen compounds</option>
+							  <option value="205">24.16 : Manufacture of plastics in primary forms</option>
+							  <option value="206">24.17 : Manufacture of synthetic rubber in primary forms</option>
+							  <option value="207">24.2 : Manufacture of pesticides and other agro-chemical products</option>
+							  <option value="208">24.20 : Manufacture of pesticides and other agro-chemical products</option>
+							  <option value="209">24.3 : Manufacture of paints, varnishes and similar coatings, printing ink and mastics</option>
+							  <option value="210">24.30 : Manufacture of paints, varnishes and similar coatings, printing ink and mastics</option>
+							  <option value="211">24.4 : Manufacture of pharmaceuticals, medicinal chemicals and botanical products</option>
+							  <option value="212">24.41 : Manufacture of basic pharmaceutical products</option>
+							  <option value="213">24.42 : Manufacture of pharmaceutical preparations</option>
+							  <option value="214">24.5 : Manufacture of soap and detergents, cleaning and polishing preparations, perfumes and</option>
+							</optgroup>
+							<optgroup label="Soilet preparations">
+							  <option value="215">24.51 : Manufacture of soap and detergents, cleaning and polishing preparations</option>
+							  <option value="216">24.52 : Manufacture of perfumes and toilet preparations</option>
+							  <option value="217">24.6 : Manufacture of other chemical products</option>
+							  <option value="218">24.61 : Manufacture of explosives</option>
+							  <option value="219">24.62 : Manufacture of glues and gelatines</option>
+							  <option value="220">24.63 : Manufacture of essential oils</option>
+							  <option value="221">24.64 : Manufacture of photographic chemical material</option>
+							  <option value="222">24.65 : Manufacture of prepared unrecorded media</option>
+							  <option value="223">24.66 : Manufacture of other chemical products n.e.c.</option>
+							  <option value="224">24.7 : Manufacture of man-made fibres</option>
+							  <option value="225">24.70 : Manufacture of man-made fibres</option>
+							</optgroup>
+							<optgroup label="SubSectionDH : Manufacture of rubber and plastic products">
+							  <option value="226">25 : Manufacture of rubber and plastic products</option>
+							  <option value="227">25.1 : Manufacture of rubber products</option>
+							  <option value="228">25.11 : Manufacture of rubber tyres and tubes</option>
+							  <option value="229">25.12 : Retreading and rebuilding of rubber tyres</option>
+							  <option value="230">25.13 : Manufacture of other rubber products</option>
+							  <option value="231">25.2 : Manufacture of plastic products</option>
+							  <option value="232">25.21 : Manufacture of plastic plates, sheets, tubes and profiles</option>
+							  <option value="233">25.22 : Manufacture of plastic packing goods</option>
+							  <option value="234">25.23 : Manufacture of builders ware of plastic</option>
+							  <option value="235">25.24 : Manufacture of other plastic products</option>
+							</optgroup>
+							<optgroup label="SubSectionDI : Manufacture of other non-metallic mineral products">
+							  <option value="236">26 : Manufacture of other non-metallic mineral products</option>
+							  <option value="237">26.1 : Manufacture of glass and glass products</option>
+							  <option value="238">26.11 : Manufacture of flat glass</option>
+							  <option value="239">26.12 : Shaping and processing of flat glass</option>
+							  <option value="240">26.13 : Manufacture of hollow glass</option>
+							  <option value="241">26.14 : Manufacture of glass fibres</option>
+							  <option value="242">26.15 : Manufacture and processing of other glass, including technical glassware</option>
+							  <option value="243">26.2 : Manufacture of non-refractory ceramic goods other than for construction purposes;</option>
+							</optgroup>
+							<optgroup label="Sanufacture of refractory ceramic products">
+							  <option value="244">26.21 : Manufacture of ceramic household and ornamental articles</option>
+							  <option value="245">26.22 : Manufacture of ceramic sanitary fixtures</option>
+							  <option value="246">26.23 : Manufacture of ceramic insulators and insulating fittings</option>
+							  <option value="247">26.24 : Manufacture of other technical ceramic products</option>
+							  <option value="248">26.25 : Manufacture of other ceramic products</option>
+							  <option value="249">26.26 : Manufacture of refractory ceramic products</option>
+							  <option value="250">26.3 : Manufacture of ceramic tiles and flags</option>
+							  <option value="251">26.30 : Manufacture of ceramic tiles and flags</option>
+							  <option value="252">26.4 : Manufacture of bricks, tiles and construction products, in baked clay</option>
+							  <option value="253">26.40 : Manufacture of bricks, tiles and construction products, in baked clay</option>
+							  <option value="254">26.5 : Manufacture of cement, lime and plaster</option>
+							  <option value="255">26.51 : Manufacture of cement</option>
+							  <option value="256">26.52 : Manufacture of lime</option>
+							  <option value="257">26.53 : Manufacture of plaster</option>
+							  <option value="258">26.6 : Manufacture of articles of concrete, plaster and cement</option>
+							  <option value="259">26.61 : Manufacture of concrete products for construction purposes</option>
+							  <option value="260">26.62 : Manufacture of plaster products for construction purposes</option>
+							  <option value="261">26.63 : Manufacture of ready-mixed concrete</option>
+							  <option value="262">26.64 : Manufacture of mortars</option>
+							  <option value="263">26.65 : Manufacture of fibre cement</option>
+							  <option value="264">26.66 : Manufacture of other articles of concrete, plaster and cement</option>
+							  <option value="265">26.7 : Cutting, shaping and finishing of stone</option>
+							  <option value="266">26.70 : Cutting, shaping and finishing of stone</option>
+							  <option value="267">26.8 : Manufacture of other non-metallic mineral products</option>
+							  <option value="268">26.81 : Production of abrasive products</option>
+							  <option value="269">26.82 : Manufacture of other non-metallic mineral products n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSectionDJ : Manufacture of basic metals and fabricated metal products">
+							  <option value="270">27 : Manufacture of basic metals</option>
+							  <option value="271">27.1 : Manufacture of basic iron and steel and of ferro-alloys (ECSC)</option>
+							  <option value="272">27.10 : Manufacture of basic iron and steel and of ferro-alloys (ECSC)20)</option>
+							  <option value="273">27.2 : Manufacture of tubes</option>
+							  <option value="274">27.21 : Manufacture of cast iron tubes</option>
+							  <option value="275">27.22 : Manufacture of steel tubes</option>
+							  <option value="276">27.3 : Other first processing of iron and steel and production of non-ECSC20) ferro-alloys</option>
+							  <option value="277">27.31 : Cold drawing</option>
+							  <option value="278">27.32 : Cold rolling of narrow strip</option>
+							  <option value="279">27.33 : Cold forming or folding</option>
+							  <option value="280">27.34 : Wire drawing</option>
+							  <option value="281">27.35 : Other first processing of iron and steel n.e.c.; production of non-ECSC20) ferro-alloys</option>
+							  <option value="282">27.4 : Manufacture of basic precious and non-ferrous metals</option>
+							  <option value="283">27.41 : Precious metals production</option>
+							  <option value="284">27.42 :Aluminium production</option>
+							  <option value="285">27.43 : Lead, zinc and tin production</option>
+							  <option value="286">27.44 : Copper production</option>
+							  <option value="287">27.45 : Other non-ferrous metal production</option>
+							  <option value="288">27.5 : Casting of metals</option>
+							  <option value="289">27.51 : Casting of iron</option>
+							  <option value="290">27.52 : Casting of steel</option>
+							  <option value="291">27.53 : Casting of light metals</option>
+							  <option value="292">27.54 : Casting of other non-ferrous metals</option>
+							  <option value="293">28 : Manufacture of fabricated metal products, except machinery and equipment</option>
+							  <option value="294">28.1 : Manufacture of structural metal products</option>
+							  <option value="295">28.11 : Manufacture of metal structures and parts of structures</option>
+							  <option value="296">28.12 : Manufacture of builders carpentry and joinery of metal</option>
+							  <option value="297">28.2 : Manufacture of tanks, reservoirs and containers of metal; manufacture of central heating</option>
+							</optgroup>
+							<optgroup label="Sadiators and boilers">
+							  <option value="298">28.21 : Manufacture of tanks, reservoirs and containers of metal</option>
+							  <option value="299">28.22 : Manufacture of central heating radiators and boilers</option>
+							  <option value="300">28.3 : Manufacture of steam generators, except central heating hot water boilers</option>
+							  <option value="301">28.30 : Manufacture of steam generators, except central heating hot water boilers</option>
+							  <option value="302">28.4 : Forging, pressing, stamping and roll forming of metal; powder metallurgy</option>
+							  <option value="303">28.40 : Forging, pressing, stamping and roll forming of metal; powder metallurgy</option>
+							  <option value="304">28.5 : Treatment and coating of metals; general mechanical engineering</option>
+							  <option value="305">28.51 : Treatment and coating of metals</option>
+							  <option value="306">28.52 : General mechanical engineering</option>
+							  <option value="307">28.6 : Manufacture of cutlery, tools and general hardware</option>
+							  <option value="308">28.61 : Manufacture of cutlery</option>
+							  <option value="309">28.62 : Manufacture of tools</option>
+							  <option value="310">28.63 : Manufacture of locks and hinges</option>
+							  <option value="311">28.7 : Manufacture of other fabricated metal products</option>
+							  <option value="312">28.71 : Manufacture of steel drums and similar containers</option>
+							  <option value="313">28.72 : Manufacture of light metal packaging</option>
+							  <option value="314">28.73 : Manufacture of wire products</option>
+							  <option value="315">28.74 : Manufacture of fasteners, screw machine products, chain and springs</option>
+							  <option value="316">28.75 : Manufacture of other fabricated metal products n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSectionDK : Manufacture of machinery and equipment n.e.c.">
+							  <option value="317">29 : Manufacture of machinery and equipment n.e.c.</option>
+							  <option value="318">29.1 : Manufacture of machinery for the production and use of mechanical power, except aircraft,</option>
+							</optgroup>
+							<optgroup label="Sehicle and cycle engines">
+							  <option value="319">29.11 : Manufacture of engines and turbines, except aircraft, vehicle and cycle engines</option>
+							  <option value="320">29.12 : Manufacture of pumps and compressors</option>
+							  <option value="321">29.13 : Manufacture of taps and valves</option>
+							  <option value="322">29.14 : Manufacture of bearings, gears, gearing and driving elements</option>
+							  <option value="323">29.2 : Manufacture of other general purpose machinery</option>
+							  <option value="324">29.21 : Manufacture of furnaces and furnace burners</option>
+							  <option value="325">29.22 : Manufacture of lifting and handling equipment</option>
+							  <option value="326">29.23 : Manufacture of non-domestic cooling and ventilation equipment</option>
+							  <option value="327">29.24 : Manufacture of other general purpose machinery n.e.c.</option>
+							  <option value="328">29.3 : Manufacture of agricultural and forestry machinery</option>
+							  <option value="329">29.31 : Manufacture of agricultural tractors</option>
+							  <option value="330">29.32 : Manufacture of other agricultural and forestry machinery</option>
+							  <option value="331">29.4 : Manufacture of machine-tools</option>
+							  <option value="332">29.40 : Manufacture of machine-tools</option>
+							  <option value="333">29.5 : Manufacture of other special purpose machinery</option>
+							  <option value="334">29.51 : Manufacture of machinery for metallurgy</option>
+							  <option value="335">29.52 : Manufacture of machinery for mining, quarrying and construction</option>
+							  <option value="336">29.53 : Manufacture of machinery for food, beverage and tobacco processing</option>
+							  <option value="337">29.54 : Manufacture of machinery for textile, apparel and leather production</option>
+							  <option value="338">29.55 : Manufacture of machinery for paper and paperboard production</option>
+							  <option value="339">29.56 : Manufacture of other special purpose machinery n.e.c.</option>
+							  <option value="340">29.6 : Manufacture of weapons and ammunition</option>
+							  <option value="341">29.60 : Manufacture of weapons and ammunition</option>
+							  <option value="342">29.7 : Manufacture of domestic appliances n.e.c.</option>
+							  <option value="343">29.71 : Manufacture of electric domestic appliances</option>
+							  <option value="344">29.72 : Manufacture of non-electric domestic appliances</option>
+							</optgroup>
+							<optgroup label="SubSectionDL : Manufacture of electrical and optical equipment">
+							  <option value="345">30 : Manufacture of office machinery and computers</option>
+							  <option value="346">30.0 : Manufacture of office machinery and computers</option>
+							  <option value="347">30.01 : Manufacture of office machinery</option>
+							  <option value="348">30.02 : Manufacture of computers and other information processing equipment</option>
+							  <option value="349">31 : Manufacture of electrical machinery and apparatus n.e.c.</option>
+							  <option value="350">31.1 : Manufacture of electric motors, generators and transformers</option>
+							  <option value="351">31.10 : Manufacture of electric motors, generators and transformers</option>
+							  <option value="352">31.2 : Manufacture of electricity distribution and control apparatus</option>
+							  <option value="353">31.20 : Manufacture of electricity distribution and control apparatus</option>
+							  <option value="354">31.3 : Manufacture of insulated wire and cable</option>
+							  <option value="355">31.30 : Manufacture of insulated wire and cable</option>
+							  <option value="356">31.4 : Manufacture of accumulators, primary cells and primary batteries</option>
+							  <option value="357">31.40 : Manufacture of accumulators, primary cells and primary batteries</option>
+							  <option value="358">31.5 : Manufacture of lighting equipment and electric lamps</option>
+							  <option value="359">31.50 : Manufacture of lighting equipment and electric lamps</option>
+							  <option value="360">31.6 : Manufacture of electrical equipment n.e.c.</option>
+							  <option value="361">31.61 : Manufacture of electrical equipment for engines and vehicles n.e.c.</option>
+							  <option value="362">31.62 : Manufacture of other electrical equipment n.e.c.</option>
+							  <option value="363">32 : Manufacture of radio, television and communication equipment and apparatus</option>
+							  <option value="364">32.1 : Manufacture of electronic valves and tubes and other electronic components</option>
+							  <option value="365">32.10 : Manufacture of electronic valves and tubes and other electronic components</option>
+							  <option value="366">32.2 : Manufacture of television and radio transmitters and apparatus for line telephony and line</option>
+							</optgroup>
+							<optgroup label="Selegraphy">
+							  <option value="367">32.20 : Manufacture of television and radio transmitters and apparatus for line telephony and line</option>
+							</optgroup>
+							<optgroup label="Selegraphy">
+							  <option value="368">32.3 : Manufacture of television and radio receivers, sound or video recording or reproducing</option>
+							</optgroup>
+							<optgroup label="Spparatus and associated goods">
+							  <option value="369">32.30 : Manufacture of television and radio receivers, sound or video recording or reproducing</option>
+							</optgroup>
+							<optgroup label="Spparatus and associated goods">
+							  <option value="370">33 : Manufacture of medical, precision and optical instruments, watches and clocks</option>
+							  <option value="371">33.1 : Manufacture of medical and surgical equipment and orthopaedic appliances</option>
+							  <option value="372">33.10 : Manufacture of medical and surgical equipment and orthopaedic appliances</option>
+							  <option value="373">33.2 : Manufacture of instruments and appliances for measuring, checking, testing, navigating and</option>
+							</optgroup>
+							<optgroup label="Sther purposes, except industrial process control equipment">
+							  <option value="374">33.20 : Manufacture of instruments and appliances for measuring, checking, testing, navigating</option>
+							</optgroup>
+							<optgroup label="Snd other purposes, except industrial process control equipment">
+							  <option value="375">33.3 : Manufacture of industrial process control equipment</option>
+							  <option value="376">33.30 : Manufacture of industrial process control equipment</option>
+							  <option value="377">33.4 : Manufacture of optical instruments and photographic equipment</option>
+							  <option value="378">33.40 : Manufacture of optical instruments and photographic equipment</option>
+							  <option value="379">33.5 : Manufacture of watches and clocks</option>
+							  <option value="380">33.50 : Manufacture of watches and clocks</option>
+							</optgroup>
+							<optgroup label="SubSectionDM : Manufacture of transport equipment">
+							  <option value="381">34 : Manufacture of motor vehicles, trailers and semi-trailers</option>
+							  <option value="382">34.1 : Manufacture of motor vehicles</option>
+							  <option value="383">34.10 : Manufacture of motor vehicles</option>
+							  <option value="384">34.2 : Manufacture of bodies (coachwork) for motor vehicles; manufacture of trailers and semitrailers</option>
+							  <option value="385">34.20 : Manufacture of bodies (coachwork) for motor vehicles; manufacture of trailers and semitrailers</option>
+							  <option value="386">34.3 : Manufacture of parts and accessories for motor vehicles and their engines</option>
+							  <option value="387">34.30 : Manufacture of parts and accessories for motor vehicles and their engines</option>
+							  <option value="388">35 : Manufacture of other transport equipment</option>
+							  <option value="389">35.1 : Building and repairing of ships and boats</option>
+							  <option value="390">35.11 : Building and repairing of ships</option>
+							  <option value="391">35.12 : Building and repairing of pleasure and sporting boats</option>
+							  <option value="392">35.2 : Manufacture of railway and tramway locomotives and rolling stock</option>
+							  <option value="393">35.20 : Manufacture of railway and tramway locomotives and rolling stock</option>
+							  <option value="394">35.3 : Manufacture of aircraft and spacecraft</option>
+							  <option value="395">35.30 : Manufacture of aircraft and spacecraft</option>
+							  <option value="396">35.4 : Manufacture of motorcycles and bicycles</option>
+							  <option value="397">35.41 : Manufacture of motorcycles</option>
+							  <option value="398">35.42 : Manufacture of bicycles</option>
+							  <option value="399">35.43 : Manufacture of invalid carriages</option>
+							  <option value="400">35.5 : Manufacture of other transport equipment n.e.c.</option>
+							  <option value="401">35.50 : Manufacture of other transport equipment n.e.c.</option>
+							</optgroup>
+							<optgroup label="SubSectionDN : Manufacturing n.e.c.">
+							  <option value="402">36 : Manufacture of furniture; manufacturing n.e.c.</option>
+							  <option value="403">36.1 : Manufacture of furniture</option>
+							  <option value="404">36.11 : Manufacture of chairs and seats</option>
+							  <option value="405">36.12 : Manufacture of other office and shop furniture</option>
+							  <option value="406">36.13 : Manufacture of other kitchen furniture</option>
+							  <option value="407">36.14 : Manufacture of other furniture</option>
+							  <option value="408">36.15 : Manufacture of mattresses</option>
+							  <option value="409">36.2 : Manufacture of jewellery and related articles</option>
+							  <option value="410">36.21 : Striking of coins and medals</option>
+							  <option value="411">36.22 : Manufacture of jewellery and related articles n.e.c.</option>
+							  <option value="412">36.3 : Manufacture of musical instruments</option>
+							  <option value="413">36.30 : Manufacture of musical instruments</option>
+							  <option value="414">36.4 : Manufacture of sports goods</option>
+							  <option value="415">36.40 : Manufacture of sports goods</option>
+							  <option value="416">36.5 : Manufacture of games and toys</option>
+							  <option value="417">36.50 : Manufacture of games and toys</option>
+							  <option value="418">36.6 : Miscellaneous manufacturing n.e.c.</option>
+							  <option value="419">36.61 : Manufacture of imitation jewellery</option>
+							  <option value="420">36.62 : Manufacture of brooms and brushes</option>
+							  <option value="421">36.63 : Other manufacturing n.e.c.</option>
+							  <option value="422">37 : Recycling</option>
+							  <option value="423">37.1 : Recycling of metal waste and scrap</option>
+							  <option value="424">37.10 : Recycling of metal waste and scrap</option>
+							  <option value="425">37.2 : Recycling of non-metal waste and scrap</option>
+							  <option value="426">37.20 : Recycling of non-metal waste and scrap</option>
+							</optgroup>
+							<optgroup label="Section E : Electricity, gas and water supply">
+							  <option value="427">40 : Electricity, gas, steam and hot water supply</option>
+							  <option value="428">40.1 : Production and distribution of electricity</option>
+							  <option value="429">40.10 : Production and distribution of electricity</option>
+							  <option value="430">40.2 : Manufacture of gas; distribution of gaseous fuels through mains</option>
+							  <option value="431">40.20 : Manufacture of gas; distribution of gaseous fuels through mains</option>
+							  <option value="432">40.3 : Steam and hot water supply</option>
+							  <option value="433">40.30 : Steam and hot water supply</option>
+							  <option value="434">41 : Collection, purification and distribution of water</option>
+							  <option value="435">41.0 : Collection, purification and distribution of water</option>
+							  <option value="436">41.00 : Collection, purification and distribution of water</option>
+							</optgroup>
+							<optgroup label="Section F : Construction">
+							  <option value="437">45 : Construction</option>
+							  <option value="438">45.1 : Site preparation</option>
+							  <option value="439">45.11 : Demolition and wrecking of buildings; earth moving</option>
+							  <option value="440">45.12 : Test drilling and boring</option>
+							  <option value="441">45.2 : Building of complete constructions or parts thereof; civil engineering</option>
+							  <option value="442">45.21 : General construction of buildings and civil engineering works</option>
+							  <option value="443">45.22 : Erection of roof covering and frames</option>
+							  <option value="444">45.23 : Construction of highways, roads, airfields and sport facilities</option>
+							  <option value="445">45.24 : Construction of water projects</option>
+							  <option value="446">45.25 : Other construction work involving special trades</option>
+							  <option value="447">45.3 : Building installation</option>
+							  <option value="448">45.31 : Installation of electrical wiring and fittings</option>
+							  <option value="449">45.32 : Insulation work activities</option>
+							  <option value="450">45.33 : Plumbing</option>
+							  <option value="451">45.34 : Other building installation</option>
+							  <option value="452">45.4 : Building completion</option>
+							  <option value="453">45.41 : Plastering</option>
+							  <option value="454">45.42 : Joinery installation</option>
+							  <option value="455">45.43 : Floor and wall covering</option>
+							  <option value="456">45.44 : Painting and glazing</option>
+							  <option value="457">45.45 : Other building completion</option>
+							  <option value="458">45.5 : Renting of construction or demolition equipment with operator</option>
+							  <option value="459">45.50 : Renting of construction or demolition equipment with operator</option>
+							</optgroup>
+							<optgroup label="Section G : Wholesale and retail trade; repair of motor vehicles, motorcycles and personal and household goods">
+							  <option value="460">50 : Sale, maintenance and repair of motor vehicles and motorcycles; retail sale of automotive fuel</option>
+							  <option value="461">50.1 : Sale of motor vehicles</option>
+							  <option value="462">50.10 : Sale of motor vehicles</option>
+							  <option value="463">50.2 : Maintenance and repair of motor vehicles</option>
+							  <option value="464">50.20 : Maintenance and repair of motor vehicles</option>
+							  <option value="465">50.3 : Sale of motor vehicle parts and accessories</option>
+							  <option value="466">50.30 : Sale of motor vehicle parts and accessories</option>
+							  <option value="467">50.4 : Sale, maintenance and repair of motorcycles and related parts and accessories</option>
+							  <option value="468">50.40 : Sale, maintenance and repair of motorcycles and related parts and accessories</option>
+							  <option value="469">50.5 : Retail sale of automotive fuel</option>
+							  <option value="470">50.50 : Retail sale of automotive fuel</option>
+							  <option value="471">51 : Wholesale trade and commission trade, except of motor vehicles and motorcycles</option>
+							  <option value="472">51.1 : Wholesale on a fee or contract basis</option>
+							  <option value="473">51.11 : Agents involved in the sale of agricultural raw materials, live animals, textile raw materials</option>
+							</optgroup>
+							<optgroup label="Snd semi-finished goods">
+							  <option value="474">51.12 : Agents involved in the sale of fuels, ores, metals and industrial chemicals</option>
+							  <option value="475">51.13 : Agents involved in the sale of timber and building materials</option>
+							  <option value="476">51.14 : Agents involved in the sale of machinery, industrial equipment, ships and aircraft</option>
+							  <option value="477">51.15 : Agents involved in the sale of furniture, household goods, hardware and ironmongery</option>
+							  <option value="478">51.16 : Agents involved in the sale of textiles, clothing, footwear and leather goods</option>
+							  <option value="479">51.17 : Agents involved in the sale of food, beverages and tobacco</option>
+							  <option value="480">51.18 : Agents specializing in the sale of particular products or ranges of products n.e.c.</option>
+							  <option value="481">51.19 : Agents involved in the sale of a variety of goods</option>
+							  <option value="482">51.2 : Wholesale of agricultural raw materials and live animals (These groups include only</option>
+							</optgroup>
+							<optgroup label="Sholesale on own account)">
+							  <option value="483">51.21 : Wholesale of grain, seeds and animal feeds</option>
+							  <option value="484">51.22 : Wholesale of flowers and plants</option>
+							  <option value="485">51.23 : Wholesale of live animals</option>
+							  <option value="486">51.24 : Wholesale of hides, skins and leather</option>
+							  <option value="487">51.25 : Wholesale of unmanufactured tobacco</option>
+							  <option value="488">51.3 : Wholesale of food, beverages and tobacco</option>
+							  <option value="489">51.31 : Wholesale of fruit and vegetables</option>
+							  <option value="490">51.32 : Wholesale of meat and meat products</option>
+							  <option value="491">51.33 : Wholesale of dairy produce, eggs and edible oils and fats</option>
+							  <option value="492">51.34 : Wholesale of alcoholic and other beverages</option>
+							  <option value="493">51.35 : Wholesale of tobacco products</option>
+							  <option value="494">51.36 : Wholesale of sugar and chocolate and sugar confectionery</option>
+							  <option value="495">51.37 : Wholesale of coffee, tea, cocoa and spices</option>
+							  <option value="496">51.38 : Wholesale of other food, including fish, crustaceans and molluscs</option>
+							  <option value="497">51.39 : Non-specialized wholesale of food, beverages and tobacco</option>
+							  <option value="498">51.4 : Wholesale of household goods</option>
+							  <option value="499">51.41 : Wholesale of textiles</option>
+							  <option value="500">51.42 : Wholesale of clothing and footwear</option>
+							  <option value="501">51.43 : Wholesale of electrical household appliances and radio and television goods</option>
+							  <option value="502">51.44 : Wholesale of china and glassware, wallpaper and cleaning materials</option>
+							  <option value="503">51.45 : Wholesale of perfume and cosmetics</option>
+							  <option value="504">51.46 : Wholesale of pharmaceutical goods</option>
+							  <option value="505">51.47 : Wholesale of other household goods</option>
+							  <option value="506">51.5 : Wholesale of non-agricultural intermediate products, waste and scrap</option>
+							  <option value="507">51.51 : Wholesale of solid, liquid and gaseous fuels and related products</option>
+							  <option value="508">51.52 : Wholesale of metals and metal ores</option>
+							  <option value="509">51.53 : Wholesale of wood, construction materials and sanitary equipment</option>
+							  <option value="510">51.54 : Wholesale of hardware, plumbing and heating equipment and supplies</option>
+							  <option value="511">51.55 : Wholesale of chemical products</option>
+							  <option value="512">51.56 : Wholesale of other intermediate products</option>
+							  <option value="513">51.57 : Wholesale of waste and scrap</option>
+							  <option value="514">51.6 : Wholesale of machinery, equipment and supplies</option>
+							  <option value="515">51.61 : Wholesale of machine-tools</option>
+							  <option value="516">51.62 : Wholesale of construction machinery</option>
+							  <option value="517">51.63 : Wholesale of machinery for the textile industry and of sewing and knitting machines</option>
+							  <option value="518">51.64 : Wholesale of office machinery and equipment</option>
+							  <option value="519">51.65 : Wholesale of other machinery for use in industry, trade and navigation</option>
+							  <option value="520">51.66 : Wholesale of agricultural machinery and accessories and implements, including tractors</option>
+							  <option value="521">51.7 : Other wholesale</option>
+							  <option value="522">51.70 : Other wholesale</option>
+							  <option value="523">52 : Retail trade, except of motor vehicles and motorcycles; repair of personal and household goods</option>
+							  <option value="524">52.1 : Retail sale in non-specialized stores</option>
+							  <option value="525">52.11 : Retail sale in non-specialized stores with food, beverages or tobacco predominating</option>
+							  <option value="526">52.12 : Other retail sale in non-specialized stores</option>
+							  <option value="527">52.2 : Retail sale of food, beverages and tobacco in specialized stores</option>
+							  <option value="528">52.21 : Retail sale of fruit and vegetables</option>
+							  <option value="529">52.22 : Retail sale of meat and meat products</option>
+							  <option value="530">52.23 : Retail sale of fish, crustaceans and molluscs</option>
+							  <option value="531">52.24 : Retail sale of bread, cakes, flour confectionery and sugar confectionery</option>
+							  <option value="532">52.25 : Retail sale of alcoholic and other beverages</option>
+							  <option value="533">52.26 : Retail sale of tobacco products</option>
+							  <option value="534">52.27 : Other retail sale of food, beverages and tobacco in specialized stores</option>
+							  <option value="535">52.3 : Retail sale of pharmaceutical and medical goods, cosmetic and toilet articles</option>
+							  <option value="536">52.31 : Dispensing chemists</option>
+							  <option value="537">52.32 : Retail sale of medical and orthopaedic goods</option>
+							  <option value="538">52.33 : Retail sale of cosmetic and toilet articles</option>
+							  <option value="539">52.4 : Other retail sale of new goods in specialized stores</option>
+							  <option value="540">52.41 : Retail sale of textiles</option>
+							  <option value="541">52.42 : Retail sale of clothing</option>
+							  <option value="542">52.43 : Retail sale of footwear and leather goods</option>
+							  <option value="543">52.44 : Retail sale of furniture, lighting equipment and household articles n.e.c.</option>
+							  <option value="544">52.45 : Retail sale of electrical household appliances and radio and television goods</option>
+							  <option value="545">52.46 : Retail sale of hardware, paints and glass</option>
+							  <option value="546">52.47 : Retail sale of books, newspapers and stationery</option>
+							  <option value="547">52.48 : Other retail sale in specialized stores</option>
+							  <option value="548">52.5 : Retail sale of second-hand goods in stores</option>
+							  <option value="549">52.50 : Retail sale of second-hand goods in stores</option>
+							  <option value="550">52.6 : Retail sale not in stores</option>
+							  <option value="551">52.61 : Retail sale via mail order houses</option>
+							  <option value="552">52.62 : Retail sale via stalls and markets</option>
+							  <option value="553">52.63 : Other non-store retail sale</option>
+							  <option value="554">52.7 : Repair of personal and household goods</option>
+							  <option value="555">52.71 : Repair of boots, shoes and other articles of leather</option>
+							  <option value="556">52.72 : Repair of electrical household goods</option>
+							  <option value="557">52.73 : Repair of watches, clocks and jewellery</option>
+							  <option value="558">52.74 : Repair n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section H : Hotels and restaurants">
+							  <option value="559">55 : Hotels and restaurants</option>
+							  <option value="560">55.1 : Hotels</option>
+							  <option value="561">55.11 : Hotels and motels, with restaurant</option>
+							  <option value="562">55.12 : Hotels and motels, without restaurant</option>
+							  <option value="563">55.2 : Camping sites and other provision of short-stay accommodation</option>
+							  <option value="564">55.21 : Youth hostels and mountain refuges</option>
+							  <option value="565">55.22 : Camping sites, including caravan sites</option>
+							  <option value="566">55.23 : Other provision of lodgings n.e.c.</option>
+							  <option value="567">55.3 : Restaurants</option>
+							  <option value="568">55.30 : Restaurants</option>
+							  <option value="569">55.4 : Bars</option>
+							  <option value="570">55.40 : Bars</option>
+							  <option value="571">55.5 : Canteens and catering</option>
+							  <option value="572">55.51 : Canteens</option>
+							  <option value="573">55.52 : Catering</option>
+							</optgroup>
+							<optgroup label="Section I : Transport, storage and communication">
+							  <option value="574">60 : Land transport; transport via pipelines</option>
+							  <option value="575">60.1 : Transport via railways</option>
+							  <option value="576">60.10 : Transport via railways</option>
+							  <option value="577">60.2 : Other land transport</option>
+							  <option value="578">60.21 : Other scheduled passenger land transport</option>
+							  <option value="579">60.22 : Taxi operation</option>
+							  <option value="580">60.23 : Other land passenger transport</option>
+							  <option value="581">60.24 : Freight transport by road</option>
+							  <option value="582">60.3 : Transport via pipelines</option>
+							  <option value="583">60.30 : Transport via pipelines</option>
+							  <option value="584">61 : Water transport</option>
+							  <option value="585">61.1 : Sea and coastal water transport</option>
+							  <option value="586">61.10 : Sea and coastal water transport</option>
+							  <option value="587">61.2 : Inland water transport</option>
+							  <option value="588">61.20 : Inland water transport</option>
+							  <option value="589">62 : Air transport</option>
+							  <option value="590">62.1 : Scheduled air transport</option>
+							  <option value="591">62.10 : Scheduled air transport</option>
+							  <option value="592">62.2 : Non-scheduled air transport</option>
+							  <option value="593">62.20 : Non-scheduled air transport</option>
+							  <option value="594">62.3 : Space transport</option>
+							  <option value="595">62.30 : Space transport</option>
+							  <option value="596">63 : Supporting and auxiliary transport activities; activities of travel agencies</option>
+							  <option value="597">63.1 : Cargo handling and storage</option>
+							  <option value="598">63.11 : Cargo handling</option>
+							  <option value="599">63.12 : Storage and warehousing</option>
+							  <option value="600">63.2 : Other supporting transport activities</option>
+							  <option value="601">63.21 : Other supporting land transport activities</option>
+							  <option value="602">63.22 : Other supporting water transport activities</option>
+							  <option value="603">63.23 : Other supporting air transport activities</option>
+							  <option value="604">63.3 : Activities of travel agencies and tour operators; tourist assistance activities n.e.c.</option>
+							  <option value="605">63.30 : Activities of travel agencies and tour operators; tourist assistance activities n.e.c.</option>
+							  <option value="606">63.4 : Activities of other transport agencies</option>
+							  <option value="607">63.40 : Activities of other transport agencies</option>
+							  <option value="608">64 : Post and telecommunications</option>
+							  <option value="609">64.1 : Post and courier activities</option>
+							  <option value="610">64.11 : National post activities</option>
+							  <option value="611">64.12 : Courier activities other than national post activities</option>
+							  <option value="612">64.2 : Telecommunications</option>
+							  <option value="613">64.20 : Telecommunications</option>
+							</optgroup>
+							<optgroup label="Section J : Financial intermediation">
+							  <option value="614">65 : Financial intermediation, except insurance and pension funding</option>
+							  <option value="615">65.1 : Monetary intermediation</option>
+							  <option value="616">65.11 : Central banking</option>
+							  <option value="617">65.12 : Other monetary intermediation</option>
+							  <option value="618">65.2 : Other financial intermediation</option>
+							  <option value="619">65.21 : Financial leasing</option>
+							  <option value="620">65.22 : Other credit granting</option>
+							  <option value="621">65.23 : Other financial intermediation n.e.c.</option>
+							  <option value="622">66 : Insurance and pension funding, except compulsory social security</option>
+							  <option value="623">66.0 : Insurance and pension funding, except compulsory social security</option>
+							  <option value="624">66.01 : Life insurance</option>
+							  <option value="625">66.02 : Pension funding</option>
+							  <option value="626">66.03 : Non-life insurance</option>
+							  <option value="627">67 : Activities auxiliary to financial intermediation</option>
+							  <option value="628">67.1 : Activities auxiliary to financial intermediation, except insurance and pension funding</option>
+							  <option value="629">67.11 : Administration of financial markets</option>
+							  <option value="630">67.12 : Security broking and fund management</option>
+							  <option value="631">67.13 : Activities auxiliary to financial intermediation n.e.c.</option>
+							  <option value="632">67.2 : Activities auxiliary to insurance and pension funding</option>
+							  <option value="633">67.20 : Activities auxiliary to insurance and pension funding</option>
+							</optgroup>
+							<optgroup label="Section K : Real estate, renting and business activities">
+							  <option value="634">70 : Real estate activities</option>
+							  <option value="635">70.1 : Real estate activities with own property</option>
+							  <option value="636">70.11 : Development and selling of real estate</option>
+							  <option value="637">70.12 : Buying and selling of own real estate</option>
+							  <option value="638">70.2 : Letting of own property</option>
+							  <option value="639">70.20 : Letting of own property</option>
+							  <option value="640">70.3 : Real estate activities on a fee or contract basis</option>
+							  <option value="641">70.31 : Real estate agencies</option>
+							  <option value="642">70.32 : Management of real estate on a fee or contract basis</option>
+							  <option value="643">71 : Renting of machinery and equipment without operator and of personal and household goods</option>
+							  <option value="644">71.1 : Renting of automobiles</option>
+							  <option value="645">71.10 : Renting of automobiles</option>
+							  <option value="646">71.2 : Renting of other transport equipment</option>
+							  <option value="647">71.21 : Renting of other land transport equipment</option>
+							  <option value="648">71.22 : Renting of water transport equipment</option>
+							  <option value="649">71.23 : Renting of air transport equipment</option>
+							  <option value="650">71.3 : Renting of other machinery and equipment</option>
+							  <option value="651">71.31 : Renting of agricultural machinery and equipment</option>
+							  <option value="652">71.32 : Renting of construction and civil engineering machinery and equipment</option>
+							  <option value="653">71.33 : Renting of office machinery and equipment, including computers</option>
+							  <option value="654">71.34 : Renting of other machinery and equipment n.e.c.</option>
+							  <option value="655">71.4 : Renting of personal and household goods n.e.c.</option>
+							  <option value="656">71.40 : Renting of personal and household goods n.e.c.</option>
+							  <option value="657">72 : Computer and related activities</option>
+							  <option value="658">72.1 : Hardware consultancy</option>
+							  <option value="659">72.10 : Hardware consultancy</option>
+							  <option value="660">72.2 : Software consultancy and supply</option>
+							  <option value="661">72.20 : Software consultancy and supply</option>
+							  <option value="662">72.3 : Data processing</option>
+							  <option value="663">72.30 : Data processing</option>
+							  <option value="664">72.4 : Database activities</option>
+							  <option value="665">72.40 : Database activities</option>
+							  <option value="666">72.5 : Maintenance and repair of office, accounting and computing machinery</option>
+							  <option value="667">72.50 : Maintenance and repair of office, accounting and computing machinery</option>
+							  <option value="668">72.6 : Other computer related activities</option>
+							  <option value="669">72.60 : Other computer related activities</option>
+							  <option value="670">73 : Research and development</option>
+							  <option value="671">73.1 : Research and experimental development on natural sciences and engineering</option>
+							  <option value="672">73.10 : Research and experimental development on natural sciences and engineering</option>
+							  <option value="673">73.2 : Research and experimental development on social sciences and humanities</option>
+							  <option value="674">73.20 : Research and experimental development on social sciences and humanities</option>
+							  <option value="675">74 : Other business activities</option>
+							  <option value="676">74.1 : Legal, accounting, book-keeping and auditing activities; tax consultancy; market research</option>
+							</optgroup>
+							<optgroup label="Snd public opinion polling; business and management consultancy; holdings">
+							  <option value="677">74.11 : Legal activities</option>
+							  <option value="678">74.12 : Accounting, book-keeping and auditing activities; tax consultancy</option>
+							  <option value="679">74.13 : Market research and public opinion polling</option>
+							  <option value="680">74.14 : Business and management consultancy activities</option>
+							  <option value="681">74.15 : Management activities of holding companies</option>
+							  <option value="682">74.2 : Architectural and engineering activities and related technical consultancy</option>
+							  <option value="683">74.20 : Architectural and engineering activities and related technical consultancy</option>
+							  <option value="684">74.3 : Technical testing and analysis</option>
+							  <option value="685">74.30 : Technical testing and analysis</option>
+							  <option value="686">74.4 : Advertising</option>
+							  <option value="687">74.40 : Advertising</option>
+							  <option value="688">74.5 :Labour recruitment and provision of personnel</option>
+							  <option value="689">74.50 :Labour recruitment and provision of personnel</option>
+							  <option value="690">74.6 : Investigation and security activities</option>
+							  <option value="691">74.60 : Investigation and security activities</option>
+							  <option value="692">74.7 : Industrial cleaning</option>
+							  <option value="693">74.70 : Industrial cleaning</option>
+							  <option value="694">74.8 : Miscellaneous business activities n.e.c.</option>
+							  <option value="695">74.81 : Photographic activities</option>
+							  <option value="696">74.82 : Packaging activities</option>
+							  <option value="697">74.83 : Secretarial and translation activities</option>
+							  <option value="698">74.84 : Other business activities n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section L : Public administration and defence; compulsory social security">
+							  <option value="699">75 : Public administration and defence; compulsory social security</option>
+							  <option value="700">75.1 : Administration of the State and the economic and social policy of the community</option>
+							  <option value="701">75.11 : General (overall) public service activities</option>
+							  <option value="702">75.12 : Regulation of the activities of agencies that provide health care, education, cultural</option>
+							</optgroup>
+							<optgroup label="Services and other social services, excluding social security">
+							  <option value="703">75.13 : Regulation of and contribution to more efficient operation of business</option>
+							  <option value="704">75.14 : Supporting service activities for the government as a whole</option>
+							  <option value="705">75.2 : Provision of services to the community as a whole</option>
+							  <option value="706">75.21 : Foreign affairs</option>
+							  <option value="707">75.22 :Defence activities</option>
+							  <option value="708">75.23 : Justice and judicial activities</option>
+							  <option value="709">75.24 : Public security, law and order activities</option>
+							  <option value="710">75.25 : Fire service activities</option>
+							  <option value="711">75.3 : Compulsory social security activities</option>
+							  <option value="712">75.30 : Compulsory social security activities</option>
+							</optgroup>
+							<optgroup label="Section M : Education">
+							  <option value="713">80 : Education</option>
+							  <option value="714">80.1 : Primary education</option>
+							  <option value="715">80.10 : Primary education</option>
+							  <option value="716">80.2 : Secondary education</option>
+							  <option value="717">80.21 : General secondary education</option>
+							  <option value="718">80.22 : Technical and vocational secondary education</option>
+							  <option value="719">80.3 : Higher education</option>
+							  <option value="720">80.30 : Higher education</option>
+							  <option value="721">80.4 : Adult and other education</option>
+							  <option value="722">80.41 : Driving school activities</option>
+							  <option value="723">80.42 : Adult and other education n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section N : Health and social work">
+							  <option value="724">85 : Health and social work</option>
+							  <option value="725">85.1 : Human health activities</option>
+							  <option value="726">85.11 : Hospital activities</option>
+							  <option value="727">85.12 : Medical practice activities</option>
+							  <option value="728">85.13 : Dental practice activities</option>
+							  <option value="729">85.14 : Other human health activities</option>
+							  <option value="730">85.2 : Veterinary activities</option>
+							  <option value="731">85.20 : Veterinary activities</option>
+							  <option value="732">85.3 : Social work activities</option>
+							  <option value="733">85.31 : Social work activities with accommodation</option>
+							  <option value="734">85.32 : Social work activities without accommodation</option>
+							</optgroup>
+							<optgroup label="Section O : Other community, social and personal service activities">
+							  <option value="735">90 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="736">90.0 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="737">90.00 : Sewage and refuse disposal, sanitation and similar activities</option>
+							  <option value="738">91 : Activities of membership organizations n.e.c.</option>
+							  <option value="739">91.1 : Activities of business, employers and professional organizations</option>
+							  <option value="740">91.11 : Activities of business and employers organizations</option>
+							  <option value="741">91.12 : Activities of professional organizations</option>
+							  <option value="742">91.2 : Activities of trade unions</option>
+							  <option value="743">91.20 : Activities of trade unions</option>
+							  <option value="744">91.3 : Activities of other membership organizations</option>
+							  <option value="745">91.31 : Activities of religious organizations</option>
+							  <option value="746">91.32 : Activities of political organizations</option>
+							  <option value="747">91.33 : Activities of other membership organizations n.e.c.</option>
+							  <option value="748">92 : Recreational, cultural and sporting activities</option>
+							  <option value="749">92.1 : Motion picture and video activities</option>
+							  <option value="750">92.11 : Motion picture and video production</option>
+							  <option value="751">92.12 : Motion picture and video distribution</option>
+							  <option value="752">92.13 : Motion picture projection</option>
+							  <option value="753">92.2 : Radio and television activities</option>
+							  <option value="754">92.20 : Radio and television activities</option>
+							  <option value="755">92.3 : Other entertainment activities</option>
+							  <option value="756">92.31 : Artistic and literary creation and interpretation</option>
+							  <option value="757">92.32 : Operation of arts facilities</option>
+							  <option value="758">92.33 : Fair and amusement park activities</option>
+							  <option value="759">92.34 : Other entertainment activities n.e.c.</option>
+							  <option value="760">92.4 : News agency activities</option>
+							  <option value="761">92.40 : News agency activities</option>
+							  <option value="762">92.5 : Library, archives, museums and other cultural activities</option>
+							  <option value="763">92.51 : Library and archives activities</option>
+							  <option value="764">92.52 : Museums activities and preservation of historical sites and buildings</option>
+							  <option value="765">92.53 : Botanical and zoological gardens and nature reserves activities</option>
+							  <option value="766">92.6 : Sporting activities</option>
+							  <option value="767">92.61 : Operation of sports arenas and stadiums</option>
+							  <option value="768">92.62 : Other sporting activities</option>
+							  <option value="769">92.7 : Other recreational activities</option>
+							  <option value="770">92.71 : Gambling and betting activities</option>
+							  <option value="771">92.72 : Other recreational activities n.e.c.</option>
+							  <option value="772">93 : Other service activities</option>
+							  <option value="773">93.0 : Other service activities</option>
+							  <option value="774">93.01 : Washing and dry-cleaning of textile and fur products</option>
+							  <option value="775">93.02 : Hairdressing and other beauty treatment</option>
+							  <option value="776">93.03 : Funeral and related activities</option>
+							  <option value="777">93.04 : Physical well-being activities</option>
+							  <option value="778">93.05 : Other service activities n.e.c.</option>
+							</optgroup>
+							<optgroup label="Section P : Private households with employed persons">
+							  <option value="779">95 : Private households with employed persons</option>
+							</optgroup>
+							<optgroup label="Section Q : Extra-territorial organizations and bodies">
+							  <option value="780">99 : Extra-territorial organizations and bodies</option>
+							</optgroup>
+						  </select>
+						</dd>
+				  </dl>
+				  <div class="category_block"></div>
+				</div>
+		  </div>
+		</div>
+  </div>
+</div>
+

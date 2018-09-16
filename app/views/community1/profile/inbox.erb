@@ -1,0 +1,505 @@
+<div class="clear"></div>
+<div class="content_main inbox">
+  <div class="messages_column">
+    <div class="messages_top">
+        <div id='message_display'>
+            <!-- <div id='pop_up_message' style="display:none;color:green">Message sent successfully...</div> -->
+            <div class='green'>New Message</div>
+            <h1 style='font-weight:500;font-size:1em' id='conversation-name'>
+              Conversation with <span id="from_user_name"></span>
+            </h1>
+            <h1 style='font-weight:500;font-size:1em;display:none' id='no-conversations'>No conversations</h1>
+              <div id='message_new'>
+                  <div class='input' style='margin-bottom:25px'>
+                    <input type='text' id='new_message_name'  placeholder='Enter user name'>
+                    <div class='drop' style="display: block;height: 150px;overflow: scroll;"></div>
+                  </div>
+              </div>
+        </div>
+    </div>    
+    <div class="clear"></div>
+    <div class="messages_feed" style="top:120px;">
+       <div id="message_error_container" class='messages-container'></div>
+        <div id="message_container" class='messages-container'>
+            <div id= "comm_message_list" class='messages'>
+                
+            </div>
+            <div class="compose_message">
+                <textarea placeholder='Enter a message'></textarea>
+                <button style="background-color:#4bbf66" class='message-submit'>Send</button>
+            </div> 
+        </div>
+    </div> 
+  </div>    
+
+  <div class="messages_from">
+    <div class='top'>
+      <h2>View messages from:</h2>
+    </div>
+    <div class="user_list">
+        <ul class="message_list">
+            
+        </ul>
+    </div>    
+  </div>    
+
+</div>    
+
+<div style="display:none">
+<div class="message" id="in_messages_id" style="display: none;overflow:auto">
+    <img src="" style="margin-right: 7px;" width="60" height="60" alt="" class="user_image">
+    <div class='msg_user_name'><a href="javascript:void(0)" class="user_name_id"></a>
+      <span style="color: rgb(182, 182, 182);float: right; font-size: 12px; position: relative;top: 5px;"></span>
+    </div>
+    <p id="message_text_id" style='margin:4px 0 20px 74px'></p>
+</div>
+<li id="users_li" style="display: none;"><img class="user_image" src="" style="margin-right: 10px;" width="60" height="60" alt=""><span class='name'></span> <span class="time_stamp_m"></span></li>
+</div>
+
+<script>
+  $('#new_message_name').on('change', function(){
+    $('.upload-tab .section').fadeIn()
+})
+
+
+  $('#my_messages').click(function(){
+    set_in_messages_count();
+  })
+
+  var current_user_name = '<%= current_user.name %>'
+  var limit = 5
+  var offset = 0
+  var list_user_id
+  $('#next').click(function(){
+    offset = offset + 5
+    $("#previous").attr('disabled',false)
+    var message_container = $('.messages-container.active .messages')
+    message_container.empty()
+    get_communication(list_user_id, message_container)
+  })
+  $('#previous').click(function(){
+    offset = offset - 5
+    if (offset == 0)
+      $(this).attr('disabled', 'disabled')
+    var message_container = $('.messages-container.active .messages')
+    message_container.empty()
+    get_communication(list_user_id, message_container)
+  })
+
+  var submit_message = function(message_selector, name_selector){
+    var message = $(message_selector).val()
+    var name = $(name_selector).text()
+    var to_user_id = $(name_selector).select2('data').id
+
+    $.ajax({
+      url: '/api/v2.2/community/communications',
+      type: "POST",
+      data : {to_user_id: to_user_id,message: message},
+      success: function(response1){
+        ss_alert("success" , GLOBAL_MESSAGE_SENT_NOTIFICATION);
+        update_communicated_user_list();
+    }})
+  }
+
+  var select_user = function(id){
+    el = $('.message_list li').eq(id)
+    $('#comm_message_list').css('display', 'none')
+    $('.message_list li').removeClass('active_message')
+    el.addClass('active_message')
+    $('.messages_top h1 span').text(el.children('.name').text())
+
+  }
+//  var data_map = new Array();
+
+  
+
+  $(document).ready(function(){
+    set_in_messages_count();
+    update_communicated_user_list();
+  })
+
+  var set_in_messages_count = function() {
+    $.ajax({
+      url: '/api/v2.2/users/set_in_messages_count',
+      type: 'GET',
+      success: function(response){
+        $('#message_count').text(0)
+        $('#message_count').parent().removeClass("notification_green")
+        $('#message_count').parent().children('.t_green').removeClass("t_green").addClass('t_g')
+        $('#message_count').parent().addClass("notification_grey")
+      }
+    })
+  }
+
+  var update_communicated_user_list = function(uid){ 
+
+      $("#previous").attr('disabled','disabled')
+      $.ajax({
+        url: '/api/v2.2/users/get_free_app_communicated_users',
+        type: 'GET',
+        success: function(response){
+            var i = 0
+            var msg_list_div = $('.message_list')
+            var error_message_container = $('#message_error_container')
+            msg_list_div.empty();
+            // msg_list_div.css("overflow-y","scroll") ; \
+            if(!($.isEmptyObject(response)) && response.users)
+            {
+            response.users.forEach(function(row){
+                var li_obj = $('#users_li')
+                var clone_of_li_obj = li_obj.clone()
+                clone_of_li_obj.css("display","block");
+                clone_of_li_obj.attr("id",row.id);
+                var li_active_class = '<li id='+row.id+'>'
+                if (i == 0) {
+                  clone_of_li_obj.addClass('active_message')
+                  $('#message_container').addClass('active')
+                  error_message_container.css("display", "none")
+                  var message_container = $('.messages-container.active .messages')
+                  list_user_id = row.id
+                  get_communication(row.id, message_container)
+                }
+
+                var span_with_name_class = clone_of_li_obj.find('.name')
+                span_with_name_class.text(row.name)
+                msg_list_div.append(clone_of_li_obj)
+
+                var img_with_user = clone_of_li_obj.find('.user_image')
+                if(row.image && row.image.image && row.image.image.url)
+                  img_with_user.attr('src', row.image.image.thumb.url)
+                else{
+                  var email = "<%= current_user.email %>" ;
+                  var email_hash = $.md5(email);
+                  profile_image = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+                  img_with_user.attr('src', profile_image)
+                }
+
+                // var data = new Object();
+                // data.id = row.id
+                // data.text = row.name
+                // data_map[i] = data
+                
+                // data_map = JSON.stringify(response.users)
+              i++
+            });
+          }
+          else
+          {
+            $('#no-conversations').show()
+            $('#conversation-name').hide()
+            var li_obj = $('#users_li')
+            var clone_of_li_obj = li_obj.clone()
+            clone_of_li_obj.html("No Message Found.")
+            clone_of_li_obj.css("display","block");
+            clone_of_li_obj.css("color","grey");
+            clone_of_li_obj.css("margin","auto");
+            clone_of_li_obj.addClass('no_message');
+            msg_list_div.append(clone_of_li_obj)
+          }
+          message_list_items = $('.message_list li')
+          for(i=0; i<message_list_items.length; i++) {
+            message_list_items[i].addEventListener("click", message_list_li_click);
+          } 
+          if (uid) $('#' + uid).click()
+
+          if ( $('.message_list').outerHeight() + 57 > $('.messages_column').outerHeight() ){
+            $('.message_list').css('height', $('.messages_column').outerHeight() - 57)
+          }
+
+        //call back function
+        }})
+
+        $.ajax({
+          url: '/api/v2.2/users/get_free_app_users',
+          type: 'GET',
+          success: function(response){
+              var i = 0
+              if(!($.isEmptyObject(response)) && response.users) {
+                window.users = response.users
+                response.users.forEach(function(row){
+                    var data = new Object();
+                    var user_details=new Object();
+                    data.id = row.id
+                    user_details.name = row.name
+                    user_details.email=row.email;
+                    data.user_details=user_details;
+                    // data.email = row.email
+                    data_map[i] = data
+                    
+                    // data_map = JSON.stringify(response.users)
+                  i++
+                });
+                
+              }
+          //call back function
+          }})
+
+        
+  }
+
+  var messageId;
+  var get_communication = function(user_id, message_container) {
+      $.ajax({
+      url: '/api/v2.2/community/get_communication/'+user_id + '/' + limit + '/' + offset,
+      type: 'GET',
+      success: function(response1){
+          messageId = 0
+          if (! response1.communications)
+          {
+            message_container.empty();
+            message_container.html("No Message Found.")
+          }
+          message_container.empty();
+          comm_array = response1.communications
+          
+          comm_array.forEach(function(row){
+            var msg_obj = $('#in_messages_id')
+            var clone_of_msg_obj = msg_obj.clone()
+            var new_id = 'in_messages_id'+messageId
+            clone_of_msg_obj.attr("id",new_id);
+            clone_of_msg_obj.css("display","block");
+            var anchor_element = clone_of_msg_obj.find('a')
+            anchor_element.text(row.from_user_name)
+            anchor_element.attr('href',"profile_public?id="+row.from_user)
+            var span_element = clone_of_msg_obj.find('span')
+            span_element.text(row.time_difference + " ago")
+            var paragraph_element = clone_of_msg_obj.find('p')
+            paragraph_element.text(row.message_text)
+            if(user_id == row.from_user) {
+              clone_of_msg_obj.addClass('active_message')
+            }
+            var img_with_user = clone_of_msg_obj.find('.user_image')
+            if(row.from_user_image && row.from_user_image.image && row.from_user_image.image.url)
+              img_with_user.attr('src', row.from_user_image.image.thumb.url)
+            else{
+              var email = "<%= current_user.email %>" ;
+              var email_hash = $.md5(email);
+              profile_image = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+              img_with_user.attr('src', profile_image)
+            }
+
+            message_container.append(clone_of_msg_obj)
+            if(row.from_user_name==current_user_name)
+              $('#from_user_name').text(row.to_user_name)
+            else
+              $('#from_user_name').text(row.from_user_name)
+            messageId += 1
+            message_container.scrollTop(message_container[0].scrollHeight)
+          })
+      //call back function
+      }})
+    }
+
+  var new_messages_for_users = function(user_id, message_container) {
+      // case when no comminication for user
+      if(!user_id)
+      {
+        user_id=0;
+      }
+      $.ajax({
+      url: '/api/v2.2/community/new_messages_form_users/'+user_id + '/' + limit + '/' + offset,
+      type: 'GET',
+      success: function(response){
+          if (response.communications_for_selected_user && user_id != 0)
+          {
+ 
+          comm_array = response.communications_for_selected_user
+          
+          comm_array.forEach(function(row){
+            var msg_obj = $('#in_messages_id')
+            var clone_of_msg_obj = msg_obj.clone()
+            var new_id = 'in_messages_id'+messageId
+            clone_of_msg_obj.attr("id",new_id);
+            clone_of_msg_obj.css("display","block");
+            var anchor_element = clone_of_msg_obj.find('a')
+            anchor_element.text(row.from_user_name)
+            anchor_element.attr('href',"profile_public?id="+row.from_user)
+            var span_element = clone_of_msg_obj.find('span')
+            span_element.text(row.time_difference + " ago")
+            var paragraph_element = clone_of_msg_obj.find('p')
+            paragraph_element.text(row.message_text)
+            if(user_id == row.from_user) {
+              clone_of_msg_obj.addClass('active_message')
+            }
+            var img_with_user = clone_of_msg_obj.find('.user_image')
+            if(row.from_user_image && row.from_user_image.image && row.from_user_image.image.url)
+              img_with_user.attr('src', row.from_user_image.image.thumb.url)
+            else{
+              var email = "<%= current_user.email %>" ;
+              var email_hash = $.md5(email);
+              profile_image = "https://secure.gravatar.com/avatar/" + email_hash+"?d=mm"  ;
+              img_with_user.attr('src', profile_image)
+            }
+
+            message_container.append(clone_of_msg_obj)
+            if(row.from_user_name==current_user_name)
+              $('#from_user_name').text(row.to_user_name)
+            else
+              $('#from_user_name').text(row.from_user_name)
+            messageId += 1
+            message_container.scrollTop(message_container[0].scrollHeight)
+          })
+        }
+
+        if (response.communications_form_users )
+          {
+            communications_form_users= response.communications_form_users
+            communications_form_users.forEach(function(row){
+              if($('.message_list li[id="'+row.from_user+'"]').size()!=0){
+                if(user_id!=row.from_user){
+                  $('.message_list li[id="'+row.from_user+'"]').addClass('new_user_message')
+                }
+               }else{
+                 $.ajax({
+                    url: '/api/v2.2/community/user_profile/'+row.from_user+'/user_public_profile',
+                    type: 'GET',
+                    success: function(response){
+                     var image_url = response.photo.photo.thumb.url; 
+                     if(image_url== null){
+                      image_url = 'https://secure.gravatar.com/avatar/363b9f9750d23bf2c21f9b5b678fcd72?d=mm'
+                     }
+                     var new_user_li = '<li id="'+response.id
+                      +'" style="display: block;" class="new_user_message"><img class="user_image" src="'+ image_url+'" style="margin-right: 10px;" width="60" height="60" alt=""><span class="name">'+response.name+'</span> <span class="time_stamp_m"></span></li>';
+                    if(user_id == 0){
+                      
+                       $('.message_list').empty();
+                       $('.message_list').append(new_user_li);
+
+                      } else{  
+                      $('.message_list li:last').after(new_user_li)
+                    } 
+                    $('.message_list li')[$('.message_list li').size()-1].addEventListener("click", message_list_li_click);   
+                 } 
+                })     
+               } 
+            })
+          }
+      //call back function
+      }})
+    }  
+
+  var message_list_li_click = function(){
+    $('#new_message_name').val('')
+    user_id = $(this).attr('id')
+    list_user_id = user_id
+    offset = 0
+    $('#message_new').hide()
+    $("#previous").attr('disabled','disabled')
+     $('#conversation-name').show()
+     $('#no-conversations').hide()
+    $('#comm_message_list').css('display', 'block')
+    $('.message_list li').removeClass('active_message')
+    $(this).addClass('active_message')
+    $(this).removeClass('new_user_message')
+    var message_container = $('.messages-container .messages')
+    message_container.empty()
+    get_communication(user_id, message_container)
+  }
+  
+  $('.new_message').click(function(){
+    $('#from_user_name').text('')
+    $('.message_list li').removeClass('active_message')
+    $('#comm_message_list').css('display', 'none')
+    $('#no-conversations').show()
+    $('#conversation-name').hide()
+  })
+
+   $('#new_message_name').on('input', function(e){
+     if (e.target.value == '' || !e.target.value){
+          $('#message_new .input .drop').fadeOut()
+    } else {
+        $('#message_new .input .drop').fadeIn()
+         $('#message_new .drop').html('')
+         var match = false
+         window.users.forEach(function(u){
+
+             if (u.name.match(e.target.value) || u.name.toLowerCase().match(e.target.value)){
+               $('#message_new .drop').append("<div class='org'  uid='" + u.id + "'>" + "<ul>"  +u.name + " <li>" + u.email + "</li></ul></div>")
+               match= true
+             }
+         })
+         if(match==false)
+         {
+           $('#message_new .drop').append("<div class='alert'>No match found</div>")
+         }
+     }
+     pvalue = e.target.value
+ })
+
+$('#message_new').on('click', '.org', function(){
+    $('#message_new .input .drop').fadeOut()
+    $('#message_new').hide()
+    $('#message_new .input input').val($(this).text())
+    $('#no-conversations').hide()
+    $('#conversation-name').show()
+    uid = $(this).attr('uid')
+    if ( $('#' + uid).length == 0 ) {
+      $('#new_message_name').val('')
+      user_id = uid
+      list_user_id = user_id
+      offset = 0
+      $('#message_new').hide()
+      $("#previous").attr('disabled','disabled')
+      $('#comm_message_list').css('display', 'block')
+      $('.message_list li').removeClass('active_message')
+      $(this).addClass('active_message')
+      var message_container = $('.messages-container .messages')
+      message_container.empty()
+      $('#from_user_name').text($(this).text())
+    } else {
+      $('#' + uid).click()
+    }
+})
+
+  $('.message-submit').click(function(){
+    submit_message1('.compose_message textarea')
+  })
+
+  var submit_message1 = function(message_selector){
+    var message = $(message_selector).val()
+    if(message.trim()=="") {
+      ss_alert("error", "Message can't be blank.");
+      return false;
+    }
+    if(message.length > 255) {
+      ss_alert("error", "Message length is too long (maximun is 256 characters)");
+      return false;
+    }
+    $.ajax({
+      url: '/api/v2.2/community/communications',
+      type: "POST",
+      data : {to_user_id: list_user_id, message: message},
+      success: function(response1){
+        var message_container = $('.messages-container .messages')
+        get_communication(list_user_id, message_container)
+        update_communicated_user_list(list_user_id);
+        $(message_selector).val("")
+        //call back function
+      },
+      error:function(errors,response1){
+        ss_alert("error", errors.responseText) 
+      }
+  })
+  }
+
+  $('.messages').each(function(){
+    $(this).scrollTop($(this)[0].scrollHeight)
+  })
+
+  $('#message_display .green').click(function(){
+    $('#message_new').css('display', 'inline-block')
+    $('#from_user_name').text('')
+    $('.message_list li').removeClass('active_message')
+    $('#comm_message_list').css('display', 'none')
+    $('#no-conversations').show()
+    $('#conversation-name').hide()
+  })
+  function format(state) {
+      return "<nobr>" + state.text
+  }
+  $('#message_new .green').click(function(){
+    $('#message_display').show()
+    $('#message_new').hide()
+    submit_message('#message_new textarea', '#message_new input')
+  })
+</script>

@@ -1,0 +1,439 @@
+<h1 class="content_headline messages_center_mod">{{title}}</h1>
+
+<div class="message_center_header_empty" ng-if="!inNotifications.length">
+  <p>No unread messages, notifications and files</p>
+</div>
+<div class="add_msg_block">
+  <h2 class="add_msg_hline"><%= I18n.t('compose_a_message_to') %> </h2>
+
+  <div class="msg_form_b">
+
+	<dl class="form_cell form_cell_v1_mod">
+	  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		<label for="Enter_user_name_or_group_name">Enter user name or group name</label>
+	  </dt>
+	  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		<input type="text" id="Enter_user_name_or_group_name" placeholder="Enter user name or group name" class="f_c_field default_mod "/>
+	  </dd>
+	</dl>
+
+	<dl class="form_cell form_cell_v1_mod">
+	  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+		<label for="Enter_your_message">Enter your message</label>
+	  </dt>
+	  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		<textarea id="Enter_your_message" placeholder="Enter your message" class="f_c_field default_mod textarea_mod_2 " ng-model="communication.message"></textarea>
+	  </dd>
+	</dl>
+
+	<div class="butt_wrap msg_form_mod">
+		{{communication.attachment.filename}}
+		<div ng-if="communication.attachment.filename" ng-click="remove_compose_attachment()">Remove attachment</div>
+		<div id="Upload_image" placeholder="<%= t('upload_image') %>" class="attach_butt" ng-file-select ng-file-change="compose_attach_file($files, $event)">Add attachment</div>
+	  <div ng-class="{ 'butt_comment_send': communication.message == undefined || communication.message.length == 0, 'butt_send': communication.message.length > 0 }" ng-click="send_message()"><%= I18n.t('send') %></div>
+	</div>
+  </div>
+</div>
+
+<div infinite-scroll='loadMore()' infinite-scroll-disabled='{{busy}}' infinite-scroll-distance='1'>
+<!--TODA MAX it is new message block with comments-->
+<article class="msg_block" ng-if="false">
+ <!-- <header class="msg_header">
+	<div class="user_block default_mod h_48_mod hor_mod msg_mod ">
+	  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "><img src="i/space.jpg" alt="Kristin Colony" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+	  </div>
+	  <div class="user_name default_mod h_48_mod hor_mod msg_mod">Kristin Colony</div>
+	</div>
+	<div class="msg_time">3 Min Ago</div>
+  </header>
+  <div class="msg_content">
+	<p>1. SQF</p>
+	<p>	- OR BRC</p>
+	<p>	- OR FSSC 22000</p>
+	<p>	This requirement is due by June 30, 2015. If this requirement is not fulfilled by that time, your facility will be flagged as <span class="dot_block red_mod">Red</span> by Greenfence.</p>
+  </div>
+  <div class="msg_comment_block">
+	<header class="msg_header msg_comment_2_mod">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod "><img src="i/space.jpg" alt="Kristin Colony" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+		</div>
+		<div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">Kristin Colony</div>
+	  </div>
+	  <div class="msg_time">3 Min Ago</div>
+	</header>
+	<div class="msg_content">
+	  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua.</p>
+	</div>
+  </div>
+  <div class="msg_comment_block">
+	<header class="msg_header msg_comment_2_mod">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_comment_2_mod ">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_comment_2_mod "><img src="i/space.jpg" alt="Kristin Colony" class="user_avatar_img default_mod h_48_mod hor_mod msg_comment_2_mod"/>
+		</div>
+		<div class="user_name default_mod h_48_mod hor_mod msg_comment_2_mod">Kristin Colony</div>
+	  </div>
+	  <div class="msg_time">3 Min Ago</div>
+	</header>
+	<div class="msg_content">
+	  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labo et dolore magna aliqua.</p>
+	</div>
+  </div>
+  <footer class="msg_footer">
+	<div class="msg_comment_form">
+	  <div class="user_block msg_comment_mod ">
+		<div class="user_avatar_w msg_comment_mod ">
+		  &lt;!&ndash;<img src="i/ron-vail.jpg" alt="undefined" class="user_avatar_img msg_comment_mod"/>&ndash;&gt;
+		</div>
+	  </div>
+	  <dl class="form_cell form_cell_v1_mod">
+		<dt class="form_c_hline form_v1_mod hline_hide_mod">
+		  <label for="Respond">Respond...</label>
+		</dt>
+		<dd class="form_c_f_w form_v1_mod hline_hide_mod">
+		  <input type="text" id="Respond" placeholder="Respond..." class="f_c_field default_mod "/>
+		</dd>
+	  </dl>
+	  <div class="butt_wrap msg_comment_mod">
+		<div class="attach_butt">Add attachment</div>
+		<div class="butt_comment_send">Send</div>
+	  </div>
+	</div>
+  </footer>-->
+</article>
+
+<!-- Directive -->
+<gf-activity-feed
+	class="message-block"
+	ng-repeat="notification in inNotifications"
+	data='notification'
+	ng-if="notification.activity_key == 'generic'"></gf-activity-feed>
+
+<article class="msg_block" ng-repeat="notification in inNotifications" ng-switch="notification.activity_key">
+
+  <div class="message-block" ng-switch-when="new_message">
+  	<div ng-if="showTo(notification)">
+			<header class="msg_header">
+			  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+				<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+				  <img ng-src="{{notification.from.photo_url}}"  alt="{{notification.from.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+				</div>
+				<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.from.name}} <%= t('sent') %> {{notification.to.name}} <%= t('a_private_message') %></div>
+			  </div>
+			  <div class="msg_time">{{notification.updated_at}}</div>
+			</header>
+			<div class="msg_content">
+			  <p>{{notification.message_text}}</p>
+			  <a href="{{notification.attachment_url}}" title="Click here to see file" class="file_link ng-scope" ng-if="notification.attachment_url" download><%= t('download_file') %></a>
+			</div>
+		</div>
+
+	<div ng-repeat="message in notification.replies">
+	  <div ng-if="showTo(message)">
+		<header class="msg_header">
+		  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+			<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+			  <img ng-src="{{message.from.photo_url}}"  alt="{{message.from.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+			</div>
+			<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{message.from.name}} <%= t('sent') %> {{message.to.name}} <%= t('a_private_message') %></div>
+		  </div>
+		  <div class="msg_time">{{message.updated_at}}</div>
+		</header>
+		<div class="msg_content">
+		  <p>{{message.message_text}}</p>
+		  <a href="{{message.attachment_url}}" title="Click here to see file" class="file_link ng-scope" ng-if="message.attachment_url" download><%= t('download_file') %></a>
+		</div>
+	  </div>
+	</div>
+
+	<footer class="msg_footer">
+	  <div class="msg_comment_form">
+		<div class="user_block msg_comment_mod ">
+		  <div class="user_avatar_w msg_comment_mod ">
+			<img ng-src="{{user.photo_url}}"  class="user_avatar_img msg_comment_mod"/>
+		  </div>
+		</div>
+
+		<dl class="form_cell form_cell_v1_mod">
+		  <dt class="form_c_hline form_v1_mod hline_hide_mod">
+			<label for="Add_a_comment"> Add a comment...</label>
+		  </dt>
+		  <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+			<input type="text" id="Add_a_comment" placeholder="<%= I18n.t('add_a_comment') %>" class="f_c_field default_mod " ng-model="replyMessages[$index]"/>
+		  </dd>
+		</dl>
+
+		<div class="butt_wrap msg_comment_mod">
+			{{replyAttachments[$index].filename}}
+			<div ng-if="replyAttachments[$index].filename" ng-click="remove_reply_attachment($index)">Remove attachment</div>
+			<div id="Upload_image" placeholder="<%= t('upload_image') %>" class="attach_butt" ng-file-select ng-file-change="reply_attach_file($files, $event, $index)">Add attachment</div>
+		  <div ng-class="{ 'butt_comment_send': replyMessages[$index] == undefined || replyMessages[$index].length == 0, 'butt_send': replyMessages[$index].length > 0 }" ng-click="reply_message($index)"><%= I18n.t('send') %></div>
+		</div>
+	  </div>
+	</footer>
+  </div>
+
+  <!-- friendship(connect) notification -->
+  <!-- for my message center page -->
+  <div class="friendship-block" ng-switch-when="friendship_request">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "  ng-if="notification.object.status == 'pending'">
+			<img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"  ng-if="notification.object.status == 'pending'">
+			{{notification.sender.name}} <%= t('requested_you_to_be_a_friend') %>
+		  </div>
+
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "  ng-if="notification.object.status == 'accepted'">
+			<img ng-src="{{user.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"  ng-if="notification.object.status == 'accepted'">
+			<%= t('you_have_accepted_the_requested_from') %> {{notification.sender.name}}
+		  </div>
+
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "  ng-if="notification.parameters.activity_key == 'friendship_request_decline'">
+			<img ng-src="{{user.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"  ng-if="notification.parameters.activity_key == 'friendship_request_decline'">
+			<%= t('you_have_reject_the_requested_from') %> {{notification.sender.name}}
+		  </div>
+
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "  ng-if="notification.parameters.activity_key == 'friendship_request_cancel'">
+			<img ng-src="{{notification.parameters.sender.photo_url}}"  alt="{{notification.parameters.sender.name}}" class="user_avatar_img msg_vendor_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"  ng-if="notification.parameters.activity_key == 'friendship_request_cancel'">
+			{{notification.parameters.sender.name}} <%= t('have_canceled_the_request') %>
+		  </div>
+
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod "  ng-if="notification.parameters.activity_key == 'friendship_disconnect' && userId == notification.parameters.sender.id">
+			<img ng-src="{{user.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"  ng-if="notification.parameters.activity_key == 'friendship_disconnect' && userId == notification.parameters.sender.id">
+			<%= t('you_have_disconnected_with') %> {{notification.sender.name}}
+		  </div>
+
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod " ng-if="notification.parameters.activity_key == 'friendship_disconnect' && userId != notification.parameters.sender.id">
+			<img ng-src="{{notification.parameters.sender.photo_url}}"  alt="CocaCola" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod" ng-if="notification.parameters.activity_key == 'friendship_disconnect' && userId != notification.parameters.sender.id">
+			{{notification.parameters.sender.name}} <%= t('have_disconnected_with_you') %>  </div>
+
+	  </div>
+
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	  <div class="gl_action_block msg_mod" ng-if="notification.object.status == 'pending'">
+		<a href="" title="" class="gl_action_trigger_butt take_action_butt"><%= t('take_action') %>
+		</a>
+		<ul class="gl_action_list msg_mod">
+		  <li class="gl_action_item msg_mod">
+			<a href="" title="<%= t('accept') %>" class="gl_action_butt msg_mod accept_mod" ng-click="friendship_request_accept(notification.sender)"><%= t('accept') %></a>
+		  </li>
+		  <li class="gl_action_item msg_mod">
+			<a href="" title="<%= t('deny') %>" class="gl_action_butt msg_mod deny_mod" ng-click="friendship_request_decline(notification.sender)"><%= t('deny') %></a>
+		  </li>
+		</ul>
+	  </div>
+	</header>
+  </div>
+
+  <!-- for recipient's message center page -->
+  <div class="friendship-block" ng-switch-when="friendship_request_accept">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="CocaCola" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('accepted_your_connect_request') %></div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+  <div class="friendship-block" ng-switch-when="friendship_request_decline">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="CocaCola" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('declined_your_connect_request') %></div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+  <div class="friendship-block" ng-switch-when="friendship_request_cancel">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="CocaCola" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('have_canceled_the_request') %></div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+  <div class="friendship-block" ng-switch-when="friendship_disconnect">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="CocaCola" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('disconnected_with_you') %></div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- group notification -->
+  <!-- for my message center page -->
+  <div class="group-block" ng-switch-when="group_user_invited">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+
+
+		  <div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod " ng-if="notification.object.join_status == 'invited'">
+			<img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		  </div>
+		  <div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod" ng-if="notification.object.join_status == 'invited'">
+			{{notification.sender.name}} <%= t('invited_you_to') %> {{'“' + notification.object.group.name + '”'}}
+		  </div>
+
+
+
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod " ng-if="notification.object.join_status == 'accepted'">
+		  <img ng-src="{{user.photo_url}}" alt="{{user.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod" ng-if="notification.object.join_status == 'accepted'">
+		  <%= t('you_have_accepted_the_invitation_from') %> {{notification.sender.name}} to {{'“' + notification.object.group.name + '”'}}
+		</div>
+
+
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod " ng-if="notification.object.join_status == 'declined'">
+		  <img ng-src="{{user.photo_url}}" alt="{{user.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod" ng-if="notification.object.join_status == 'declined'">
+		  <%= t('you_have_reject_the_invitation_from') %> {{notification.sender.name}} to {{'“' + notification.object.group.name + '”'}}
+		</div>
+	  </div>
+
+	  <div class="msg_time" >{{notification.updated_at}}</div>
+
+	  <div class="gl_action_block msg_mod" ng-if="notification.object.join_status == 'invited'">
+		<a href="" title="" class="gl_action_trigger_butt take_action_butt"><%= t('take_action') %>
+		</a>
+		<ul class="gl_action_list msg_mod">
+		  <li class="gl_action_item msg_mod">
+			<a href="" title="<%= t('accept') %>" class="gl_action_butt msg_mod accept_mod" ng-click="group_invitation_accept(notification.object.group)"><%= t('accept') %></a>
+		  </li>
+		  <li class="gl_action_item msg_mod">
+			<a href="" title="<%= t('deny') %>" class="gl_action_butt msg_mod deny_mod" ng-click="group_invitation_decline(notification.object.group)"><%= t('deny') %></a>
+		  </li>
+		</ul>
+	  </div>
+	</header>
+  </div>
+
+  <!-- for the recipient's center page -->
+  <div class="group-block" ng-switch-when="group_user_invitation_accept">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('accepted_your_invitation_to') %> {{'“' + notification.object.group.name + '”'}}</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+  <div class="group-block" ng-switch-when="group_user_invitation_decline">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w msg_vendor_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}}  <%= t('declined_your_invitation_to') %> {{'“' + notification.object.group.name + '”'}}</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- user profile change notification -->
+  <div class="user-profile-block" ng-switch-when="user_general_change">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod"> {{notification.sender.name}} <%= I18n.t('has_updated_his') %> {{notification.parameters.changed_fields.join(" and ")}}.</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- operation change notification -->
+  <div class="user-profile-block" ng-switch-when="operation_general_change">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}}  <%= I18n.t('has_updated_the_fields') %> {{notification.parameters.changed_fields.join(" and ")}} <%= t('of_the_operation') %> {{'“' + notification.object.name + '”'}}.</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- service change notification -->
+  <div class="user-profile-block" ng-switch-when="service_general_change">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}}  <%= I18n.t('has_updated_the_fields') %> {{notification.parameters.changed_fields.join(" and ")}} <%= I18n.t('of_the_service') %> {{'“' + notification.object.name + '”'}}.</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- operation new product added notification -->
+  <div class="user-profile-block" ng-switch-when="operation_new_product_added">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img default_mod h_48_mod hor_mod msg_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('has_added_new_product') %> {{'“' + notification.parameters.product.name + '”'}}</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+  <!-- document change notification -->
+  <div class="user-profile-block" ng-switch-when="document_general_change">
+	<header class="msg_header">
+	  <div class="user_block default_mod h_48_mod hor_mod msg_mod">
+		<div class="user_avatar_w default_mod h_48_mod hor_mod msg_mod ">
+		  <img ng-src="{{notification.sender.photo_url}}"  alt="{{notification.sender.name}}" class="user_avatar_img msg_vendor_mod"/>
+		</div>
+		<div class="user_msg_hline default_mod h_48_mod hor_mod msg_mod">{{notification.sender.name}} <%= t('has_updated_the_fields') %> {{notification.parameters.changed_fields.join(" and ")}} <%= t('of_the_document') %> {{'“' + notification.object.document_name + '”'}}.</div>
+	  </div>
+	  <div class="msg_time">{{notification.updated_at}}</div>
+	</header>
+  </div>
+
+</article>
+
+</div>
+<div class="actions"></div>
+<a href="messages_center.html" title="" class="next"></a>

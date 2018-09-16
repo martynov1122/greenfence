@@ -1,0 +1,71 @@
+<div class="secondary_row layuot_mod_1" ng-controller="CompanyPublicProfileRightMenuCtrl">
+  <div class="section_menu mod_1" ng-if="false">
+    <h2 class="section_hline"><%= t('menu') %></h2>
+    <ul class="section_menu_list">
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/featured',$event)"><%= t('featured') %>
+          <span class="section_m_link_count">{{public_company.featured_count}}</span>
+        </div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/operations',$event)"><%= t('operations') %>
+          <span class="section_m_link_count">{{public_company.operations_count}}</span>
+        </div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/products',$event)"><%= t('products') %>
+          <span class="section_m_link_count">{{public_company.products_count}}</span>
+        </div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/services',$event)"><%= t('services') %>
+          <span class="section_m_link_count">{{public_company.services_count}}</span>
+        </div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/documents',$event)"><%= t('certificates') %> &amp; <%= t('documents') %>
+          <span class="section_m_link_count">{{public_company.documents_count}}</span>
+        </div>
+      </li>
+      <li class="section_menu_l_item">
+        <div class="section_menu_link hovered_1_mod" ng-click="filterType('/filter/employees',$event)">Employees
+          <span class="section_m_link_count">{{public_company.employees_count}}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="user_block about_mod ">
+	<div class="user_avatar_w about_mod ">
+	  <span class="user_avatar_img about_mod no_img_mod" ng-if="!public_company.primary_contact_user.image_url"></span>
+	  <img ng-if="public_company.primary_contact_user.image_url" ng-src="{{public_company.primary_contact_user.image_url}}" alt="{{public_company.primary_contact_user.name}}" class="user_avatar_img about_mod">
+	</div>
+	<div class="user_name about_mod">{{public_company.primary_contact_user.name}}</div>
+	<div class="user_info about_mod">{{public_company.primary_contact_user.title}}</div>
+	<div class="user_second_info about_mod"><%= t('primary_contact') %></div>
+
+	<div class="message_company_butt user_msg_butt about_mod"  ng-if="current_user_id != public_company.primary_contact_user.id">Message</div>
+  </div>
+
+  <div id="company_send_message" style="display:none">
+    <div class="ui-dialog-titlebar">
+      <span class="ui-dialog-title"><%= t('send_message') %> {{public_company.primary_contact_user.name}}</span>
+    </div>
+    <div class="dialog_content">
+    <div class="dialog_form">
+      <dl class="form_cell form_cell_v1_mod">
+      <dt class="form_c_hline form_v1_mod hline_hide_mod">
+        <label for="Compose_your_message">Compose your message</label>
+      </dt>
+      <dd class="form_c_f_w form_v1_mod hline_hide_mod">
+        <textarea id="Compose_your_message" placeholder="<%= t('compose_your_message') %>" class="f_c_field default_mod textarea_mod_1 " ng-model="communication.message"></textarea>
+      </dd>
+      </dl>
+    </div>
+    </div>
+    <footer class="dialog_footer">
+    <div class="dialog_cancel_butt"><%= t('cancel') %></div>
+    <div ng-class="{ 'dialog_not_submit_butt': communication.message == undefined || communication.message.length == 0, 'dialog_submit_butt': communication.message.length > 0 }" ng-click="send_message(public_company.primary_contact_user)">Submit</div>
+    </footer>
+  </div>
+</div>
+

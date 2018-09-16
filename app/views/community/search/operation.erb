@@ -1,0 +1,43 @@
+<article class="profile_card_block" ng-class="{primary_mod: data.featured}">
+  <span class="corner_ico operation_mod"></span>
+  <div class="user_block profile_card_mod">
+    <a class="user_avatar_w profile_card_mod" href="#operation_public_profile/{{data.id}}">
+      <img ng-if="data.profile.thumb_url != '/assets/avatar.jpg'" ng-src="{{data.profile.thumb_url}}" alt="{{data.name}}" class="user_avatar_img profile_card_mod">
+	  <span ng-if="data.profile.thumb_url == '/assets/avatar.jpg'" class="user_avatar_img profile_card_mod no_img_mod operation_mod"></span>
+    </a>
+    <a class="user_name profile_card_mod" href="#operation_public_profile/{{data.id}}">{{data.name}}</a>
+    <div class="user_info profile_card_mod" ng-if="data.company.name">{{data.company.name}}</div>
+    <div class="user_text profile_card_mod" ng-if="data.profile.summary"><p>{{data.profile.summary}}</p></div>
+  </div>
+  <ul class="dynamic_fields" ng-if="false">
+    <li ng-repeat="(k,v) in data.searchable_fields">
+      <span class="left"> {{k}}</span>
+      <span class="right"> {{v}}</span>
+    </li>
+  </ul>
+
+  <footer class="profile_card_b_footer">
+	<div class="card_follow_butt" ng-if="!data.followed_by_current_user" ng-click="follow_me(data)">Follow</div>
+	<div class="card_follow_butt" ng-if="data.followed_by_current_user" ng-click="unfollow_me(data)">Unfollow</div>
+    <ul class="post_f_list">
+      <li class="post_f_list_item">
+        <dl class="tag_block">
+          <dt class="tag_b_text"><%= t('services') %></dt>
+          <dd class="tag_b_value">{{data.profile.services_count}}</dd>
+        </dl>
+      </li>
+      <li class="post_f_list_item">
+        <dl class="tag_block">
+          <dt class="tag_b_text"><%= t('products') %></dt>
+          <dd class="tag_b_value">{{data.profile.products_count}}</dd>
+        </dl>
+      </li>
+      <li class="post_f_list_item">
+        <dl class="tag_block">
+          <dt class="tag_b_text"><%= t('documents') %></dt>
+          <dd class="tag_b_value">{{data.profile.documents_count}}</dd>
+        </dl>
+      </li>
+    </ul>
+  </footer>
+</article>

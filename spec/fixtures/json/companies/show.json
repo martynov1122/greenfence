@@ -1,0 +1,48 @@
+{
+  "address": {
+    "addressable_type": "Company",
+    "administrative_area": "OH",
+    "country": null,
+    "fax_number": null,
+    "latitude_degrees": 36.3354,
+    "locality": "GREEN FOREST",
+    "longitude_degrees": -93.4372,
+    "phone_number": null,
+    "postal_code": "72638",
+    "street1": "123 Easy Street",
+    "street2": "",
+    "sub_administrative_area": null
+  },
+  "facilities": [
+    {
+      "administrative_area": "AR",
+      "id": 1,
+      "gfsi_state_description": "Not provided",
+      "gfsi_status": "orange",
+      "name": "CAL MAINE FOODS, INC. Farm",
+      "products_count": 1
+    }
+  ],
+  "name": "CAL MAINE FOODS, INC.",
+  "products": [
+    {
+      "id": 1,
+      "facilities_count": 1,
+      "name": "Eggs Fresh Eggs",
+      "producers_count": 1,
+      "product_category_name": "Eggs"
+    }
+  ],
+  "buyers": [
+    {
+      "administrative_area": "GA",
+      "id": 1,
+      "facilities_count": 0,
+      "gfsi_status": "red",
+      "name": "Walmart",
+      "products_count": 0
+    }
+  ],
+  "suppliers": [
+  ]
+}

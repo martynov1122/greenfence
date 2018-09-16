@@ -1,0 +1,7 @@
+%label.lbl_rb_ch_block(class='#{array[:block_class_mod]}')
+  - if checked_mod
+    %input.lbl_inp_rb_ch{:name=>'#{name}', :type=>'#{array[:type]}', :class=>'#{array[:input_class_mod]}', :checked=>'checked'}
+  - else
+    %input.lbl_inp_rb_ch{:name=>'#{name}', :type=>'#{array[:type]}', :class=>'#{array[:input_class_mod]}'}
+  %span.lbl_rb_ch_text{:class=>'#{array[:class_mod]}'}
+    = title
