@@ -1,6 +1,7 @@
 http://greenfence.com/
 
-I can't reveal the whole code because it belongs to my clients. You can review my coding style and the quality through some codes here. Also you can check my experience of the following technologies.
+You can review my coding style and the quality through some codes here. 
+Also you can check my experience of the following technologies.
 
 1. AngularJS
 2. Authentication System by Devise
